@@ -1,4 +1,4 @@
-package net.netne.mina.enums;
+package net.netne.common.enums;
 
 public enum EEchoCode {
 	

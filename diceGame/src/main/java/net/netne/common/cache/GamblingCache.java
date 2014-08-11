@@ -1,4 +1,4 @@
-package net.netne.mina.cache;
+package net.netne.common.cache;
 
 import java.util.Map;
 

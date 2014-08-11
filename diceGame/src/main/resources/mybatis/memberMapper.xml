@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="net.netne.api.dao.IMemberDao">
+    <!--
+         获取城市信息
+    
+    <select id="getCityList" resultType="City">
+		select id,name from city;
+	</select>
+	 -->
+	 <insert id="addMember" parameterType="Member">
+	 	insert into member (name,password,mobile,sex) values(#{name},#{password},#{mobile},#{sex})
+	 </insert>
+	 
+	 <select id="getMember" resultType="Member" parameterType="String">
+		select name,password,mobile,sex from member where mobile = #{mobile};
+	</select>
+</mapper> 
