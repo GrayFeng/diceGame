@@ -1,6 +1,5 @@
 package net.netne.mina.handler;
 
-import net.netne.mina.pojo.param.IParams;
 import net.netne.mina.pojo.result.CommonResult;
 
 import org.apache.mina.core.session.IoSession;
@@ -13,6 +12,6 @@ import org.apache.mina.core.session.IoSession;
  */
 public interface IHandler {
 	
-	public CommonResult execute(IoSession session,IParams paramObj);
+	public CommonResult execute(IoSession session,String params);
 
 }

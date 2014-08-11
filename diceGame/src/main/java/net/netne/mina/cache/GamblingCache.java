@@ -33,6 +33,10 @@ public class GamblingCache {
 		cache.put(gambling.getId(), gambling);
 	}
 	
+	public Gambling get(String key){
+		return cache.get(key);
+	}
+	
 	public void remove(String key){
 		cache.remove(key);
 	}

@@ -8,15 +8,32 @@ import java.util.List;
  * @author Gray(tyfjy823@gmail.com)
  * @version 1.0
  */
-public class Gambling {
+public class Gambling{
 	//唯一标识ID
 	private String id;
 	//牌局号
 	private String boardNo;
+	//最大参与人数
+	private Integer maxGamerNum;
 	//参与人数
 	private Integer gamerNum;
+	//等待-0,开始游戏-1
+	private Integer status;
 	//当前参数游戏玩家列表
 	private List<Gamer> gamerList;
+	
+	public Integer getMaxGamerNum() {
+		return maxGamerNum;
+	}
+	public void setMaxGamerNum(Integer maxGamerNum) {
+		this.maxGamerNum = maxGamerNum;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 	public String getId() {
 		return id;
 	}

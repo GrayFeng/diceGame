@@ -8,6 +8,16 @@ package net.netne.mina.pojo.result;
 public class CreateGamblingResult implements IResult{
 	
 	private String gamblingId;
+	
+	private String boardNo;
+	
+	public String getBoardNo() {
+		return boardNo;
+	}
+
+	public void setBoardNo(String boardNo) {
+		this.boardNo = boardNo;
+	}
 
 	public String getGamblingId() {
 		return gamblingId;

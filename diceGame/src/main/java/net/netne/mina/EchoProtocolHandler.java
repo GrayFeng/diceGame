@@ -19,10 +19,17 @@
  */
 package net.netne.mina;
 
+import java.util.List;
+import java.util.Map;
+
+import net.netne.mina.enums.EActionCode;
+import net.netne.mina.enums.EEchoCode;
 import net.netne.mina.handler.CreateGamblingHandler;
 import net.netne.mina.handler.IHandler;
-import net.netne.mina.pojo.param.CreateGamblingParams;
+import net.netne.mina.handler.JoinGameHandler;
+import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.result.CommonResult;
+import net.netne.mina.pojo.result.JoinGameResult;
 
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.service.IoHandlerAdapter;
@@ -34,6 +41,8 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * {@link IoHandler} implementation for echo server.
@@ -43,7 +52,14 @@ import com.alibaba.fastjson.JSONObject;
 public class EchoProtocolHandler extends IoHandlerAdapter {
 	private final static Logger LOGGER = LoggerFactory
 			.getLogger(EchoProtocolHandler.class);
+	
+	private Map<Integer,IHandler> handlerMap = Maps.newHashMap();
 
+	public EchoProtocolHandler(){
+		handlerMap.put(EActionCode.CREATE_GAME.getCode(), new CreateGamblingHandler());
+		handlerMap.put(EActionCode.JOIN_GAME.getCode(), new JoinGameHandler());
+	}
+	
 	@Override
 	public void sessionCreated(IoSession session) {
 		session.getConfig().setIdleTime(IdleStatus.BOTH_IDLE, 10);
@@ -76,19 +92,42 @@ public class EchoProtocolHandler extends IoHandlerAdapter {
 			throws Exception {
 		try {
 			String params = String.valueOf(message);
-			JSONObject jsonObject = JSONObject.parseObject(params);
-			String code = jsonObject.getString("actionCode");
-			IHandler handler = null;
-			CommonResult result = null;
-			if ("create".equals(code)) {
-				CreateGamblingParams createGamblingParams = JSONObject
-						.parseObject(params, CreateGamblingParams.class);
-				handler = new CreateGamblingHandler();
-				result = handler.execute(session, createGamblingParams);
-			}
+			CommonResult result = execute(session,params);
 			session.write(JSON.toJSONString(result));
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(),e);
+			session.close(true);
 		}
+	}
+	
+	//处理访问请求
+	private CommonResult execute(IoSession session,String params){
+		CommonResult result = null;
+		try {
+			JSONObject jsonObject = JSONObject.parseObject(params);
+			Integer code = jsonObject.getInteger("actionCode");
+			IHandler handler = getActionHandler(code);
+			if(handler != null){
+				result = handler.execute(session, params);
+			}
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(),e);
+		}finally{
+			if(result == null){
+				result = new CommonResult();
+				result.setCode(EEchoCode.ERROR.getCode());
+				result.setMsg("request error");
+				session.close(false);
+			}
+		}
+		return result;
+	}
+	
+	//获取指令处理器
+	private IHandler getActionHandler(Integer code){
+		if(code == null || !handlerMap.containsKey(code)){
+			return null;
+		}
+		return handlerMap.get(code);
 	}
 }
