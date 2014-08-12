@@ -57,18 +57,14 @@ public class MemberControl {
 			}
 		}catch (Exception e) {
 			if(e.getCause() instanceof MySQLIntegrityConstraintViolationException){
-				result = new Result();
-				result.setStatus(EEchoCode.ERROR.getCode());
-				result.setMsg("昵称或手机号码重复!");
+				result = new Result(EEchoCode.ERROR.getCode(),"昵称或手机号码重复!");
 				log.error(e.getMessage());
 			}else{
 				log.error(e.getMessage(),e);
 			}
 		}finally{
 			if(result == null){
-				result = new Result();
-				result.setStatus(EEchoCode.ERROR.getCode());
-				result.setMsg("用户信息不完整，注册失败!");
+				result = new Result(EEchoCode.ERROR.getCode(),"用户信息不完整，注册失败!");
 			}
 		}
 		return ResultUtil.getJsonString(result);

@@ -15,15 +15,15 @@ public abstract class AbstractHandler implements IHandler{
 		Result result = null;
 		JSONObject jsonObject = JSONObject.parseObject(params);
 		String uid = jsonObject.getString("uid");
-		if(StringUtils.isEmpty(uid)){
-			result = new Result(EEchoCode.MISSING.getCode(), "未授权访问，缺少UID信息!");
-			session.close(false);
-		}else if(!MemberCache.getInstance().isLogin(uid)){
-			result = new Result(EEchoCode.NOT_LOGIN.getCode(), "用户未登录");
-			session.close(false);
-		}else{
+//		if(StringUtils.isEmpty(uid)){
+//			result = new Result(EEchoCode.MISSING.getCode(), "未授权访问，缺少UID信息!");
+//			session.close(false);
+//		}else if(!MemberCache.getInstance().isLogin(uid)){
+//			result = new Result(EEchoCode.NOT_LOGIN.getCode(), "用户未登录");
+//			session.close(false);
+//		}else{
 			result = execute(session, params);
-		}
+//		}
 		return result;
 	}
 

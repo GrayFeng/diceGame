@@ -1,8 +1,5 @@
 package net.netne.common.pojo;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-
 import net.netne.common.enums.EEchoCode;
 
 /**

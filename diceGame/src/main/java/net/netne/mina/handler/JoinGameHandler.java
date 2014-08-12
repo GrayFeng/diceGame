@@ -4,8 +4,10 @@ import java.util.List;
 
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
+import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EBroadcastCode;
 import net.netne.common.enums.EEchoCode;
+import net.netne.common.pojo.LoginInfo;
 import net.netne.common.pojo.Result;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
@@ -38,24 +40,25 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 					&& gambling.getGamerNum() < gambling.getMaxGamerNum()){
 				gambling.setGamerNum(gambling.getGamerNum() + 1);
 				GamblingCache.getInstance().add(gambling);
-				Gamer newGamer = new Gamer();
-				newGamer.setUid(joinGameParam.getUid());
-				newGamer.setSession(session);
-				newGamer.setGamestatus(0);
-				broadCast(gambling, newGamer);
-				List<Gamer> gamers = GamerCache.getInstance().getGamers(gambling.getId());
-				JoinGameResult jonGameResult = new JoinGameResult();
-				List<GamerVO> gamerVOList = Lists.newArrayList();
-				for(Gamer gamer : gamers){
-					GamerVO gamerVO = new GamerVO();
-					gamerVO.setName(gamer.getUid());
-					gamerVOList.add(gamerVO);
+				LoginInfo loginInfo = MemberCache.getInstance().get(joinGameParam.getUid());
+				if(loginInfo != null && loginInfo.getMember() != null){
+					//建立新玩家
+					Gamer newGamer = createNewGamer(joinGameParam.getUid(),session,loginInfo);
+					//广播通知其他玩家
+					broadCast(gambling, newGamer);
+					JoinGameResult jonGameResult = new JoinGameResult();
+					List<Gamer> gamers = GamerCache.getInstance().getGamers(gambling.getId());
+					//读取现有玩家信息
+					List<GamerVO> gamerVOList = getOldGamerList(gamers);
+					jonGameResult.setGamers(gamerVOList);
+					result = Result.getSuccessResult();
+					result.setRe(jonGameResult);
+					gamers.add(newGamer);
+					GamerCache.getInstance().add(gambling.getId(),gamers);
+				}else{
+					result = new Result(EEchoCode.ERROR.getCode(),"缺少用户信息");
+					session.close(false);
 				}
-				jonGameResult.setGamers(gamerVOList);
-				result = Result.getSuccessResult();
-				result.setRe(jonGameResult);
-				gamers.add(newGamer);
-				GamerCache.getInstance().add(gambling.getId(),gamers);
 			}
 		}catch(Exception e){
 			log.error(e.getMessage(),e);
@@ -66,6 +69,27 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 			}
 		}
 		return result;
+	}
+	
+	private Gamer createNewGamer(String uid,IoSession session,LoginInfo loginInfo){
+		Gamer newGamer = new Gamer();
+		newGamer.setUid(uid);
+		newGamer.setSession(session);
+		newGamer.setName(loginInfo.getMember().getName());
+		newGamer.setSex(loginInfo.getMember().getSex() + "");
+		newGamer.setGamestatus(0);
+		return newGamer;
+	}
+	
+	private List<GamerVO> getOldGamerList(List<Gamer> gamers){
+		List<GamerVO> gamerVOList = Lists.newArrayList();
+		for(Gamer gamer : gamers){
+			GamerVO gamerVO = new GamerVO();
+			gamerVO.setName(gamer.getName());
+			gamerVO.setSex(gamer.getSex());
+			gamerVOList.add(gamerVO);
+		}
+		return gamerVOList;
 	}
 	
 	private void broadCast(Gambling gambling,Gamer gamer){

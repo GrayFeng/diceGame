@@ -12,6 +12,11 @@ public class Gamer {
 	
 	//用户标识
 	private String uid;
+	
+	private String name;
+	
+	private String sex;
+
 	//游戏状态 0-初始加入,1-确认准备、2-游戏中 、3-退出
 	private Integer gamestatus;
 	
@@ -39,6 +44,22 @@ public class Gamer {
 
 	public void setUid(String uid) {
 		this.uid = uid;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
 	}
 	
 }
