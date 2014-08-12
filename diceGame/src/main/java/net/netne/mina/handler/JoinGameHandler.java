@@ -6,11 +6,11 @@ import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
 import net.netne.common.enums.EBroadcastCode;
 import net.netne.common.enums.EEchoCode;
+import net.netne.common.pojo.Result;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.broadcast.NewGamerJoin;
 import net.netne.mina.pojo.param.JoinGameParam;
-import net.netne.mina.pojo.result.CommonResult;
 import net.netne.mina.pojo.result.GamerVO;
 import net.netne.mina.pojo.result.JoinGameResult;
 
@@ -22,13 +22,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 
-public class JoinGameHandler implements IHandler{
+public class JoinGameHandler extends AbstractHandler implements IHandler{
 	
 	private Logger log = LoggerFactory.getLogger(JoinGameHandler.class);
 
 	@Override
-	public CommonResult execute(IoSession session, String params) {
-		CommonResult result = null;
+	public Result execute(IoSession session, String params) {
+		Result result = null;
 		try{
 			JoinGameParam joinGameParam = JSONObject
 					.parseObject(params, JoinGameParam.class);
@@ -52,10 +52,8 @@ public class JoinGameHandler implements IHandler{
 					gamerVOList.add(gamerVO);
 				}
 				jonGameResult.setGamers(gamerVOList);
-				result = new CommonResult();
-				result.setCode(EEchoCode.SUCCESS.getCode());
-				result.setMsg("成功");
-				result.setContent(jonGameResult);
+				result = Result.getSuccessResult();
+				result.setRe(jonGameResult);
 				gamers.add(newGamer);
 				GamerCache.getInstance().add(gambling.getId(),gamers);
 			}
@@ -63,9 +61,7 @@ public class JoinGameHandler implements IHandler{
 			log.error(e.getMessage(),e);
 		}finally{
 			if(result == null){
-				result = new CommonResult();
-				result.setCode(EEchoCode.ERROR.getCode());
-				result.setMsg("游戏已不可加入");
+				result = new Result(EEchoCode.ERROR.getCode(),"游戏已不可加入");
 				session.close(false);
 			}
 		}

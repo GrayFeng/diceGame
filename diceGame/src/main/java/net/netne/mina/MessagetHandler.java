@@ -23,10 +23,10 @@ import java.util.Map;
 
 import net.netne.common.enums.EActionCode;
 import net.netne.common.enums.EEchoCode;
+import net.netne.common.pojo.Result;
 import net.netne.mina.handler.CreateGamblingHandler;
 import net.netne.mina.handler.IHandler;
 import net.netne.mina.handler.JoinGameHandler;
-import net.netne.mina.pojo.result.CommonResult;
 
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.service.IoHandlerAdapter;
@@ -45,13 +45,13 @@ import com.google.common.collect.Maps;
  * 
  * @author <a href="http://mina.apache.org">Apache MINA Project</a>
  */
-public class EchoProtocolHandler extends IoHandlerAdapter {
+public class MessagetHandler extends IoHandlerAdapter {
 	private final static Logger LOGGER = LoggerFactory
-			.getLogger(EchoProtocolHandler.class);
+			.getLogger(MessagetHandler.class);
 	
 	private Map<Integer,IHandler> handlerMap = Maps.newHashMap();
 
-	public EchoProtocolHandler(){
+	public MessagetHandler(){
 		handlerMap.put(EActionCode.CREATE_GAME.getCode(), new CreateGamblingHandler());
 		handlerMap.put(EActionCode.JOIN_GAME.getCode(), new JoinGameHandler());
 	}
@@ -88,7 +88,7 @@ public class EchoProtocolHandler extends IoHandlerAdapter {
 			throws Exception {
 		try {
 			String params = String.valueOf(message);
-			CommonResult result = execute(session,params);
+			Result result = execute(session,params);
 			session.write(JSON.toJSONString(result));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(),e);
@@ -97,22 +97,20 @@ public class EchoProtocolHandler extends IoHandlerAdapter {
 	}
 	
 	//处理访问请求
-	private CommonResult execute(IoSession session,String params){
-		CommonResult result = null;
+	private Result execute(IoSession session,String params){
+		Result result = null;
 		try {
 			JSONObject jsonObject = JSONObject.parseObject(params);
 			Integer code = jsonObject.getInteger("actionCode");
 			IHandler handler = getActionHandler(code);
 			if(handler != null){
-				result = handler.execute(session, params);
+				result = handler.handle(session, params);
 			}
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage(),e);
+			LOGGER.error(e.getMessage());
 		}finally{
 			if(result == null){
-				result = new CommonResult();
-				result.setCode(EEchoCode.ERROR.getCode());
-				result.setMsg("request error");
+				result = new Result(EEchoCode.ERROR.getCode(),"request error");
 				session.close(false);
 			}
 		}

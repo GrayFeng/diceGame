@@ -5,11 +5,10 @@ import java.util.Random;
 
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
-import net.netne.common.enums.EEchoCode;
+import net.netne.common.pojo.Result;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.param.CreateGamblingParams;
-import net.netne.mina.pojo.result.CommonResult;
 import net.netne.mina.pojo.result.CreateGamblingResult;
 import net.netne.mina.utils.GamblingKeyCreator;
 
@@ -26,24 +25,22 @@ import com.google.common.collect.Lists;
  * @author Gray(tyfjy823@gmail.com)
  * @version 1.0
  */
-public class CreateGamblingHandler implements IHandler{
+public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 	
 	private Logger log = LoggerFactory.getLogger(CreateGamblingHandler.class);
 
 	@Override
-	public CommonResult execute(IoSession session,String params) {
-		CommonResult result = null;
+	public Result execute(IoSession session,String params) {
+		Result result = null;
 		try{
 			CreateGamblingParams createGamblingParams = JSONObject
 					.parseObject(params, CreateGamblingParams.class);
 			Gambling gambling = create(session,createGamblingParams);
 			if(gambling != null){
-				result = new CommonResult();
+				result = Result.getSuccessResult();
 				CreateGamblingResult createGamblingResult = new CreateGamblingResult();
 				createGamblingResult.setGamblingId(gambling.getId());
-				result.setCode(EEchoCode.SUCCESS.getCode());
-				result.setMsg("成功");
-				result.setContent(createGamblingResult);
+				result.setRe(createGamblingResult);
 			}
 		}catch(Exception e){
 			log.error(e.getMessage(),e);

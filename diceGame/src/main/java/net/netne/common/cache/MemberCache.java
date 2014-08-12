@@ -1,10 +1,11 @@
 package net.netne.common.cache;
 
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-import net.netne.common.pojo.Member;
+import net.netne.common.pojo.LoginInfo;
 
-import com.google.common.collect.Maps;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 /**
  * diceGame
@@ -16,7 +17,9 @@ public class MemberCache {
 	
 	private static MemberCache memberCache = null;
 	
-	private static Map<String,Member> cache = Maps.newHashMap();
+	private static Cache<String, LoginInfo> cache = CacheBuilder.newBuilder()
+			.maximumSize(10000)
+			.expireAfterAccess(2, TimeUnit.DAYS).build(); 
 	
 	private MemberCache(){
 		
@@ -29,21 +32,29 @@ public class MemberCache {
 		return memberCache;
 	}
 	
-	public void add(String uid,Member member){
-		cache.put(uid, member);
+	public void add(String uid,LoginInfo loginInfo){
+		cache.put(uid, loginInfo);
 	}
 	
 	
-	public Member get(String uid){
-		return cache.get(uid);
+	public LoginInfo get(String uid){
+		return cache.getIfPresent(uid);
 	}
 	
 	public void remove(String uid){
-		cache.remove(uid);
+		cache.invalidate(uid);
 	}
 	
 	public boolean isHave(String uid){
-		return cache.containsKey(uid);
+		return cache.asMap().containsKey(uid);
+	}
+	
+	public boolean isLogin(String uid){
+		LoginInfo loginInfo = get(uid);
+		if(loginInfo != null && loginInfo.getMember() != null){
+			return true;
+		}
+		return false;
 	}
 	
 }

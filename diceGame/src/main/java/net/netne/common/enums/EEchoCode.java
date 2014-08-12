@@ -8,6 +8,11 @@ public enum EEchoCode {
 			return "200";
 		}
 	},
+	NOT_LOGIN{
+		public String getCode(){
+			return "201";
+		}
+	},
 	MISSING{
 		public String getCode(){
 			return "204";

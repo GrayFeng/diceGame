@@ -66,7 +66,7 @@ public class Launcher {
         addLogger(chain);
 
         // Bind
-        acceptor.setHandler(new EchoProtocolHandler());
+        acceptor.setHandler(new MessagetHandler());
         acceptor.bind(new InetSocketAddress(PORT));
         System.out.println("服务器启动...");
     }
