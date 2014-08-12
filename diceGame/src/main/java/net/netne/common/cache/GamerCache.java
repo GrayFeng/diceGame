@@ -20,7 +20,7 @@ public class GamerCache {
 	
 	private static GamerCache gamerCache = null;
 	
-	private static Map<String,List<Gamer>> cache = Maps.newHashMap();
+	private static Map<String,Map<String,Gamer>> cache = Maps.newLinkedHashMap();
 	
 	private GamerCache(){
 		
@@ -34,34 +34,51 @@ public class GamerCache {
 	}
 	
 	public void add(String gamblingId,List<Gamer> gamers){
-		cache.put(gamblingId, gamers);
+		if(gamers != null && gamers.size() > 0){
+			Map<String,Gamer> gamerMap = cache.get(gamblingId);
+			if(gamerMap == null){
+				gamerMap = Maps.newHashMap();
+			}
+			for(Gamer gamer : gamers){
+				gamerMap.put(gamer.getUid(), gamer);
+			}
+			cache.put(gamblingId, gamerMap);
+		}
+		
+	}
+	
+	public void add(String gamblingId,Map<String,Gamer> gamerMap){
+		cache.put(gamblingId, gamerMap);
 	}
 	
 	public void addOne(String gamblingId,Gamer gamer){
 		if(StringUtils.isNotEmpty(gamblingId)){
-			List<Gamer> gamerList = cache.get(gamblingId);
-			if(gamerList == null){
-				gamerList = Lists.newArrayList();
+			Map<String,Gamer> gamerMap = cache.get(gamblingId);
+			if(gamerMap == null){
+				gamerMap = Maps.newHashMap();
 			}
-			gamerList.add(gamer);
-			cache.put(gamblingId, gamerList);
+			gamerMap.put(gamer.getUid(),gamer);
+			cache.put(gamblingId, gamerMap);
 		}
 	}
 	
 	public List<Gamer> getGamers(String gamblingId){
+		Map<String,Gamer> gamerMap = cache.get(gamblingId);
+		if(gamerMap != null){
+			return Lists.newArrayList(gamerMap.values());
+		}
+		return null;
+	}
+	
+	public Map<String,Gamer> getGamerMap(String gamblingId){
 		return cache.get(gamblingId);
 	}
 	
 	public void removeOne(String key,String gamerId){
-		List<Gamer> gamerList = cache.get(key);
-		if(gamerList != null){
-			for(Gamer gamer : gamerList){
-				if(gamer.getUid().equals(gamerId)){
-					gamerList.remove(gamer);
-					break;
-				}
-			}
-			cache.put(key,gamerList);
+		Map<String,Gamer> gamerMap = cache.get(key);
+		if(gamerMap != null){
+			gamerMap.remove(gamerId);
+			cache.put(key,gamerMap);
 		}
 	}
 	

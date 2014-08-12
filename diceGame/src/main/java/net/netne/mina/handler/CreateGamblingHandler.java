@@ -1,10 +1,13 @@
 package net.netne.mina.handler;
 
-import java.util.List;
 import java.util.Random;
 
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
+import net.netne.common.cache.MemberCache;
+import net.netne.common.enums.GameStatus;
+import net.netne.common.enums.GamerStatus;
+import net.netne.common.pojo.LoginInfo;
 import net.netne.common.pojo.Result;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
@@ -17,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Lists;
 
 /**
  * diceGame
@@ -54,7 +56,7 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 		Random random = new Random();
 		gambling.setBoardNo(random.nextInt(100)+"");
 		gambling.setGamerNum(createGamblingParams.getGamerNum());
-		gambling.setStatus(0);
+		gambling.setStatus(GameStatus.WAIT.getCode());
 		gambling.setGamerNum(1);
 		gambling.setMaxGamerNum(createGamblingParams.getGamerNum());
 		GamblingCache.getInstance().add(gambling);
@@ -63,13 +65,15 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 	}
 	
 	private void addGamer(IoSession session,Gambling gambling,CreateGamblingParams createGamblingParams){
+		LoginInfo loginInfo = MemberCache.getInstance().get(createGamblingParams.getUid());
 		Gamer gamer = new Gamer();
 		gamer.setUid(createGamblingParams.getUid());
-		gamer.setGamestatus(0);
+		gamer.setId(loginInfo.getMember().getId());
+		gamer.setGamestatus(GamerStatus.NEW_JOIN.getCode());
+		gamer.setName(loginInfo.getMember().getName());
+		gamer.setSex(String.valueOf(loginInfo.getMember().getSex()));
 		gamer.setSession(session);
-		List<Gamer> gamers = Lists.newArrayList();
-		gamers.add(gamer);
-		GamerCache.getInstance().add(gambling.getId(), gamers);
+		GamerCache.getInstance().addOne(gambling.getId(), gamer);
 	}
 
 }

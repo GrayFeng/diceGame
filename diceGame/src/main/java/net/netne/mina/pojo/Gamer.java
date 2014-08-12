@@ -22,6 +22,8 @@ public class Gamer {
 	
 	private IoSession session;
 	
+	private Integer id;
+	
 	public IoSession getSession() {
 		return session;
 	}
@@ -61,5 +63,12 @@ public class Gamer {
 	public void setSex(String sex) {
 		this.sex = sex;
 	}
-	
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 }

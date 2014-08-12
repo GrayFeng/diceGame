@@ -13,9 +13,19 @@ public enum EBroadcastCode {
 			return "901";
 		}
 	},
-	GAMER_STATUS_CHANGE{
+	GAMER_READY{
 		public String getCode(){
 			return "902";
+		}
+	},
+	GAMER_UNREADY{
+		public String getCode(){
+			return "903";
+		}
+	},
+	GAMER_QUIT{
+		public String getCode(){
+			return "903";
 		}
 	};
 	

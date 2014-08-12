@@ -27,8 +27,8 @@ import net.netne.common.pojo.Result;
 import net.netne.mina.handler.CreateGamblingHandler;
 import net.netne.mina.handler.IHandler;
 import net.netne.mina.handler.JoinGameHandler;
+import net.netne.mina.handler.Ready2GameHandler;
 
-import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
@@ -40,11 +40,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 
-/**
- * {@link IoHandler} implementation for echo server.
- * 
- * @author <a href="http://mina.apache.org">Apache MINA Project</a>
- */
 public class MessagetHandler extends IoHandlerAdapter {
 	private final static Logger LOGGER = LoggerFactory
 			.getLogger(MessagetHandler.class);
@@ -54,35 +49,9 @@ public class MessagetHandler extends IoHandlerAdapter {
 	public MessagetHandler(){
 		handlerMap.put(EActionCode.CREATE_GAME.getCode(), new CreateGamblingHandler());
 		handlerMap.put(EActionCode.JOIN_GAME.getCode(), new JoinGameHandler());
+		handlerMap.put(EActionCode.GAMER_READY.getCode(), new Ready2GameHandler());
 	}
 	
-	@Override
-	public void sessionCreated(IoSession session) {
-		session.getConfig().setIdleTime(IdleStatus.BOTH_IDLE, 10);
-
-		// We're going to use SSL negotiation notification.
-		session.setAttribute(SslFilter.USE_NOTIFICATION);
-	}
-
-	@Override
-	public void sessionClosed(IoSession session) throws Exception {
-	}
-
-	@Override
-	public void sessionOpened(IoSession session) throws Exception {
-	}
-
-	@Override
-	public void sessionIdle(IoSession session, IdleStatus status) {
-		LOGGER.info("*** IDLE #" + session.getIdleCount(IdleStatus.BOTH_IDLE)
-				+ " ***");
-	}
-
-	@Override
-	public void exceptionCaught(IoSession session, Throwable cause) {
-		session.close(true);
-	}
-
 	@Override
 	public void messageReceived(IoSession session, Object message)
 			throws Exception {
@@ -124,4 +93,31 @@ public class MessagetHandler extends IoHandlerAdapter {
 		}
 		return handlerMap.get(code);
 	}
+	
+	@Override
+	public void sessionCreated(IoSession session) {
+		session.getConfig().setIdleTime(IdleStatus.BOTH_IDLE, 10);
+		// We're going to use SSL negotiation notification.
+		session.setAttribute(SslFilter.USE_NOTIFICATION);
+	}
+
+	@Override
+	public void sessionClosed(IoSession session) throws Exception {
+	}
+
+	@Override
+	public void sessionOpened(IoSession session) throws Exception {
+	}
+
+	@Override
+	public void sessionIdle(IoSession session, IdleStatus status) {
+//		LOGGER.info("*** IDLE #" + session.getIdleCount(IdleStatus.BOTH_IDLE)
+//				+ " ***");
+	}
+
+	@Override
+	public void exceptionCaught(IoSession session, Throwable cause) {
+		session.close(true);
+	}
+
 }

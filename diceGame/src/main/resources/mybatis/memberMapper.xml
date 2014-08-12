@@ -15,6 +15,6 @@
 	 </insert>
 	 
 	 <select id="getMember" resultType="Member" parameterType="String">
-		select name,password,mobile,sex from member where mobile = #{mobile};
+		select id,name,password,mobile,sex from member where mobile = #{mobile};
 	</select>
 </mapper> 
