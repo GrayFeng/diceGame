@@ -2,17 +2,19 @@ package net.netne.mina.handler;
 
 import java.util.List;
 
+import net.netne.api.service.IMemberService;
+import net.netne.common.SpringConstant;
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
 import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EEchoCode;
 import net.netne.common.enums.GamerStatus;
 import net.netne.common.pojo.LoginInfo;
-import net.netne.common.pojo.Result;
 import net.netne.mina.broadcast.BroadcastThreadPool;
 import net.netne.mina.broadcast.NewGamerJoin;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
+import net.netne.mina.pojo.MinaResult;
 import net.netne.mina.pojo.param.JoinGameParam;
 import net.netne.mina.pojo.result.GamerVO;
 import net.netne.mina.pojo.result.JoinGameResult;
@@ -29,8 +31,8 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 	private Logger log = LoggerFactory.getLogger(JoinGameHandler.class);
 
 	@Override
-	public Result execute(IoSession session, String params) {
-		Result result = null;
+	public MinaResult execute(IoSession session, String params) {
+		MinaResult result = null;
 		try{
 			JoinGameParam joinGameParam = JSONObject
 					.parseObject(params, JoinGameParam.class);
@@ -38,24 +40,33 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 			//游戏状态为等待中且人数未满可加入游戏
 			if(gambling != null && gambling.getStatus() == 0 
 					&& gambling.getGamerNum() < gambling.getMaxGamerNum()){
+				IMemberService memberService = SpringConstant.getBean("memberServiceImpl");
 				LoginInfo loginInfo = MemberCache.getInstance().get(joinGameParam.getUid());
 				if(loginInfo != null && loginInfo.getMember() != null){
-					gambling.setGamerNum(gambling.getGamerNum() + 1);
-					GamblingCache.getInstance().add(gambling);
-					//建立新玩家
-					Gamer newGamer = createNewGamer(joinGameParam.getUid(),session,loginInfo);
-					JoinGameResult jonGameResult = new JoinGameResult();
-					List<Gamer> gamers = GamerCache.getInstance().getGamers(gambling.getId());
-					//读取现有玩家信息
-					List<GamerVO> gamerVOList = getOldGamerList(gamers);
-					jonGameResult.setGamers(gamerVOList);
-					result = Result.getSuccessResult();
-					result.setRe(jonGameResult);
-					GamerCache.getInstance().addOne(gambling.getId(),newGamer);
-					//广播通知其他玩家
-					BroadcastThreadPool.execute(new NewGamerJoin(gambling.getId(), newGamer));
+					Integer memberId = loginInfo.getMember().getId();
+					if(memberService.checkScore(memberId, gambling.getScore())){
+						memberService.freezeScore(memberId, gambling.getScore());
+						gambling.setGamerNum(gambling.getGamerNum() + 1);
+						GamblingCache.getInstance().add(gambling);
+						//建立新玩家
+						Gamer newGamer = createNewGamer(joinGameParam.getUid(),session,loginInfo);
+						JoinGameResult jonGameResult = new JoinGameResult();
+						List<Gamer> gamers = GamerCache.getInstance().getGamers(gambling.getId());
+						//读取现有玩家信息
+						List<GamerVO> gamerVOList = getOldGamerList(gamers);
+						jonGameResult.setGamers(gamerVOList);
+						result = MinaResult.getSuccessResult();
+						result.setRe(jonGameResult);
+						GamerCache.getInstance().addOne(gambling.getId(),newGamer);
+						session.setAttribute("gbId", gambling.getId());
+						//广播通知其他玩家
+						BroadcastThreadPool.execute(new NewGamerJoin(gambling.getId(), newGamer));
+					}else{
+						result = new MinaResult(EEchoCode.ERROR.getCode(),"您的积分不足无法加入游戏");
+						session.close(false);
+					}
 				}else{
-					result = new Result(EEchoCode.ERROR.getCode(),"缺少用户信息");
+					result = new MinaResult(EEchoCode.ERROR.getCode(),"缺少用户信息");
 					session.close(false);
 				}
 			}
@@ -63,7 +74,7 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 			log.error(e.getMessage(),e);
 		}finally{
 			if(result == null){
-				result = new Result(EEchoCode.ERROR.getCode(),"游戏已不可加入");
+				result = new MinaResult(EEchoCode.ERROR.getCode(),"游戏已不可加入");
 				session.close(false);
 			}
 		}

@@ -15,5 +15,11 @@ public interface IMemberService {
 	public Member login(String mobile,String password);
 	
 	public Member getMember(String mobile);
+	
+	public void freezeScore(Integer memberId,Integer amount);
+	
+	public void unFreezeScore(Integer memberId, Integer amount);
+	
+	public boolean checkScore(Integer memberId,Integer amount);
 
 }

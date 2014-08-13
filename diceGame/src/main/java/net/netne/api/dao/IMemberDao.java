@@ -1,9 +1,12 @@
 package net.netne.api.dao;
 
-import org.springframework.stereotype.Repository;
+import java.util.Map;
 
 import net.netne.common.annotation.MyBatisRepository;
+import net.netne.common.pojo.Account;
 import net.netne.common.pojo.Member;
+
+import org.springframework.stereotype.Repository;
 
 /**
  * diceGame
@@ -15,8 +18,16 @@ import net.netne.common.pojo.Member;
 @MyBatisRepository
 public interface IMemberDao {
 	
-	public void addMember(Member member);
+	public Integer addMember(Member member);
 	
 	public Member getMember(String mobile);
+	
+	public void addAccount(Account account);
+	
+	public Account getAccount(Integer memberId);
+	
+	public void freezeScore(Map<String,Object> paramMap);
+	
+	public void unFreezeScore(Map<String,Object> paramMap);
 
 }

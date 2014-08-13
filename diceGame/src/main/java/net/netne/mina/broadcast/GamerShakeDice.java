@@ -18,52 +18,49 @@ import com.alibaba.fastjson.JSON;
 
 /**
  * diceGame
- * @date 2014-8-12 下午10:28:32
+ * @date 2014-8-12 下午11:16:43
  * @author Gray(tyfjy823@gmail.com)
  * @version 1.0
  */
-public class checkGameCanBegin implements IBroadcastThread{
-	
+public class GamerShakeDice implements IBroadcastThread{
+
 	private String gamblingId;
-	
+
 	private Gamer gamer;
-	
-	public checkGameCanBegin(String gamblingId,Gamer gamer){
+
+	public GamerShakeDice(String gamblingId, Gamer gamer) {
 		this.gamblingId = gamblingId;
 		this.gamer = gamer;
 	}
 
 	@Override
 	public void run() {
-		isGameCanBegin(gamblingId);
-	}
-	
-	private void isGameCanBegin(String gamblingId){
 		Gambling gambling = GamblingCache.getInstance().get(gamblingId);
 		List<Gamer> gamers = GamerCache.getInstance().getGamers(gamblingId);
 		if(gambling != null && gamers != null){
-			if(GameStatus.WAIT.getCode().equals(gambling.getStatus())){
-				int readyCount = 0;
+			if(GameStatus.START.getCode().equals(gambling.getStatus())){
+				int shookCount = 0;
 				for(Gamer gamer : gamers){
-					if(!GamerStatus.READY.getCode().equals(gamer.getGamestatus())){
+					if(!GamerStatus.SHOOK.getCode().equals(gamer.getGamestatus())){
 						break;
 					}else{
-						readyCount += 1;
+						shookCount += 1;
 					}
 				}
-				if(readyCount == gambling.getMaxGamerNum()){
-					gambling.setStatus(GameStatus.START.getCode());
+				if(shookCount == gambling.getMaxGamerNum()){
+					gambling.setStatus(GameStatus.REPORT_NO.getCode());
 					GamblingCache.getInstance().add(gambling);
-					broadCastGameBegin(gamers);
+					broadCastStartReport(gamers);
 				}else{
-					broadCastGamerReady(gamers);
+					broadCastShakeDice(gamers);
 				}
 			}
+			
 		}
 	}
 	
-	private void broadCastGamerReady(List<Gamer> gamers){
-		BroadcastTO broadcastTO = new BroadcastTO(EBroadcastCode.GAMER_READY.getCode(),"玩家准备");
+	private void broadCastShakeDice(List<Gamer> gamers){
+		BroadcastTO broadcastTO = new BroadcastTO(EBroadcastCode.GAMER_SHOOK.getCode(),"玩家已经摇完");
 		NewGamerJoinTO newGamerJoin = new NewGamerJoinTO();
 		newGamerJoin.setId(gamer.getId());
 		broadcastTO.setContent(newGamerJoin);
@@ -76,9 +73,9 @@ public class checkGameCanBegin implements IBroadcastThread{
 		}
 	}
 	
-	private void broadCastGameBegin(List<Gamer> gamers){
+	private void broadCastStartReport(List<Gamer> gamers){
 		if(gamers != null){
-			BroadcastTO result = new BroadcastTO(EBroadcastCode.GAMER_START.getCode(), "游戏开始");
+			BroadcastTO result = new BroadcastTO(EBroadcastCode.GAMER_START_REPORT.getCode(), "上报点数");
 			for(Gamer mGamer : gamers){
 				IoSession session = mGamer.getSession();
 				if(session.isConnected()){

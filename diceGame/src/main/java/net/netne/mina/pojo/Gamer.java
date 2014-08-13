@@ -24,6 +24,16 @@ public class Gamer {
 	
 	private Integer id;
 	
+	private String dicePoint;
+	
+	public String getDicePoint() {
+		return dicePoint;
+	}
+
+	public void setDicePoint(String dicePoint) {
+		this.dicePoint = dicePoint;
+	}
+
 	public IoSession getSession() {
 		return session;
 	}

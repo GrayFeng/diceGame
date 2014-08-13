@@ -12,9 +12,29 @@ public enum GameStatus {
 			return 0;
 		}
 	},
-	PLAYING{
+	START{
 		public Integer getCode(){
 			return 1;
+		}
+	},
+	SHAKE{
+		public Integer getCode(){
+			return 2;
+		}
+	},
+	REPORT_NO{
+		public Integer getCode(){
+			return 3;
+		}
+	},
+	OVER{
+		public Integer getCode(){
+			return 4;
+		}
+	},
+	CLOSE{
+		public Integer getCode(){
+			return 5;
 		}
 	};
 	

@@ -18,6 +18,8 @@ public class GamblingVO{
 	private Integer gamerNum;
 	//等待-0,开始游戏-1
 	private Integer status;
+	//开局分数
+	private Integer score;
 	
 	public Integer getMaxGamerNum() {
 		return maxGamerNum;
@@ -48,5 +50,11 @@ public class GamblingVO{
 	}
 	public void setGamerNum(Integer gamerNum) {
 		this.gamerNum = gamerNum;
+	}
+	public Integer getScore() {
+		return score;
+	}
+	public void setScore(Integer score) {
+		this.score = score;
 	}
 }

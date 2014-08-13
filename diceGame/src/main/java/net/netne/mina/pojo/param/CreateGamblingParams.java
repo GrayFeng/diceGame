@@ -13,6 +13,15 @@ public class CreateGamblingParams implements IParams{
 	private String uid;
 	//游戏参与人数
 	private Integer gamerNum;
+	//每局积分消耗
+	private Integer score;
+	
+	public Integer getScore() {
+		return score;
+	}
+	public void setScore(Integer score) {
+		this.score = score;
+	}
 	public String getActionCode() {
 		return actionCode;
 	}

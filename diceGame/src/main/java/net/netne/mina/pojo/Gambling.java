@@ -19,6 +19,8 @@ public class Gambling{
 	private Integer gamerNum;
 	//等待-0,开始游戏-1
 	private Integer status;
+	//开局分数
+	private Integer score;
 	//当前参数游戏玩家列表
 	private List<Gamer> gamerList;
 	
@@ -57,5 +59,11 @@ public class Gambling{
 	}
 	public void setGamerList(List<Gamer> gamerList) {
 		this.gamerList = gamerList;
+	}
+	public Integer getScore() {
+		return score;
+	}
+	public void setScore(Integer score) {
+		this.score = score;
 	}
 }

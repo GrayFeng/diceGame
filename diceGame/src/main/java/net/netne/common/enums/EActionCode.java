@@ -31,6 +31,16 @@ public enum EActionCode {
 		public Integer getCode(){
 			return 121;
 		}
+	},
+	GAMER_SHOOK{
+		public Integer getCode(){
+			return 130;
+		}
+	},
+	GAMER_REPORT{
+		public Integer getCode(){
+			return 131;
+		}
 	};
 	
 	abstract public Integer getCode();

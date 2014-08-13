@@ -23,6 +23,16 @@ public class Member {
 	private String mobile;
 	
 	private Integer sex;
+	
+	private Account account;
+	
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
 
 	public Integer getId() {
 		return id;

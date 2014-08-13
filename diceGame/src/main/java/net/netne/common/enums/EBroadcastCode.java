@@ -23,9 +23,19 @@ public enum EBroadcastCode {
 			return "903";
 		}
 	},
+	GAMER_SHOOK{
+		public String getCode(){
+			return "904";
+		}
+	},
+	GAMER_START_REPORT{
+		public String getCode(){
+			return "905";
+		}
+	},
 	GAMER_QUIT{
 		public String getCode(){
-			return "903";
+			return "910";
 		}
 	};
 	

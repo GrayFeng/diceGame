@@ -17,14 +17,19 @@ public enum GamerStatus {
 			return 1;
 		}
 	},
-	PLAYING{
+	SHOOK{
 		public Integer getCode(){
 			return 2;
 		}
 	},
-	QUIT{
+	REPORTED{
 		public Integer getCode(){
 			return 3;
+		}
+	},
+	QUIT{
+		public Integer getCode(){
+			return 4;
 		}
 	};
 	

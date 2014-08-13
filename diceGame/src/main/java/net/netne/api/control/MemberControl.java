@@ -53,6 +53,12 @@ public class MemberControl {
 					loginInfo.setMember(member);
 					MemberCache.getInstance().add(uid, loginInfo);
 					result = Result.getSuccessResult();
+					Map<String,Object> memberInfo = Maps.newHashMap();
+					memberInfo.put("mobile", member.getMobile());
+					memberInfo.put("sex",member.getSex() == null || member.getSex() == 1 ? "男" : "女");
+					memberInfo.put("name", member.getName());
+					memberInfo.put("scoreAmount", 500);
+					result.setRe(memberInfo);
 				}
 			}
 		}catch (Exception e) {
@@ -93,6 +99,15 @@ public class MemberControl {
 							memberInfo.put("mobile", member.getMobile());
 							memberInfo.put("sex",member.getSex() == null || member.getSex() == 1 ? "男" : "女");
 							memberInfo.put("name", member.getName());
+							long scoreAmount = 0;
+							if(member.getAccount() != null){
+								long realScore = member.getAccount().getScoreAmount() 
+										- member.getAccount().getFreezeAmount();
+								if(realScore > 0){
+									scoreAmount = realScore;
+								}
+							}
+							memberInfo.put("scoreAmount", scoreAmount);
 							result.setRe(memberInfo);
 						}
 					}

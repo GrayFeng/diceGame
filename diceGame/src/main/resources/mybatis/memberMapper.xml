@@ -3,18 +3,35 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace必须指向Dao接口 -->
 <mapper namespace="net.netne.api.dao.IMemberDao">
-    <!--
-         获取城市信息
-    
-    <select id="getCityList" resultType="City">
-		select id,name from city;
-	</select>
-	 -->
+     <!-- 新增用户 -->
 	 <insert id="addMember" parameterType="Member">
-	 	insert into member (name,password,mobile,sex) values(#{name},#{password},#{mobile},#{sex})
+	 		insert into member (name,password,mobile,sex) values(#{name},#{password},#{mobile},#{sex})
+	 	<selectKey resultType="int" keyProperty="id" order="AFTER">  
+  			SELECT LAST_INSERT_ID() as id
+  		</selectKey>  
 	 </insert>
 	 
+	 <!-- 新增用户账户信息 -->
+	 <insert id="addAccount" parameterType="Account">
+	 	insert into account (member_id,score_amount,freeze_amount,modify_time) values(#{memberId},#{scoreAmount},#{freezeAmount},now())
+	 </insert>
+	 
+	 <!-- 手机号获取用户信息-->
 	 <select id="getMember" resultType="Member" parameterType="String">
 		select id,name,password,mobile,sex from member where mobile = #{mobile};
 	</select>
+	
+	 <!-- 获取用户账户信息-->
+	 <select id="getAccount" resultType="Account" parameterType="int">
+		select score_amount as scoreAmount,freeze_amount as freezeAmount from account where member_id = #{memberId};
+	</select>
+	
+	 <!-- 冻结用户积分 -->
+	 <update id="freezeScore" parameterType="map">
+	     update account set freeze_amount = freeze_amount + #{amount} where member_id = #{memberId};
+	 </update>
+	 
+	  <update id="unFreezeScore" parameterType="map">
+	     update account set freeze_amount = freeze_amount - #{amount} where member_id = #{memberId};
+	 </update>
 </mapper> 

@@ -2,15 +2,18 @@ package net.netne.mina.handler;
 
 import java.util.Random;
 
+import net.netne.api.service.IMemberService;
+import net.netne.common.SpringConstant;
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
 import net.netne.common.cache.MemberCache;
+import net.netne.common.enums.EEchoCode;
 import net.netne.common.enums.GameStatus;
 import net.netne.common.enums.GamerStatus;
 import net.netne.common.pojo.LoginInfo;
-import net.netne.common.pojo.Result;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
+import net.netne.mina.pojo.MinaResult;
 import net.netne.mina.pojo.param.CreateGamblingParams;
 import net.netne.mina.pojo.result.CreateGamblingResult;
 import net.netne.mina.utils.GamblingKeyCreator;
@@ -32,17 +35,36 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 	private Logger log = LoggerFactory.getLogger(CreateGamblingHandler.class);
 
 	@Override
-	public Result execute(IoSession session,String params) {
-		Result result = null;
+	public MinaResult execute(IoSession session,String params) {
+		MinaResult result = null;
 		try{
 			CreateGamblingParams createGamblingParams = JSONObject
 					.parseObject(params, CreateGamblingParams.class);
-			Gambling gambling = create(session,createGamblingParams);
-			if(gambling != null){
-				result = Result.getSuccessResult();
-				CreateGamblingResult createGamblingResult = new CreateGamblingResult();
-				createGamblingResult.setGamblingId(gambling.getId());
-				result.setRe(createGamblingResult);
+			LoginInfo loginInfo = MemberCache.getInstance().get(createGamblingParams.getUid());
+			IMemberService memberService = SpringConstant.getBean("memberServiceImpl");
+			if(createGamblingParams.getScore() != null 
+					&& createGamblingParams.getScore() > 0){
+				//检测用户积分是否满足开局条件
+				if(memberService.checkScore(loginInfo.getMember().getId(), 
+						createGamblingParams.getScore())){
+					memberService.freezeScore(loginInfo.getMember().getId(), 
+							createGamblingParams.getScore());
+					Gambling gambling = create(session,createGamblingParams);
+					if(gambling != null){
+						session.setAttribute("gbId", gambling.getId());
+						result = MinaResult.getSuccessResult();
+						CreateGamblingResult createGamblingResult = new CreateGamblingResult();
+						createGamblingResult.setGamblingId(gambling.getId());
+						createGamblingResult.setBoardNo(gambling.getBoardNo());
+						result.setRe(createGamblingResult);
+					}
+				}else{
+					result = new MinaResult(EEchoCode.ERROR.getCode(),"您的积分不足无法创建游戏");
+					session.close(false);
+				}
+			}else{
+				result = new MinaResult(EEchoCode.ERROR.getCode(),"请设置有效的开局积分数量");
+				session.close(false);
 			}
 		}catch(Exception e){
 			log.error(e.getMessage(),e);
@@ -59,6 +81,7 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 		gambling.setStatus(GameStatus.WAIT.getCode());
 		gambling.setGamerNum(1);
 		gambling.setMaxGamerNum(createGamblingParams.getGamerNum());
+		gambling.setScore(createGamblingParams.getScore());
 		GamblingCache.getInstance().add(gambling);
 		addGamer(session, gambling, createGamblingParams);
 		return gambling;

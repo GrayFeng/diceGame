@@ -23,11 +23,14 @@ import java.util.Map;
 
 import net.netne.common.enums.EActionCode;
 import net.netne.common.enums.EEchoCode;
-import net.netne.common.pojo.Result;
+import net.netne.common.uitls.ResultUtil;
 import net.netne.mina.handler.CreateGamblingHandler;
 import net.netne.mina.handler.IHandler;
 import net.netne.mina.handler.JoinGameHandler;
 import net.netne.mina.handler.Ready2GameHandler;
+import net.netne.mina.handler.SessionClosedHandler;
+import net.netne.mina.handler.ShakeDiceHandler;
+import net.netne.mina.pojo.MinaResult;
 
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
@@ -36,7 +39,6 @@ import org.apache.mina.filter.ssl.SslFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 
@@ -45,11 +47,14 @@ public class MessagetHandler extends IoHandlerAdapter {
 			.getLogger(MessagetHandler.class);
 	
 	private Map<Integer,IHandler> handlerMap = Maps.newHashMap();
+	
+	private IHandler sessionClosedHandler = new SessionClosedHandler();
 
 	public MessagetHandler(){
 		handlerMap.put(EActionCode.CREATE_GAME.getCode(), new CreateGamblingHandler());
 		handlerMap.put(EActionCode.JOIN_GAME.getCode(), new JoinGameHandler());
 		handlerMap.put(EActionCode.GAMER_READY.getCode(), new Ready2GameHandler());
+		handlerMap.put(EActionCode.GAMER_SHOOK.getCode(), new ShakeDiceHandler());
 	}
 	
 	@Override
@@ -57,8 +62,8 @@ public class MessagetHandler extends IoHandlerAdapter {
 			throws Exception {
 		try {
 			String params = String.valueOf(message);
-			Result result = execute(session,params);
-			session.write(JSON.toJSONString(result));
+			MinaResult result = execute(session,params);
+			session.write(ResultUtil.getJsonString(result));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(),e);
 			session.close(true);
@@ -66,20 +71,23 @@ public class MessagetHandler extends IoHandlerAdapter {
 	}
 	
 	//处理访问请求
-	private Result execute(IoSession session,String params){
-		Result result = null;
+	private MinaResult execute(IoSession session,String params){
+		MinaResult result = null;
 		try {
 			JSONObject jsonObject = JSONObject.parseObject(params);
 			Integer code = jsonObject.getInteger("actionCode");
 			IHandler handler = getActionHandler(code);
 			if(handler != null){
 				result = handler.handle(session, params);
+				if(result != null){
+					result.setCode(String.valueOf(code));
+				}
 			}
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}finally{
 			if(result == null){
-				result = new Result(EEchoCode.ERROR.getCode(),"request error");
+				result = new MinaResult(EEchoCode.ERROR.getCode(),"request error");
 				session.close(false);
 			}
 		}
@@ -97,12 +105,12 @@ public class MessagetHandler extends IoHandlerAdapter {
 	@Override
 	public void sessionCreated(IoSession session) {
 		session.getConfig().setIdleTime(IdleStatus.BOTH_IDLE, 10);
-		// We're going to use SSL negotiation notification.
 		session.setAttribute(SslFilter.USE_NOTIFICATION);
 	}
 
 	@Override
 	public void sessionClosed(IoSession session) throws Exception {
+		sessionClosedHandler.execute(session, null);
 	}
 
 	@Override
