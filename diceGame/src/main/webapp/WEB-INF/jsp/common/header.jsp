@@ -7,7 +7,7 @@
 		</a>
 	</div>
 	<div class="col w5 last right bottomlast">
-		<p class="last">欢迎 <span class="strong">Admin,</span> <a href="">退出</a></p>
+		<p class="last">欢迎 <span class="strong">${adminName},</span> <a href="${contextPaht}/gm/logout.do">退出</a></p>
 	</div>
 	<div class="clear"></div>
 </div>

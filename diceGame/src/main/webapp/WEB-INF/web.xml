@@ -45,4 +45,13 @@
   <listener>
     <listener-class>net.netne.init.GameServer</listener-class>
   </listener>
+  <filter>
+    <display-name>LoginFilter</display-name>
+    <filter-name>LoginFilter</filter-name>
+    <filter-class>net.netne.admin.filter.LoginFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>LoginFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
 </web-app>

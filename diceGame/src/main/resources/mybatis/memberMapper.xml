@@ -16,22 +16,32 @@
 	 	insert into account (member_id,score_amount,freeze_amount,modify_time) values(#{memberId},#{scoreAmount},#{freezeAmount},now())
 	 </insert>
 	 
+	 <!-- 修改用户信息 -->
+	 <update id="updateMember" parameterType="map">
+	     update member set name=#{name}, sex=#{sex} where id = #{memberId};
+	 </update>
+	 
+	 <!-- 修改密码 -->
+	 <update id="modifyPassword" parameterType="map">
+	     update member set password=#{password} where id = #{memberId};
+	 </update>
+	 
 	 <!-- 手机号获取用户信息-->
 	 <select id="getMember" resultType="Member" parameterType="String">
 		select id,name,password,mobile,sex from member where mobile = #{mobile};
-	</select>
+	 </select>
 	
 	 <!-- 获取用户账户信息-->
 	 <select id="getAccount" resultType="Account" parameterType="int">
 		select score_amount as scoreAmount,freeze_amount as freezeAmount from account where member_id = #{memberId};
-	</select>
+	 </select>
 	
 	 <!-- 冻结用户积分 -->
 	 <update id="freezeScore" parameterType="map">
 	     update account set freeze_amount = freeze_amount + #{amount} where member_id = #{memberId};
 	 </update>
-	 
-	  <update id="unFreezeScore" parameterType="map">
+	 <!-- 解冻用户积分 -->
+	 <update id="unFreezeScore" parameterType="map">
 	     update account set freeze_amount = freeze_amount - #{amount} where member_id = #{memberId};
 	 </update>
 </mapper> 

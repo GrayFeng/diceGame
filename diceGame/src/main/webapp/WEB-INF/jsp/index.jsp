@@ -20,7 +20,7 @@
 			<div id="desc">
 				<div class="body">
 					<div class="col w10 last bottomlast">
-						<form action="index.html">
+						<form action="#">
 							<p>
 								<label for="username">用户名:</label>
 								<input type="text" name="username" id="username" value="" size="40" class="text" />
@@ -32,8 +32,9 @@
 								<br />
 							</p>
 							<p class="last">
-								<input type="submit" value="Login" class="novisible" />
-								<a href="" class="button form_submit"><small class="icon play"></small><span>登录</span></a>
+								<a href="javascript:void(0)" class="button loginBtn">
+									<small class="icon play"></small><span>登录</span>
+								</a>
 								<br />
 							</p>
 							<div class="clear"></div>
@@ -50,5 +51,32 @@
 	</body>
 	<script src="${staticURL}/js/jquery.js" type="text/javascript"></script>
 	<script src="${staticURL}/js/global.js" type="text/javascript"></script>
-	<script src="${staticURL}/js/modal.js" type="text/javascript"></script>		
+	<script src="${staticURL}/js/modal.js" type="text/javascript"></script>	
+	<script>
+		$(function(){
+			var contextPaht = "${contextPaht}";
+			$(".loginBtn").click(function(){
+				var userName = $.trim($("#username").val());
+				var password = $.trim($("#password").val());
+				if(userName && password){
+					 $.ajax({
+					        url: contextPaht + "/gm/login.do",
+					        data:{userName:userName,password:password},
+					        type: "post",
+					        cache: false,
+					        dataType:"json",
+					        success: function(data) {
+					          if(data.status == 200){
+					        	  window.location.href = contextPaht + "/gm/user/list.do";
+					          }else{
+					        	  alert("用户名或密码错误");
+					          }
+					        }
+					    });
+				}else{
+					alert("请输入用户名密码");
+				}
+			});
+		});
+	</script>	
 </html>

@@ -1,6 +1,7 @@
 package net.netne.api.control;
 
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 /**
  * diceGame
  * @date 2014-8-11 下午9:55:06
@@ -55,15 +55,13 @@ public class MemberControl {
 					result = Result.getSuccessResult();
 					Map<String,Object> memberInfo = Maps.newHashMap();
 					memberInfo.put("mobile", member.getMobile());
-					memberInfo.put("sex",member.getSex() == null || member.getSex() == 1 ? "男" : "女");
-					memberInfo.put("name", member.getName());
 					memberInfo.put("scoreAmount", 500);
 					result.setRe(memberInfo);
 				}
 			}
 		}catch (Exception e) {
-			if(e.getCause() instanceof MySQLIntegrityConstraintViolationException){
-				result = new Result(EEchoCode.ERROR.getCode(),"昵称或手机号码重复!");
+			if(e.getCause() instanceof SQLIntegrityConstraintViolationException){
+				result = new Result(EEchoCode.ERROR.getCode(),"手机号码重复!");
 				log.error(e.getMessage());
 			}else{
 				log.error(e.getMessage(),e);
@@ -117,10 +115,81 @@ public class MemberControl {
 			log.error(e.getMessage(),e);
 		}finally{
 			if(result == null){
-				result = new Result();
-				result.setStatus(EEchoCode.ERROR.getCode());
-				result.setMsg("手机号或密码错误!");
+				result = new Result(EEchoCode.ERROR.getCode(),"手机号或密码错误!");
 			}
+		}
+		return ResultUtil.getJsonString(result);
+	}
+	
+	@RequestMapping("updateMember")
+	@ResponseBody
+	public String updateMember(String uid,String params){
+		Result result = null;
+		try{
+			if(StringUtils.isNotEmpty(uid) 
+					&& MemberCache.getInstance().isLogin(uid)){
+				LoginInfo loginInfo = MemberCache.getInstance().get(uid);
+				JSONObject jsonObject = JSON.parseObject(params);
+				String name = jsonObject.getString("name");
+				Integer sex = jsonObject.getInteger("sex");
+				if(StringUtils.isEmpty(name)){
+					name = loginInfo.getMember().getName();
+				}
+				if(sex == null){
+					sex = loginInfo.getMember().getSex();
+				}
+				Member member = new Member();
+				member.setId(loginInfo.getMember().getId());
+				member.setSex(sex);
+				member.setName(name);
+				memberService.updateMember(member);
+				loginInfo.getMember().setName(name);
+				loginInfo.getMember().setSex(sex);
+				MemberCache.getInstance().add(uid, loginInfo);
+				result = Result.getSuccessResult();
+			}else{
+				result = new Result(EEchoCode.ERROR.getCode(),"用户尚未登录");
+			}
+		}catch (Exception e) {
+			if(e.getCause() instanceof SQLIntegrityConstraintViolationException){
+				result = new Result(EEchoCode.ERROR.getCode(),"昵称重复!");
+				log.error(e.getMessage());
+			}else{
+				log.error(e.getMessage(),e);
+			}
+		}
+		return ResultUtil.getJsonString(result);
+	}
+	
+	@RequestMapping("modifyPassword")
+	@ResponseBody
+	public String modifyPassword(String uid,String params){
+		Result result = null;
+		try{
+			if(StringUtils.isNotEmpty(uid) 
+					&& MemberCache.getInstance().isLogin(uid)){
+				LoginInfo loginInfo = MemberCache.getInstance().get(uid);
+				JSONObject jsonObject = JSON.parseObject(params);
+				String oldPassword = jsonObject.getString("oldPassword");
+				String newPassword = jsonObject.getString("newPassword");
+				if(StringUtils.isNotEmpty(oldPassword) 
+						&& StringUtils.isNotEmpty(newPassword)){
+					if(oldPassword.equals(loginInfo.getMember().getPassword())){
+						memberService.modifyPassword(loginInfo.getMember().getId(), newPassword);
+						loginInfo.getMember().setPassword(newPassword);
+						MemberCache.getInstance().add(uid, loginInfo);
+						result = Result.getSuccessResult();
+					}else{
+						result = new Result(EEchoCode.ERROR.getCode(),"旧密码不正确");
+					}
+				}else{
+					result = new Result(EEchoCode.ERROR.getCode(),"信息不全无法修改");
+				}
+			}else{
+				result = new Result(EEchoCode.ERROR.getCode(),"用户尚未登录");
+			}
+		}catch (Exception e) {
+			log.error(e.getMessage(),e);
 		}
 		return ResultUtil.getJsonString(result);
 	}

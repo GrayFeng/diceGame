@@ -85,4 +85,21 @@ public class MemberServiceImpl implements IMemberService{
 		}
 	}
 
+	@Override
+	public void updateMember(Member member) {
+		Map<String,Object> paramMap = Maps.newHashMap();
+		paramMap.put("memberId", member.getId());
+		paramMap.put("name", member.getName());
+		paramMap.put("sex", member.getSex());
+		memberDao.updateMember(paramMap);
+	}
+
+	@Override
+	public void modifyPassword(Integer memberId, String password) {
+		Map<String,Object> paramMap = Maps.newHashMap();
+		paramMap.put("memberId", memberId);
+		paramMap.put("password", password);
+		memberDao.modifyPassword(paramMap);
+	}
+
 }

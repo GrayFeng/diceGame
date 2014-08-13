@@ -21,5 +21,9 @@ public interface IMemberService {
 	public void unFreezeScore(Integer memberId, Integer amount);
 	
 	public boolean checkScore(Integer memberId,Integer amount);
+	
+	public void updateMember(Member member);
+
+	public void modifyPassword(Integer memberId,String password);
 
 }
