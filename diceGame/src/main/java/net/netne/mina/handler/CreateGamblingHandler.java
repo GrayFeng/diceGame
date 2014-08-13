@@ -42,8 +42,10 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 					.parseObject(params, CreateGamblingParams.class);
 			LoginInfo loginInfo = MemberCache.getInstance().get(createGamblingParams.getUid());
 			IMemberService memberService = SpringConstant.getBean("memberServiceImpl");
-			if(createGamblingParams.getScore() != null 
-					&& createGamblingParams.getScore() > 0){
+			if(createGamblingParams.getScore() == null){
+				createGamblingParams.setScore(200);
+			}
+			if(createGamblingParams.getScore() > 0){
 				//检测用户积分是否满足开局条件
 				if(memberService.checkScore(loginInfo.getMember().getId(), 
 						createGamblingParams.getScore())){
