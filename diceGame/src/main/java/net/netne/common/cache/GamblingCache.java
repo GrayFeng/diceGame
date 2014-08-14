@@ -3,6 +3,8 @@ package net.netne.common.cache;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import net.netne.mina.pojo.Gambling;
 
 import com.google.common.collect.Lists;
@@ -20,6 +22,8 @@ public class GamblingCache {
 	
 	private static Map<String,Gambling> cache = Maps.newLinkedHashMap();
 	
+	private static Map<String,String> roomNoCache = Maps.newLinkedHashMap();
+	
 	private GamblingCache(){
 		
 	}
@@ -33,10 +37,19 @@ public class GamblingCache {
 	
 	public void add(Gambling gambling){
 		cache.put(gambling.getId(), gambling);
+		roomNoCache.put(gambling.getBoardNo(), gambling.getId());
 	}
 	
 	public Gambling get(String key){
 		return cache.get(key);
+	}
+	
+	public Gambling getByRoomNo(String roomNo){
+		String key = roomNoCache.get(roomNo);
+		if(StringUtils.isNotEmpty(key)){
+			return cache.get(key);
+		}
+		return null;
 	}
 	
 	public List<Gambling> getAll(){
@@ -44,7 +57,10 @@ public class GamblingCache {
 	}
 	
 	public void remove(String key){
-		cache.remove(key);
+		Gambling gambling = cache.remove(key);
+		if(gambling != null){
+			roomNoCache.remove(gambling.getBoardNo());
+		}
 	}
 	
 }
