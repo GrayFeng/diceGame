@@ -50,6 +50,7 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 						GamblingCache.getInstance().add(gambling);
 						//建立新玩家
 						Gamer newGamer = createNewGamer(joinGameParam.getUid(),session,loginInfo);
+						newGamer.setTokenIndex(gambling.getGamerNum() - 1);
 						JoinGameResult jonGameResult = new JoinGameResult();
 						List<Gamer> gamers = GamerCache.getInstance().getGamers(gambling.getId());
 						//读取现有玩家信息
@@ -87,7 +88,7 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 		newGamer.setId(loginInfo.getMember().getId());
 		newGamer.setSession(session);
 		newGamer.setName(loginInfo.getMember().getName());
-		newGamer.setSex(loginInfo.getMember().getSex() + "");
+		newGamer.setSex(loginInfo.getMember().getSex());
 		newGamer.setGamestatus(GamerStatus.NEW_JOIN.getCode());
 		return newGamer;
 	}

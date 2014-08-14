@@ -4,7 +4,7 @@ public class NewGamerJoinTO {
 	
 	private String newGamerName;
 	
-	private String sex;
+	private Integer sex;
 	
 	private Integer id;
 	
@@ -16,11 +16,11 @@ public class NewGamerJoinTO {
 		this.id = id;
 	}
 
-	public String getSex() {
+	public Integer getSex() {
 		return sex;
 	}
 
-	public void setSex(String sex) {
+	public void setSex(Integer sex) {
 		this.sex = sex;
 	}
 

@@ -32,7 +32,7 @@ public class GamerGuessDice implements IBroadcastThread{
 	public GamerGuessDice(String gamblingId, Gamer gamer,Gamer tokenGamer) {
 		this.gamblingId = gamblingId;
 		this.gamer = gamer;
-		this.tokenGamer = gamer;
+		this.tokenGamer = tokenGamer;
 	}
 
 	@Override
@@ -43,11 +43,13 @@ public class GamerGuessDice implements IBroadcastThread{
 			BroadcastTO broadcastTO = new BroadcastTO(EBroadcastCode.GAMER_GUESSED.getCode(),"玩家已经完成竞猜");
 			Map<String,Object> resultMap = Maps.newHashMap();
 			resultMap.put("tokenUserId", tokenGamer.getId());
+			resultMap.put("preUserId", gamer.getId());
+			resultMap.put("preDiceNum", gamer.getGuessDiceNum());
+			resultMap.put("preDicePoint", gamer.getGuessDicePoint());
 			broadcastTO.setContent(resultMap);
 			if(GameStatus.GUESS.getCode().equals(gambling.getStatus())){
 				for(Gamer gamer : gamers){
-					if(!gamer.getId().equals(this.gamer.getId())
-						&&(gamer.getGamestatus() == GamerStatus.GUESSED.getCode() 
+					if((gamer.getGamestatus() == GamerStatus.GUESSED.getCode() 
 							|| gamer.getGamestatus() == GamerStatus.SHOOK.getCode())){
 						gamer.getSession().write(ResultUtil.getJsonString(broadcastTO));
 					}

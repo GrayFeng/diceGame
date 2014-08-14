@@ -15,7 +15,7 @@ public class Gamer {
 	
 	private String name;
 	
-	private String sex;
+	private Integer sex;
 
 	//游戏状态 0-初始加入,1-确认准备、2-游戏中 、3-退出
 	private Integer gamestatus;
@@ -97,11 +97,11 @@ public class Gamer {
 		this.name = name;
 	}
 
-	public String getSex() {
+	public Integer getSex() {
 		return sex;
 	}
 
-	public void setSex(String sex) {
+	public void setSex(Integer sex) {
 		this.sex = sex;
 	}
 

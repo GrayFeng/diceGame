@@ -6,13 +6,13 @@ public class GamerVO {
 	
 	private String name;
 	
-	private String sex;
+	private Integer sex;
 	
-	public String getSex() {
+	public Integer getSex() {
 		return sex;
 	}
 
-	public void setSex(String sex) {
+	public void setSex(Integer sex) {
 		this.sex = sex;
 	}
 

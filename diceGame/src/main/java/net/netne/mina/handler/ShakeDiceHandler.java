@@ -48,7 +48,7 @@ public class ShakeDiceHandler extends AbstractHandler implements IHandler{
 			log.error(e.getMessage(),e);
 		}finally{
 			if(result == null){
-				result = new MinaResult(EEchoCode.ERROR.getCode(),"游戏尚未开始");
+				result = new MinaResult(EEchoCode.ERROR.getCode(),"您已摇过或尚未开始摇骰子");
 			}
 		}
 		return result;

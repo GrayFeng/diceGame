@@ -55,9 +55,10 @@ public class GuessDiceHandler extends AbstractHandler implements IHandler{
 						}
 					}
 					if(GuessEffective){
-						Gamer tokenGamer = getTokenGamer(gambling);
+						Gamer tokenGamer = getTokenGamer(gambling,gamer.getUid());
 						gambling.setDiceNum(guessDiceParam.getDiceNum());
-						gambling.setDicePoint(gambling.getDicePoint());
+						gambling.setDicePoint(guessDiceParam.getDicePoint());
+						gambling.setTokenIndex(tokenGamer.getTokenIndex());
 						GamblingCache.getInstance().add(gambling);
 						gamer.setGamestatus(GamerStatus.GUESSED.getCode());
 						gamer.setGuessDiceNum(guessDiceParam.getDiceNum());
@@ -74,26 +75,23 @@ public class GuessDiceHandler extends AbstractHandler implements IHandler{
 			log.error(e.getMessage(),e);
 		}finally{
 			if(result == null){
-				result = new MinaResult(EEchoCode.ERROR.getCode(),"还没有轮到您进行竞猜");
+				result = new MinaResult(EEchoCode.ERROR.getCode(),"请您等待其他人先完成竞猜");
 			}
 		}
 		return result;
 	}
 	
-	private Gamer getTokenGamer(Gambling gambling){
+	private Gamer getTokenGamer(Gambling gambling,String uid){
 		List<Gamer> gamers = GamerCache.getInstance().getGamers(gambling.getId());
 		Gamer tokenGamer = null;
-		for(int i = 0;i < gamers.size();i++){
-			Gamer gamer = gamers.get(i);
+		for(Gamer gamer : gamers){
 			if(gamer.getGamestatus() == GamerStatus.GUESSED.getCode() 
 					|| gamer.getGamestatus() == GamerStatus.SHOOK.getCode()){
-				if(tokenGamer == null){
+				if(tokenGamer == null 
+						&& !gamer.getUid().equals(uid)){
 					tokenGamer = gamer;
-					gambling.setTokenIndex(i);
-				}
-				if(gambling.getTokenIndex() < (i)){
+				}else if(gambling.getTokenIndex() < gamer.getTokenIndex()){
 					tokenGamer = gamer;
-					gambling.setTokenIndex(i);
 					break;
 				}
 			}

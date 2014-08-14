@@ -87,7 +87,7 @@ public class GamerShakeDice implements IBroadcastThread{
 						&& mGamer.getGamestatus() == GamerStatus.SHOOK.getCode()){
 					if(firstGamerMap == null){
 						firstGamerMap = Maps.newHashMap();
-						firstGamerMap.put("firstGamerId",mGamer.getId());
+						firstGamerMap.put("tokenUserId",mGamer.getId());
 						result.setContent(firstGamerMap);
 						gambling.setTokenIndex(gamers.indexOf(mGamer));
 						gambling.setDiceNum(1);

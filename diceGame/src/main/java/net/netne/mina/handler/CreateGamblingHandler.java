@@ -96,7 +96,8 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 		gamer.setId(loginInfo.getMember().getId());
 		gamer.setGamestatus(GamerStatus.NEW_JOIN.getCode());
 		gamer.setName(loginInfo.getMember().getName());
-		gamer.setSex(String.valueOf(loginInfo.getMember().getSex()));
+		gamer.setSex(loginInfo.getMember().getSex());
+		gamer.setTokenIndex(gambling.getGamerNum() - 1);
 		gamer.setSession(session);
 		GamerCache.getInstance().addOne(gambling.getId(), gamer);
 	}

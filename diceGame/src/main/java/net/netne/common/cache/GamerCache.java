@@ -1,5 +1,6 @@
 package net.netne.common.cache;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class GamerCache {
 	
 	private static GamerCache gamerCache = null;
 	
-	private static Map<String,Map<String,Gamer>> cache = Maps.newLinkedHashMap();
+	private static Map<String,LinkedHashMap<String,Gamer>> cache = Maps.newLinkedHashMap();
 	
 	private GamerCache(){
 		
@@ -35,9 +36,9 @@ public class GamerCache {
 	
 	public void add(String gamblingId,List<Gamer> gamers){
 		if(gamers != null && gamers.size() > 0){
-			Map<String,Gamer> gamerMap = cache.get(gamblingId);
+			LinkedHashMap<String,Gamer> gamerMap = cache.get(gamblingId);
 			if(gamerMap == null){
-				gamerMap = Maps.newHashMap();
+				gamerMap = Maps.newLinkedHashMap();
 			}
 			for(Gamer gamer : gamers){
 				gamerMap.put(gamer.getUid(), gamer);
@@ -47,24 +48,31 @@ public class GamerCache {
 		
 	}
 	
-	public void add(String gamblingId,Map<String,Gamer> gamerMap){
+	public void add(String gamblingId,LinkedHashMap<String,Gamer> gamerMap){
 		cache.put(gamblingId, gamerMap);
 	}
 	
 	public void addOne(String gamblingId,Gamer gamer){
 		if(StringUtils.isNotEmpty(gamblingId)){
-			Map<String,Gamer> gamerMap = cache.get(gamblingId);
+			LinkedHashMap<String,Gamer> gamerMap = cache.get(gamblingId);
 			if(gamerMap == null){
-				gamerMap = Maps.newHashMap();
+				gamerMap = Maps.newLinkedHashMap();
 			}
-			gamer.setTokenIndex(gamerMap.size());
 			gamerMap.put(gamer.getUid(),gamer);
 			cache.put(gamblingId, gamerMap);
 		}
 	}
 	
-	public List<Gamer> getGamers(String gamblingId){
+	public Gamer getOne(String gamblingId,String uid){
 		Map<String,Gamer> gamerMap = cache.get(gamblingId);
+		if(gamerMap != null){
+			return gamerMap.get(uid);
+		}
+		return null;
+	}
+	
+	public List<Gamer> getGamers(String gamblingId){
+		LinkedHashMap<String,Gamer> gamerMap = cache.get(gamblingId);
 		if(gamerMap != null){
 			return Lists.newArrayList(gamerMap.values());
 		}
@@ -76,7 +84,7 @@ public class GamerCache {
 	}
 	
 	public void removeOne(String key,String gamerId){
-		Map<String,Gamer> gamerMap = cache.get(key);
+		LinkedHashMap<String,Gamer> gamerMap = cache.get(key);
 		if(gamerMap != null){
 			gamerMap.remove(gamerId);
 			cache.put(key,gamerMap);

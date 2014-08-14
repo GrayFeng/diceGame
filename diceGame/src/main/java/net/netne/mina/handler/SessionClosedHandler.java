@@ -40,21 +40,29 @@ public class SessionClosedHandler extends AbstractHandler implements IHandler{
 				LoginInfo loginInfo = MemberCache.getInstance().get(uid);
 				List<Gamer> gamers = GamerCache.getInstance().getGamers(gid);
 				if(gambling != null && loginInfo != null){
+					//如果游戏尚未开始则解冻用户本局积分
 					if(gambling.getStatus() == GameStatus.WAIT.getCode()){
 						IMemberService memberService = SpringConstant.getBean("memberServiceImpl");
 						memberService.unFreezeScore(loginInfo.getMember().getId(), gambling.getScore());
 					}else{
 						int offLineGamerCount = 0;
-						Gamer offlineGamer = null;
+						Gamer offlineGamer = GamerCache.getInstance().getOne(gid, uid);
+						//检测当前掉线人数
 						for(Gamer gamer :gamers){
+							//设置掉线用户状态
 							if(uid.equals(gamer.getId())){
-								offlineGamer = gamer;
 								offLineGamerCount += 1;
 								offlineGamer.setGamestatus(GamerStatus.OFF_LINE.getCode());
+								if(gamer.getTokenIndex() == gambling.getTokenIndex() 
+										&& (gamer.getGamestatus() == GamerStatus.SHOOK.getCode() 
+											|| gamer.getGamestatus() == GamerStatus.GUESSED.getCode())){
+									// 如果掉线用户是当前竞猜用户则通知其他玩家
+								}
 							}else if(gamer.getGamestatus() == GamerStatus.OFF_LINE.getCode()){
 								offLineGamerCount += 1;
 							}else if(gamer.getGamestatus() != GamerStatus.OFF_LINE.getCode()){
-								BroadcastTO broadcastTO = new BroadcastTO(EBroadcastCode.GAMER_OFF_LINE.getCode(),"玩家掉线");;
+								//通知其他玩家当前用户掉线
+								BroadcastTO broadcastTO = new BroadcastTO(EBroadcastCode.GAMER_OFF_LINE.getCode(),"玩家掉线");
 								Map<String,Object> resultMap = Maps.newHashMap();
 								resultMap.put("id",offlineGamer.getId());
 								broadcastTO.setContent(resultMap);
@@ -67,6 +75,19 @@ public class SessionClosedHandler extends AbstractHandler implements IHandler{
 							log.error("gamer over,all gamer is offline gid:" + gid);
 						}else{
 							GamerCache.getInstance().addOne(gid,offlineGamer);
+							//如果仅剩一个有效玩家，则自动结束游戏
+							if(offLineGamerCount == gambling.getGamerNum() - 1){
+								BroadcastTO broadcastTO = new BroadcastTO(EBroadcastCode.GAME_OVER.getCode(),"游戏结束");
+								for(Gamer gamer :gamers){
+									if(gamer.getGamestatus() != GamerStatus.OFF_LINE.getCode()){
+										gamer.getSession().write(ResultUtil.getJsonString(broadcastTO));
+										break;
+									}
+								}
+								GamblingCache.getInstance().remove(gid);
+								GamerCache.getInstance().remove(gid);
+								log.error("gamer over,all gamer is offline gid:" + gid);
+							}
 						}
 					}
 				}
