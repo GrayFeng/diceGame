@@ -57,6 +57,7 @@ public class GamerCache {
 			if(gamerMap == null){
 				gamerMap = Maps.newHashMap();
 			}
+			gamer.setTokenIndex(gamerMap.size());
 			gamerMap.put(gamer.getUid(),gamer);
 			cache.put(gamblingId, gamerMap);
 		}

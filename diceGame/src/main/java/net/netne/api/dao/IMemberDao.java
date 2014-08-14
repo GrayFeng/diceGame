@@ -26,10 +26,6 @@ public interface IMemberDao {
 	
 	public Account getAccount(Integer memberId);
 	
-	public void freezeScore(Map<String,Object> paramMap);
-	
-	public void unFreezeScore(Map<String,Object> paramMap);
-	
 	public void updateMember(Map<String,Object> paramMap);
 
 	public void modifyPassword(Map<String,Object> paramMap);

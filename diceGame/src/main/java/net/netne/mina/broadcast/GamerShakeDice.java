@@ -1,6 +1,7 @@
 package net.netne.mina.broadcast;
 
 import java.util.List;
+import java.util.Map;
 
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
@@ -15,6 +16,7 @@ import net.netne.mina.pojo.broadcast.NewGamerJoinTO;
 import org.apache.mina.core.session.IoSession;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
 
 /**
  * diceGame
@@ -48,9 +50,9 @@ public class GamerShakeDice implements IBroadcastThread{
 					}
 				}
 				if(shookCount == gambling.getMaxGamerNum()){
-					gambling.setStatus(GameStatus.REPORT_NO.getCode());
+					gambling.setStatus(GameStatus.GUESS.getCode());
 					GamblingCache.getInstance().add(gambling);
-					broadCastStartReport(gamers);
+					broadCastStartReport(gamers,gambling);
 				}else{
 					broadCastShakeDice(gamers);
 				}
@@ -67,18 +69,31 @@ public class GamerShakeDice implements IBroadcastThread{
 		for (Gamer mGamer : gamers) {
 			IoSession session = mGamer.getSession();
 			if (session.isConnected() 
-					&& !mGamer.getUid().equals(gamer.getUid())) {
+					&& !mGamer.getUid().equals(gamer.getUid())
+					&& (mGamer.getGamestatus() == GamerStatus.SHOOK.getCode() 
+							|| mGamer.getGamestatus() == GamerStatus.READY.getCode())) {
 				session.write(JSON.toJSONString(broadcastTO));
 			}
 		}
 	}
 	
-	private void broadCastStartReport(List<Gamer> gamers){
+	private void broadCastStartReport(List<Gamer> gamers,Gambling gambling){
 		if(gamers != null){
-			BroadcastTO result = new BroadcastTO(EBroadcastCode.GAMER_START_REPORT.getCode(), "上报点数");
+			BroadcastTO result = new BroadcastTO(EBroadcastCode.GAMER_START_GUESS.getCode(), "开始竞猜点数");
+			Map<String,Object> firstGamerMap = null;
 			for(Gamer mGamer : gamers){
 				IoSession session = mGamer.getSession();
-				if(session.isConnected()){
+				if(session.isConnected() 
+						&& mGamer.getGamestatus() == GamerStatus.SHOOK.getCode()){
+					if(firstGamerMap == null){
+						firstGamerMap = Maps.newHashMap();
+						firstGamerMap.put("firstGamerId",mGamer.getId());
+						result.setContent(firstGamerMap);
+						gambling.setTokenIndex(gamers.indexOf(mGamer));
+						gambling.setDiceNum(1);
+						gambling.setDicePoint(1);
+						GamblingCache.getInstance().add(gambling);
+					}
 					session.write(JSON.toJSONString(result));
 				}
 			}

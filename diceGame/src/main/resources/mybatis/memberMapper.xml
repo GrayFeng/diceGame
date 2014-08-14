@@ -35,13 +35,4 @@
 	 <select id="getAccount" resultType="Account" parameterType="int">
 		select score_amount as scoreAmount,freeze_amount as freezeAmount from account where member_id = #{memberId};
 	 </select>
-	
-	 <!-- 冻结用户积分 -->
-	 <update id="freezeScore" parameterType="map">
-	     update account set freeze_amount = freeze_amount + #{amount} where member_id = #{memberId};
-	 </update>
-	 <!-- 解冻用户积分 -->
-	 <update id="unFreezeScore" parameterType="map">
-	     update account set freeze_amount = freeze_amount - #{amount} where member_id = #{memberId};
-	 </update>
 </mapper> 

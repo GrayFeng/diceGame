@@ -25,6 +25,7 @@ import net.netne.common.enums.EActionCode;
 import net.netne.common.enums.EEchoCode;
 import net.netne.common.uitls.ResultUtil;
 import net.netne.mina.handler.CreateGamblingHandler;
+import net.netne.mina.handler.GuessDiceHandler;
 import net.netne.mina.handler.IHandler;
 import net.netne.mina.handler.JoinGameHandler;
 import net.netne.mina.handler.Ready2GameHandler;
@@ -55,6 +56,7 @@ public class MessagetHandler extends IoHandlerAdapter {
 		handlerMap.put(EActionCode.JOIN_GAME.getCode(), new JoinGameHandler());
 		handlerMap.put(EActionCode.GAMER_READY.getCode(), new Ready2GameHandler());
 		handlerMap.put(EActionCode.GAMER_SHOOK.getCode(), new ShakeDiceHandler());
+		handlerMap.put(EActionCode.GAMER_GUESS.getCode(), new GuessDiceHandler());
 	}
 	
 	@Override

@@ -48,6 +48,12 @@ public class MemberControl {
 					&& MemberCache.getInstance().isHave(uid)){
 				Member member = JSON.parseObject(params, Member.class);
 				if(member != null){
+					if(StringUtils.isEmpty(member.getName())){
+						member.setName(null);
+					}
+					if(member.getSex() == null){
+						member.setSex(0);
+					}
 					memberService.addMember(member);
 					LoginInfo loginInfo = new LoginInfo();
 					loginInfo.setMember(member);
@@ -95,7 +101,7 @@ public class MemberControl {
 							result = Result.getSuccessResult();
 							Map<String,Object> memberInfo = Maps.newHashMap();
 							memberInfo.put("mobile", member.getMobile());
-							memberInfo.put("sex",member.getSex() == null || member.getSex() == 1 ? "男" : "女");
+							memberInfo.put("sex",member.getSex());
 							memberInfo.put("name", member.getName());
 							long scoreAmount = 0;
 							if(member.getAccount() != null){

@@ -5,6 +5,7 @@ import java.util.Map;
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
 import net.netne.common.enums.EEchoCode;
+import net.netne.common.enums.GameStatus;
 import net.netne.common.enums.GamerStatus;
 import net.netne.mina.broadcast.BroadcastThreadPool;
 import net.netne.mina.broadcast.checkGameCanBegin;
@@ -30,10 +31,10 @@ public class Ready2GameHandler extends AbstractHandler implements IHandler{
 			Ready2GameParam ready2GameParam = JSONObject
 					.parseObject(params, Ready2GameParam.class);
 			Gambling gambling = GamblingCache.getInstance().get(ready2GameParam.getGamblingId());
-			if(gambling != null && gambling.getStatus() == 0){
+			if(gambling != null && gambling.getStatus() == GameStatus.WAIT.getCode()){
 				Map<String,Gamer> gamers = GamerCache.getInstance().getGamerMap(gambling.getId());
 				Gamer gamer = gamers.get(ready2GameParam.getUid());
-				if(gamer != null && gamer.getGamestatus() == 0){
+				if(gamer != null && gamer.getGamestatus() == GamerStatus.NEW_JOIN.getCode()){
 					gamer.setGamestatus(GamerStatus.READY.getCode());
 					GamerCache.getInstance().addOne(ready2GameParam.getGamblingId(), gamer);
 					result = MinaResult.getSuccessResult();

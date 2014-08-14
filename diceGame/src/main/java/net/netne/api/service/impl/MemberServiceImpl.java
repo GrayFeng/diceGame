@@ -3,6 +3,7 @@ package net.netne.api.service.impl;
 import java.util.Map;
 
 import net.netne.api.dao.IMemberDao;
+import net.netne.api.dao.IScoreDao;
 import net.netne.api.service.IMemberService;
 import net.netne.common.pojo.Account;
 import net.netne.common.pojo.Member;
@@ -23,6 +24,8 @@ import com.google.common.collect.Maps;
 public class MemberServiceImpl implements IMemberService{
 	@Autowired
 	private IMemberDao memberDao;
+	@Autowired
+	private IScoreDao scoreDao;
 
 	@Override
 	@Transactional(readOnly=false,rollbackFor=Throwable.class)
@@ -57,7 +60,7 @@ public class MemberServiceImpl implements IMemberService{
 		Map<String,Object> paramMap = Maps.newHashMap();
 		paramMap.put("memberId", memberId);
 		paramMap.put("amount", amount);
-		memberDao.freezeScore(paramMap);
+		scoreDao.freezeScore(paramMap);
 	}
 
 	@Override
@@ -80,7 +83,7 @@ public class MemberServiceImpl implements IMemberService{
 				Map<String,Object> paramMap = Maps.newHashMap();
 				paramMap.put("memberId", memberId);
 				paramMap.put("amount", amount);
-				memberDao.unFreezeScore(paramMap);
+				scoreDao.unFreezeScore(paramMap);
 			}
 		}
 	}

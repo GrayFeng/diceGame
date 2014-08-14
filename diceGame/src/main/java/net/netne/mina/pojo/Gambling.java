@@ -17,10 +17,35 @@ public class Gambling{
 	private Integer maxGamerNum;
 	//参与人数
 	private Integer gamerNum;
-	//等待-0,开始游戏-1
+	//游戏状态
 	private Integer status;
 	//开局分数
 	private Integer score;
+	//令牌序号
+	private Integer tokenIndex;
+	//当前竞猜个数
+	private Integer diceNum;
+	//当前竞猜点数
+	private Integer dicePoint;
+	
+	public Integer getTokenIndex() {
+		return tokenIndex;
+	}
+	public void setTokenIndex(Integer tokenIndex) {
+		this.tokenIndex = tokenIndex;
+	}
+	public Integer getDiceNum() {
+		return diceNum;
+	}
+	public void setDiceNum(Integer diceNum) {
+		this.diceNum = diceNum;
+	}
+	public Integer getDicePoint() {
+		return dicePoint;
+	}
+	public void setDicePoint(Integer dicePoint) {
+		this.dicePoint = dicePoint;
+	}
 	//当前参数游戏玩家列表
 	private List<Gamer> gamerList;
 	

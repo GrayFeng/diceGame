@@ -22,7 +22,7 @@ public enum GameStatus {
 			return 2;
 		}
 	},
-	REPORT_NO{
+	GUESS{
 		public Integer getCode(){
 			return 3;
 		}

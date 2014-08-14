@@ -37,7 +37,7 @@ public enum EActionCode {
 			return 130;
 		}
 	},
-	GAMER_REPORT{
+	GAMER_GUESS{
 		public Integer getCode(){
 			return 131;
 		}

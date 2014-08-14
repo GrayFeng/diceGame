@@ -28,14 +28,24 @@ public enum EBroadcastCode {
 			return "904";
 		}
 	},
-	GAMER_START_REPORT{
+	GAMER_START_GUESS{
 		public String getCode(){
 			return "905";
 		}
 	},
-	GAMER_QUIT{
+	GAMER_GUESSED{
+		public String getCode(){
+			return "906";
+		}
+	},
+	GAMER_OFF_LINE{
 		public String getCode(){
 			return "910";
+		}
+	},
+	GAMER_QUIT{
+		public String getCode(){
+			return "920";
 		}
 	};
 	

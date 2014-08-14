@@ -26,6 +26,37 @@ public class Gamer {
 	
 	private String dicePoint;
 	
+	//当前竞猜个数
+	private Integer guessDiceNum;
+	//当前竞猜点数
+	private Integer guessDicePoint;
+	//令牌序号
+	private Integer tokenIndex;
+	
+	public Integer getTokenIndex() {
+		return tokenIndex;
+	}
+
+	public void setTokenIndex(Integer tokenIndex) {
+		this.tokenIndex = tokenIndex;
+	}
+
+	public Integer getGuessDiceNum() {
+		return guessDiceNum;
+	}
+
+	public void setGuessDiceNum(Integer guessDiceNum) {
+		this.guessDiceNum = guessDiceNum;
+	}
+
+	public Integer getGuessDicePoint() {
+		return guessDicePoint;
+	}
+
+	public void setGuessDicePoint(Integer guessDicePoint) {
+		this.guessDicePoint = guessDicePoint;
+	}
+
 	public String getDicePoint() {
 		return dicePoint;
 	}

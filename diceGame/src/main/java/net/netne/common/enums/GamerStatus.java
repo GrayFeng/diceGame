@@ -22,14 +22,19 @@ public enum GamerStatus {
 			return 2;
 		}
 	},
-	REPORTED{
+	GUESSED{
 		public Integer getCode(){
 			return 3;
 		}
 	},
+	OFF_LINE{
+		public Integer getCode(){
+			return 5;
+		}
+	},
 	QUIT{
 		public Integer getCode(){
-			return 4;
+			return 6;
 		}
 	};
 	

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="net.netne.api.dao.IScoreDao">
+     
+	 <!-- 冻结用户积分 -->
+	 <update id="freezeScore" parameterType="map">
+	     update account set freeze_amount = freeze_amount + #{amount} where member_id = #{memberId};
+	 </update>
+	 
+	 <!-- 解冻用户积分 -->
+	 <update id="unFreezeScore" parameterType="map">
+	     update account set freeze_amount = freeze_amount - #{amount} where member_id = #{memberId};
+	 </update>
+	 
+	 <!-- 增加用户积分 -->
+	 <update id="addScore" parameterType="map">
+	     update account set score_amount = score_amount + #{amount} where member_id = #{memberId};
+	 </update>
+	 
+</mapper> 

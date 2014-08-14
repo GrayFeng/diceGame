@@ -40,6 +40,8 @@ public class ShakeDiceHandler extends AbstractHandler implements IHandler{
 					GamerCache.getInstance().addOne(shakeDiceParam.getGamblingId(), gamer);
 					result = MinaResult.getSuccessResult();
 					BroadcastThreadPool.execute(new GamerShakeDice(gambling.getId(),gamer));
+				}else{
+					result = new MinaResult(EEchoCode.ERROR.getCode(),"您已经摇过骰子了");
 				}
 			}
 		}catch(Exception e){
