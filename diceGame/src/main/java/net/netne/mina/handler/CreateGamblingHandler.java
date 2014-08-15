@@ -3,7 +3,6 @@ package net.netne.mina.handler;
 import java.util.Random;
 
 import net.netne.api.service.IMemberService;
-import net.netne.common.Constant;
 import net.netne.common.SpringConstant;
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
