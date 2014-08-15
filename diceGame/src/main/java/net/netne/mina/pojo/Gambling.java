@@ -27,7 +27,39 @@ public class Gambling{
 	private Integer diceNum;
 	//当前竞猜点数
 	private Integer dicePoint;
+	//是否为斋
+	private boolean isFast;
+	//庄家ID
+	private String makerId;
+	//最后竞猜用户
+	private String lastGuessGamerId;
+	//当前竞猜用户
+	private String currentGuessGamerId;
 	
+	public String getLastGuessGamerId() {
+		return lastGuessGamerId;
+	}
+	public void setLastGuessGamerId(String lastGuessGamerId) {
+		this.lastGuessGamerId = lastGuessGamerId;
+	}
+	public String getCurrentGuessGamerId() {
+		return currentGuessGamerId;
+	}
+	public void setCurrentGuessGamerId(String currentGuessGamerId) {
+		this.currentGuessGamerId = currentGuessGamerId;
+	}
+	public boolean isFast() {
+		return isFast;
+	}
+	public void setFast(boolean isFast) {
+		this.isFast = isFast;
+	}
+	public String getMakerId() {
+		return makerId;
+	}
+	public void setMakerId(String makerId) {
+		this.makerId = makerId;
+	}
 	public Integer getTokenIndex() {
 		return tokenIndex;
 	}

@@ -42,7 +42,8 @@ public class checkGameCanBegin implements IBroadcastThread{
 		Gambling gambling = GamblingCache.getInstance().get(gamblingId);
 		List<Gamer> gamers = GamerCache.getInstance().getGamers(gamblingId);
 		if(gambling != null && gamers != null){
-			if(GameStatus.WAIT.getCode().equals(gambling.getStatus())){
+			if(GameStatus.WAIT.getCode().equals(gambling.getStatus()) 
+					|| GameStatus.OVER.getCode().equals(gambling.getStatus())){
 				int readyCount = 0;
 				for(Gamer gamer : gamers){
 					if(!GamerStatus.READY.getCode().equals(gamer.getGamestatus())){

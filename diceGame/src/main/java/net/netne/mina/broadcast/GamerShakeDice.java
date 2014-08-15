@@ -90,8 +90,7 @@ public class GamerShakeDice implements IBroadcastThread{
 						firstGamerMap.put("tokenUserId",mGamer.getId());
 						result.setContent(firstGamerMap);
 						gambling.setTokenIndex(gamers.indexOf(mGamer));
-						gambling.setDiceNum(1);
-						gambling.setDicePoint(1);
+						gambling.setCurrentGuessGamerId(gamer.getUid());
 						GamblingCache.getInstance().add(gambling);
 					}
 					session.write(JSON.toJSONString(result));

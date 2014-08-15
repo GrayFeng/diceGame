@@ -23,6 +23,8 @@ public interface IMemberDao {
 	
 	public Member getMember(String mobile);
 	
+	public Member getMemberById(Integer id);
+	
 	public void addAccount(Account account);
 	
 	public Account getAccount(Integer memberId);

@@ -19,4 +19,12 @@
 	     update account set score_amount = score_amount + #{amount} where member_id = #{memberId};
 	 </update>
 	 
+	 <update id="settleScore" parameterType="map">
+	     update account 
+	     set 
+	     	score_amount = score_amount + #{amount},
+	     	freeze_amount = freeze_amount - #{freezeAmount} 
+	     where member_id = #{memberId};
+	 </update>
+	 
 </mapper> 

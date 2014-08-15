@@ -3,6 +3,7 @@ package net.netne.common.cache;
 import java.util.concurrent.TimeUnit;
 
 import net.netne.common.pojo.LoginInfo;
+import net.netne.common.pojo.Member;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -34,6 +35,14 @@ public class MemberCache {
 	
 	public void add(String uid,LoginInfo loginInfo){
 		cache.put(uid, loginInfo);
+	}
+	
+	public void updateMember(String uid,Member member){
+		LoginInfo loginInfo = get(uid);
+		if(loginInfo != null){
+			loginInfo.setMember(member);
+			add(uid, loginInfo);
+		}
 	}
 	
 	

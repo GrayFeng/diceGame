@@ -14,6 +14,7 @@ import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.MinaResult;
 import net.netne.mina.pojo.param.ShakeDiceParam;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,14 +35,18 @@ public class ShakeDiceHandler extends AbstractHandler implements IHandler{
 			if(gambling != null && gambling.getStatus() == GameStatus.START.getCode()){
 				Map<String,Gamer> gamers = GamerCache.getInstance().getGamerMap(gambling.getId());
 				Gamer gamer = gamers.get(shakeDiceParam.getUid());
-				if(gamer != null && gamer.getGamestatus() == GamerStatus.READY.getCode()){
-					gamer.setDicePoint(shakeDiceParam.getDicePoint());
-					gamer.setGamestatus(GamerStatus.SHOOK.getCode());
-					GamerCache.getInstance().addOne(shakeDiceParam.getGamblingId(), gamer);
-					result = MinaResult.getSuccessResult();
-					BroadcastThreadPool.execute(new GamerShakeDice(gambling.getId(),gamer));
+				if(StringUtils.isEmpty(shakeDiceParam.getDicePoint())){
+					result = new MinaResult(EEchoCode.ERROR.getCode(),"骰子无效");
 				}else{
-					result = new MinaResult(EEchoCode.ERROR.getCode(),"您已经摇过骰子了");
+					if(gamer != null && gamer.getGamestatus() == GamerStatus.READY.getCode()){
+						gamer.setDicePoint(shakeDiceParam.getDicePoint());
+						gamer.setGamestatus(GamerStatus.SHOOK.getCode());
+						GamerCache.getInstance().addOne(shakeDiceParam.getGamblingId(), gamer);
+						result = MinaResult.getSuccessResult();
+						BroadcastThreadPool.execute(new GamerShakeDice(gambling.getId(),gamer));
+					}else{
+						result = new MinaResult(EEchoCode.ERROR.getCode(),"您已经摇过骰子了");
+					}
 				}
 			}
 		}catch(Exception e){

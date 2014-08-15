@@ -15,4 +15,6 @@ public interface IScoreDao {
 	public void unFreezeScore(Map<String,Object> paramMap);
 	
 	public void addScore(Map<String,Object> paramMap);
+	
+	public void settleScore(Map<String,Object> paramMap);
 }

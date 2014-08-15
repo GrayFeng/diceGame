@@ -45,7 +45,14 @@ public class GuessDiceHandler extends AbstractHandler implements IHandler{
 					if(guessDiceParam.getDiceNum() != null 
 							&& guessDiceParam.getDicePoint() != null
 							&& guessDiceParam.getDicePoint() <= Constant.MAX_DICE_POINT
-							&& guessDiceParam.getDiceNum() <= Constant.MAX_DICE_NUM){
+							&& guessDiceParam.getDiceNum() <= Constant.MAX_DICE_NUM * gambling.getGamerNum()
+							&& guessDiceParam.getDiceNum() >= gambling.getGamerNum()){
+						//叫点数量与玩家数量一致或叫了点数1，则默认为斋
+						if(!gambling.isFast() 
+								&& (guessDiceParam.getDiceNum() == gambling.getGamerNum() 
+									|| guessDiceParam.getDicePoint() == 1)){
+							gambling.setFast(true);
+						}
 						//如果玩家竞猜个数与当前一致且点数大于当前，则视为有效
 						if(guessDiceParam.getDiceNum() == gambling.getDiceNum() 
 								&& guessDiceParam.getDicePoint() > gambling.getDicePoint()){
@@ -54,8 +61,11 @@ public class GuessDiceHandler extends AbstractHandler implements IHandler{
 							GuessEffective = true;
 						}
 					}
+					// 如果竞猜点数有效
 					if(GuessEffective){
 						Gamer tokenGamer = getTokenGamer(gambling,gamer.getUid());
+						gambling.setLastGuessGamerId(guessDiceParam.getUid());
+						gambling.setCurrentGuessGamerId(tokenGamer.getUid());
 						gambling.setDiceNum(guessDiceParam.getDiceNum());
 						gambling.setDicePoint(guessDiceParam.getDicePoint());
 						gambling.setTokenIndex(tokenGamer.getTokenIndex());

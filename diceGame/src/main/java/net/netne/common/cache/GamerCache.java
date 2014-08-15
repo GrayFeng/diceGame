@@ -71,6 +71,14 @@ public class GamerCache {
 		return null;
 	}
 	
+	public Gamer getPreOne(String gamblingId,Integer index){
+		List<Gamer> gamers = getGamers(gamblingId);
+		if(gamers != null){
+			return gamers.get(index);
+		}
+		return null;
+	}
+	
 	public List<Gamer> getGamers(String gamblingId){
 		LinkedHashMap<String,Gamer> gamerMap = cache.get(gamblingId);
 		if(gamerMap != null){

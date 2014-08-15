@@ -45,12 +45,6 @@ public class MemberServiceImpl implements IMemberService{
 		Member member = getMember(mobile);
 		if(member != null 
 				&& member.getPassword().equals(password)){
-			Account account = memberDao.getAccount(member.getId());
-			MemberPhoto memberPhoto = memberDao.getMemberPhoto(member.getId());
-			member.setAccount(account);
-			if(memberPhoto != null){
-				member.setPhotoUrl(Constant.PHOTO_URL_PATH + member.getId());
-			}
 			return member;
 		}
 		return null;
@@ -58,15 +52,22 @@ public class MemberServiceImpl implements IMemberService{
 
 	@Override
 	public Member getMember(String mobile) {
-		return memberDao.getMember(mobile);
+		Member member = memberDao.getMember(mobile);
+		Account account = memberDao.getAccount(member.getId());
+		MemberPhoto memberPhoto = memberDao.getMemberPhoto(member.getId());
+		member.setAccount(account);
+		if(memberPhoto != null){
+			member.setPhotoUrl(Constant.PHOTO_URL_PATH + member.getId());
+		}
+		return member;
 	}
 
 	@Override
 	public void freezeScore(Integer memberId, Integer amount) {
-		Map<String,Object> paramMap = Maps.newHashMap();
-		paramMap.put("memberId", memberId);
-		paramMap.put("amount", amount);
-		scoreDao.freezeScore(paramMap);
+//		Map<String,Object> paramMap = Maps.newHashMap();
+//		paramMap.put("memberId", memberId);
+//		paramMap.put("amount", amount);
+//		scoreDao.freezeScore(paramMap);
 	}
 
 	@Override
@@ -83,15 +84,15 @@ public class MemberServiceImpl implements IMemberService{
 
 	@Override
 	public void unFreezeScore(Integer memberId, Integer amount) {
-		Account account = memberDao.getAccount(memberId);
-		if(account != null){
-			if(account.getFreezeAmount() >= amount){
-				Map<String,Object> paramMap = Maps.newHashMap();
-				paramMap.put("memberId", memberId);
-				paramMap.put("amount", amount);
-				scoreDao.unFreezeScore(paramMap);
-			}
-		}
+//		Account account = memberDao.getAccount(memberId);
+//		if(account != null){
+//			if(account.getFreezeAmount() >= amount){
+//				Map<String,Object> paramMap = Maps.newHashMap();
+//				paramMap.put("memberId", memberId);
+//				paramMap.put("amount", amount);
+//				scoreDao.unFreezeScore(paramMap);
+//			}
+//		}
 	}
 
 	@Override
@@ -114,6 +115,18 @@ public class MemberServiceImpl implements IMemberService{
 	@Override
 	public MemberPhoto getMemberPhoto(Integer memberId) {
 		return memberDao.getMemberPhoto(memberId);
+	}
+
+	@Override
+	public Member getMemberById(Integer id) {
+		Member member = memberDao.getMemberById(id);
+		Account account = memberDao.getAccount(member.getId());
+		MemberPhoto memberPhoto = memberDao.getMemberPhoto(member.getId());
+		member.setAccount(account);
+		if(memberPhoto != null){
+			member.setPhotoUrl(Constant.PHOTO_URL_PATH + member.getId());
+		}
+		return member;
 	}
 
 }

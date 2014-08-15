@@ -28,6 +28,7 @@ import net.netne.mina.handler.CreateGamblingHandler;
 import net.netne.mina.handler.GuessDiceHandler;
 import net.netne.mina.handler.IHandler;
 import net.netne.mina.handler.JoinGameHandler;
+import net.netne.mina.handler.OpenHandler;
 import net.netne.mina.handler.Ready2GameHandler;
 import net.netne.mina.handler.SessionClosedHandler;
 import net.netne.mina.handler.ShakeDiceHandler;
@@ -57,6 +58,7 @@ public class MessagetHandler extends IoHandlerAdapter {
 		handlerMap.put(EActionCode.GAMER_READY.getCode(), new Ready2GameHandler());
 		handlerMap.put(EActionCode.GAMER_SHOOK.getCode(), new ShakeDiceHandler());
 		handlerMap.put(EActionCode.GAMER_GUESS.getCode(), new GuessDiceHandler());
+		handlerMap.put(EActionCode.GAMER_OPEN.getCode(), new OpenHandler());
 	}
 	
 	@Override

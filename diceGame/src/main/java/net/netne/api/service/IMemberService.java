@@ -17,6 +17,8 @@ public interface IMemberService {
 	
 	public Member getMember(String mobile);
 	
+	public Member getMemberById(Integer id);
+	
 	public void freezeScore(Integer memberId,Integer amount);
 	
 	public void unFreezeScore(Integer memberId, Integer amount);

@@ -31,7 +31,8 @@ public class Ready2GameHandler extends AbstractHandler implements IHandler{
 			Ready2GameParam ready2GameParam = JSONObject
 					.parseObject(params, Ready2GameParam.class);
 			Gambling gambling = GamblingCache.getInstance().get(ready2GameParam.getGamblingId());
-			if(gambling != null && gambling.getStatus() == GameStatus.WAIT.getCode()){
+			if(gambling != null && (gambling.getStatus() == GameStatus.WAIT.getCode() 
+					|| gambling.getStatus() == GameStatus.OVER.getCode())){
 				Map<String,Gamer> gamers = GamerCache.getInstance().getGamerMap(gambling.getId());
 				Gamer gamer = gamers.get(ready2GameParam.getUid());
 				if(gamer != null && gamer.getGamestatus() == GamerStatus.NEW_JOIN.getCode()){

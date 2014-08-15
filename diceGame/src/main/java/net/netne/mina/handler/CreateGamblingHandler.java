@@ -84,6 +84,10 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 		gambling.setGamerNum(1);
 		gambling.setMaxGamerNum(createGamblingParams.getGamerNum());
 		gambling.setScore(createGamblingParams.getScore());
+		gambling.setFast(false);
+		gambling.setMakerId(createGamblingParams.getUid());
+		gambling.setDiceNum(0);
+		gambling.setDicePoint(0);
 		GamblingCache.getInstance().add(gambling);
 		addGamer(session, gambling, createGamblingParams);
 		return gambling;

@@ -3,13 +3,10 @@ package net.netne.mina.handler;
 import java.util.List;
 import java.util.Map;
 
-import net.netne.api.service.IMemberService;
-import net.netne.common.SpringConstant;
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
 import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EBroadcastCode;
-import net.netne.common.enums.GameStatus;
 import net.netne.common.enums.GamerStatus;
 import net.netne.common.pojo.LoginInfo;
 import net.netne.common.uitls.ResultUtil;
@@ -41,10 +38,10 @@ public class SessionClosedHandler extends AbstractHandler implements IHandler{
 				List<Gamer> gamers = GamerCache.getInstance().getGamers(gid);
 				if(gambling != null && loginInfo != null){
 					//如果游戏尚未开始则解冻用户本局积分
-					if(gambling.getStatus() == GameStatus.WAIT.getCode()){
-						IMemberService memberService = SpringConstant.getBean("memberServiceImpl");
-						memberService.unFreezeScore(loginInfo.getMember().getId(), gambling.getScore());
-					}
+//					if(gambling.getStatus() == GameStatus.WAIT.getCode()){
+//						IMemberService memberService = SpringConstant.getBean("memberServiceImpl");
+//						memberService.unFreezeScore(loginInfo.getMember().getId(), gambling.getScore());
+//					}
 					int offLineGamerCount = 0;
 					Gamer offlineGamer = GamerCache.getInstance().getOne(gid, uid);
 					//检测当前掉线人数

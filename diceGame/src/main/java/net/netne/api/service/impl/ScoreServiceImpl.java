@@ -43,5 +43,14 @@ public class ScoreServiceImpl implements IScoreService {
 		}
 		return account;
 	}
+	
+	@Override
+	public void settleScore(Integer amount, Integer freezeAmount,Integer memberId) {
+		Map<String,Object> paramMap = Maps.newHashMap();
+		paramMap.put("amount", amount);
+		paramMap.put("freezeAmount", freezeAmount);
+		paramMap.put("memberId", memberId);
+		scoreDao.settleScore(paramMap);
+	}
 
 }
