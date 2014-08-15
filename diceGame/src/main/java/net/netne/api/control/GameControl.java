@@ -100,8 +100,6 @@ public class GameControl {
 		List<Gambling> roomList = GamblingCache.getInstance().getAll();
 		if(roomList != null && roomList.size() > 0){
 			page.setTotal(roomList.size());
-			System.out.println(page.getStartNum());
-			System.out.println(page.getEndNum());
 			List<Gambling> pageList = Lists.newArrayList(roomList.subList(page.getStartNum() - 1, page.getEndNum()));
 			if(pageList != null && pageList.size() > 0){
 				List<GamblingVO> gamblingVOList = Lists.transform

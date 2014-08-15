@@ -90,6 +90,7 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 		newGamer.setName(loginInfo.getMember().getName());
 		newGamer.setSex(loginInfo.getMember().getSex());
 		newGamer.setGamestatus(GamerStatus.NEW_JOIN.getCode());
+		newGamer.setPhotoUrl(loginInfo.getMember().getPhotoUrl());
 		return newGamer;
 	}
 	
@@ -100,6 +101,7 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 			gamerVO.setId(gamer.getId());
 			gamerVO.setName(gamer.getName());
 			gamerVO.setSex(gamer.getSex());
+			gamerVO.setPhotoUrl(gamer.getPhotoUrl());
 			gamerVOList.add(gamerVO);
 		}
 		return gamerVOList;

@@ -26,6 +26,26 @@ public class Member {
 	
 	private Account account;
 	
+	private MemberPhoto memberPhoto;
+	
+	private String photoUrl;
+	
+	public String getPhotoUrl() {
+		return photoUrl;
+	}
+
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
+	}
+
+	public MemberPhoto getMemberPhoto() {
+		return memberPhoto;
+	}
+
+	public void setMemberPhoto(MemberPhoto memberPhoto) {
+		this.memberPhoto = memberPhoto;
+	}
+
 	public Account getAccount() {
 		return account;
 	}

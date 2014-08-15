@@ -15,7 +15,7 @@ import java.net.Socket;
 public class TestJoin {
 	
 	public static void main(String[] args) {
-		String params = "{'actionCode':'131','diceNum':3,'dicePoint':3,'gamblingId':'gb-dcbf1173-8e68-412b-8780-94b97caadb99','uid':'m-26819831-6039-44c7-8ee9-7289911904af'}";
+		String params = "{'actionCode':'101','diceNum':3,'dicePoint':3,'gamblingId':'gb-d5b9894a-47f9-4836-bddc-c05ad9d209a7','uid':'m-b3c9cda0-100f-484e-a745-6ef9416c9959'}";
 		try{
 			Socket client = new Socket(InetAddress.getByName("127.0.0.1"), 8088);
 			client.setKeepAlive(true);//开启保持活动状态的套接字

@@ -3,6 +3,7 @@ package net.netne.mina.handler;
 import java.util.Random;
 
 import net.netne.api.service.IMemberService;
+import net.netne.common.Constant;
 import net.netne.common.SpringConstant;
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
@@ -98,6 +99,7 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 		gamer.setName(loginInfo.getMember().getName());
 		gamer.setSex(loginInfo.getMember().getSex());
 		gamer.setTokenIndex(gambling.getGamerNum() - 1);
+		gamer.setPhotoUrl(loginInfo.getMember().getPhotoUrl());
 		gamer.setSession(session);
 		GamerCache.getInstance().addOne(gambling.getId(), gamer);
 	}

@@ -35,4 +35,20 @@
 	 <select id="getAccount" resultType="Account" parameterType="int">
 		select score_amount as scoreAmount,freeze_amount as freezeAmount from account where member_id = #{memberId};
 	 </select>
+	 
+	 <!-- 保存用户照片 -->
+	 <insert id="addMemberPhoto" parameterType="MemberPhoto">
+	 		insert into member_photo (member_id,photo) values(#{memberId},#{photo})
+	 </insert>
+	 
+	 <!-- 保存用户照片 -->
+	 <insert id="updateMemberPhoto" parameterType="MemberPhoto">
+	 		update member_photo set photo = #{photo} where member_id = #{memberId}
+	 </insert>
+	 
+	 <!-- 读取用户照片 -->
+	  <select id="getMemberPhoto" parameterType="int" resultType="MemberPhoto">
+	 		select member_id,photo from member_photo where member_id = #{memberId}
+	 </select>
+	 
 </mapper> 

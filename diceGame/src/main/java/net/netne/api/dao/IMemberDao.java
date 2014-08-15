@@ -5,6 +5,7 @@ import java.util.Map;
 import net.netne.common.annotation.MyBatisRepository;
 import net.netne.common.pojo.Account;
 import net.netne.common.pojo.Member;
+import net.netne.common.pojo.MemberPhoto;
 
 import org.springframework.stereotype.Repository;
 
@@ -29,5 +30,11 @@ public interface IMemberDao {
 	public void updateMember(Map<String,Object> paramMap);
 
 	public void modifyPassword(Map<String,Object> paramMap);
+	
+	public void addMemberPhoto(MemberPhoto memberPhoto);
+	
+	public MemberPhoto getMemberPhoto(Integer memberId);
+	
+	public void updateMemberPhoto(MemberPhoto memberPhoto);
 
 }

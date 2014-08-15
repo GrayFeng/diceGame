@@ -103,6 +103,7 @@ public class MemberControl {
 							memberInfo.put("mobile", member.getMobile());
 							memberInfo.put("sex",member.getSex());
 							memberInfo.put("name", member.getName());
+							memberInfo.put("photoUrl",member.getPhotoUrl());
 							long scoreAmount = 0;
 							if(member.getAccount() != null){
 								long realScore = member.getAccount().getScoreAmount() 

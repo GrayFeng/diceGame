@@ -1,6 +1,7 @@
 package net.netne.api.service;
 
 import net.netne.common.pojo.Member;
+import net.netne.common.pojo.MemberPhoto;
 
 /**
  * diceGame
@@ -25,5 +26,7 @@ public interface IMemberService {
 	public void updateMember(Member member);
 
 	public void modifyPassword(Integer memberId,String password);
+	
+	public MemberPhoto getMemberPhoto(Integer memberId);
 
 }

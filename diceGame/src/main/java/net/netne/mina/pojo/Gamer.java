@@ -32,7 +32,17 @@ public class Gamer {
 	private Integer guessDicePoint;
 	//令牌序号
 	private Integer tokenIndex;
+	//头像地址
+	private String photoUrl;
 	
+	public String getPhotoUrl() {
+		return photoUrl;
+	}
+
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
+	}
+
 	public Integer getTokenIndex() {
 		return tokenIndex;
 	}

@@ -5,8 +5,10 @@ import java.util.Map;
 import net.netne.api.dao.IMemberDao;
 import net.netne.api.dao.IScoreDao;
 import net.netne.api.service.IMemberService;
+import net.netne.common.Constant;
 import net.netne.common.pojo.Account;
 import net.netne.common.pojo.Member;
+import net.netne.common.pojo.MemberPhoto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +46,11 @@ public class MemberServiceImpl implements IMemberService{
 		if(member != null 
 				&& member.getPassword().equals(password)){
 			Account account = memberDao.getAccount(member.getId());
+			MemberPhoto memberPhoto = memberDao.getMemberPhoto(member.getId());
 			member.setAccount(account);
+			if(memberPhoto != null){
+				member.setPhotoUrl(Constant.PHOTO_URL_PATH + member.getId());
+			}
 			return member;
 		}
 		return null;
@@ -103,6 +109,11 @@ public class MemberServiceImpl implements IMemberService{
 		paramMap.put("memberId", memberId);
 		paramMap.put("password", password);
 		memberDao.modifyPassword(paramMap);
+	}
+
+	@Override
+	public MemberPhoto getMemberPhoto(Integer memberId) {
+		return memberDao.getMemberPhoto(memberId);
 	}
 
 }
