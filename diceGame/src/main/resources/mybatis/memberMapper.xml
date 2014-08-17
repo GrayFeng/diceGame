@@ -5,7 +5,10 @@
 <mapper namespace="net.netne.api.dao.IMemberDao">
      <!-- 新增用户 -->
 	 <insert id="addMember" parameterType="Member">
-	 		insert into member (name,password,mobile,sex) values(#{name},#{password},#{mobile},#{sex})
+	 		insert into member 
+	 			(name,password,mobile,sex,reg_time,modity_time) 
+	 		values
+	 			(#{name},#{password},#{mobile},#{sex},now(),now())
 	 	<selectKey resultType="int" keyProperty="id" order="AFTER">  
   			SELECT LAST_INSERT_ID() as id
   		</selectKey>  
@@ -18,12 +21,12 @@
 	 
 	 <!-- 修改用户信息 -->
 	 <update id="updateMember" parameterType="map">
-	     update member set name=#{name}, sex=#{sex} where id = #{memberId};
+	     update member set name=#{name}, sex=#{sex},modity_time=now() where id = #{memberId};
 	 </update>
 	 
 	 <!-- 修改密码 -->
 	 <update id="modifyPassword" parameterType="map">
-	     update member set password=#{password} where id = #{memberId};
+	     update member set password=#{password},modity_time=now() where id = #{memberId};
 	 </update>
 	 
 	 <!-- 手机号获取用户信息-->
@@ -34,6 +37,16 @@
 	 <!-- ID获取用户信息-->
 	 <select id="getMemberById" resultType="Member" parameterType="Integer">
 		select id,name,password,mobile,sex from member where id = #{id};
+	 </select>
+	 
+	 <!-- 读取用户记录总数 -->
+	 <select id="getMemberCount" resultType="long">
+	 	select count(id) from member;
+	 </select>
+	 
+	  <!-- 读取用户记录总数 -->
+	 <select id="getMemberList" resultType="Member" parameterType="map">
+	 	select id,name,mobile,sex from member order by id desc limit #{startNum},#{size};
 	 </select>
 	
 	 <!-- 获取用户账户信息-->

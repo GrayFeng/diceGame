@@ -1,5 +1,6 @@
 package net.netne.api.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import net.netne.common.annotation.MyBatisRepository;
@@ -38,5 +39,9 @@ public interface IMemberDao {
 	public MemberPhoto getMemberPhoto(Integer memberId);
 	
 	public void updateMemberPhoto(MemberPhoto memberPhoto);
+	
+	public Long getMemberCount();
+	
+	public List<Member> getMemberList(Map<String,Object> paramMap);
 
 }

@@ -98,7 +98,7 @@ public class Page<T> {
 	}
 
 	public Integer getStartNum() {
-		return (number - 1) * size + 1;
+		return (number - 1) * size;
 	}
 
 	public Integer getEndNum() {

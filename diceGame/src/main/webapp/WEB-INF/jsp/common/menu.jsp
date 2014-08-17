@@ -5,10 +5,10 @@
 	<div id="right"></div>
 	<ul>
 		<li>
-			<a href="main.jsp"><span>用户管理</span></a>
+			<a href="${contextPaht}/gm/user/list.do"><span>用户管理</span></a>
 		</li>
 		<li>
-			<a href="test.jsp"><span>物品管理</span></a>
+			<a href="${contextPaht}/gm/prize/list.do"><span>奖品管理</span></a>
 		</li>
 	</ul>
 	<div class="clear"></div>

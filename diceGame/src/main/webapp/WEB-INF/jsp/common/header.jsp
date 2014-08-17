@@ -3,7 +3,7 @@
 <div id="header">
 	<div class="col w5 bottomlast">
 		<a href="" class="logo">
-			<img src="${staticURL}/images/logo.gif" alt="Logo" />
+			<!--  img src="${staticURL}/images/logo.gif" alt="Logo" />-->
 		</a>
 	</div>
 	<div class="col w5 last right bottomlast">

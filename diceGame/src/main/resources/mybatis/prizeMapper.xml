@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="net.netne.api.dao.IPrizeDao">
+
+	<insert id="addPrize" parameterType="Prize">
+		insert into prize 
+	 		(name,stock,probability,create_time) 
+	 	values
+	 		(#{name},#{stock},#{probability},now())
+	 	<selectKey resultType="int" keyProperty="id" order="AFTER">  
+  			SELECT LAST_INSERT_ID() as id
+  		</selectKey>  
+	</insert>
+     
+	 <update id="modifyPrize" parameterType="Prize">
+	     update prize set 
+	    	 name = #{name},stock = #{stock} ,probability=#{probability},photo=photoData
+	     where id = #{id};
+	 </update>
+	 
+	 <select id="getPrizeById" resultType="Prize" parameterType="Integer">
+		select id,name,probability,stock from prize where id = #{id};
+	 </select>
+	 
+	 <select id="getPrizeList" resultType="Prize" parameterType="map">
+	 	select id,name,probability,stock from prize order by id desc limit #{startNum},#{size};
+	 </select>
+	
+	 <select id="getPrizeCount" resultType="long">
+	 	select count(id) from prize;
+	 </select>
+	 
+</mapper> 

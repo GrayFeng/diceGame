@@ -1,5 +1,7 @@
 package net.netne.common.pojo;
 
+import java.util.Date;
+
 import net.netne.common.annotation.MyBatisRepository;
 
 import org.springframework.stereotype.Repository;
@@ -30,6 +32,36 @@ public class Member {
 	
 	private String photoUrl;
 	
+	private Date regTime;
+	
+	private Date modifyTime;
+	
+	private int status;
+	
+	public Date getRegTime() {
+		return regTime;
+	}
+
+	public void setRegTime(Date regTime) {
+		this.regTime = regTime;
+	}
+
+	public Date getModifyTime() {
+		return modifyTime;
+	}
+
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 	public String getPhotoUrl() {
 		return photoUrl;
 	}

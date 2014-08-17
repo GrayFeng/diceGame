@@ -1,5 +1,6 @@
 package net.netne.api.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import net.netne.api.dao.IMemberDao;
@@ -9,6 +10,7 @@ import net.netne.common.Constant;
 import net.netne.common.pojo.Account;
 import net.netne.common.pojo.Member;
 import net.netne.common.pojo.MemberPhoto;
+import net.netne.common.pojo.Page;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ import com.google.common.collect.Maps;
 public class MemberServiceImpl implements IMemberService{
 	@Autowired
 	private IMemberDao memberDao;
+	@SuppressWarnings("unused")
 	@Autowired
 	private IScoreDao scoreDao;
 
@@ -127,6 +130,29 @@ public class MemberServiceImpl implements IMemberService{
 			member.setPhotoUrl(Constant.PHOTO_URL_PATH + member.getId());
 		}
 		return member;
+	}
+
+	@Override
+	public Page<Member> getMemberList(Integer pageNum) {
+		Page<Member> page = new Page<Member>();
+		if(pageNum == null){
+			pageNum = 1;
+		}
+		Long memberCount = memberDao.getMemberCount();
+		if(memberCount != null && memberCount > 0){
+			page.setTotal(memberCount.intValue());
+			page.setSize(10);
+			if(pageNum > page.getTotalPages()){
+				pageNum = page.getTotalPages();
+			}
+			page.setNumber(pageNum);
+			Map<String,Object> paramMap = Maps.newHashMap();
+			paramMap.put("startNum", page.getStartNum());
+			paramMap.put("size", page.getSize());
+			List<Member> memberList = memberDao.getMemberList(paramMap);
+			page.setContent(memberList);
+		}
+		return page;
 	}
 
 }

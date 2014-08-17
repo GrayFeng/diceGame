@@ -21,7 +21,7 @@
 					<div id="submenu">
 						<div class="modules_left">
 							<div class="module buttons">
-								<a href="${contextPaht}/gm/user/list.do" class="dropdown_button"><span>用户列表</span></a>
+								<a href="${contextPaht}/gm/prize/list.do" class="dropdown_button"><span>奖品列表</span></a>
 							</div>
 						</div>
 						<div class="modules_right"></div>
@@ -35,33 +35,24 @@
 									<table>
 										<tr>
 											<th class="checkbox"><input type="checkbox" name="checkbox" /></th>
-											<th>昵称</th>
-											<th>手机号</th>
-											<th>性别</th>
-											<th>状态</th>
+											<th>名称</th>
+											<th>库存</th>
+											<th>概率</th>
 										</tr>
-										<c:forEach items="${page.content}" var="member">
-											<tr id="id_${member.id}">
+										<c:forEach items="${page.content}" var="prize">
+											<tr id="id_${prize.id}">
 												<td class="checkbox"><input type="checkbox" name="checkbox" /></td>
-												<td>${member.name}</td>
-												<td>${member.mobile}</td>
-												<c:choose>
-													<c:when test="${member.sex == 2}">
-														<td>女</td>
-													</c:when>
-													<c:otherwise>
-														<td>男</td>
-													</c:otherwise>
-												</c:choose>
-											<td>正常</td>
-										</tr>
+												<td>${prize.name}</td>
+												<td>${prize.stock}</td>
+												<td>${prize.probability}%</td>
+											</tr>
 										</c:forEach>
 									</table>
 									<div style="margin-top:10px;">
 										<c:choose>
 											<c:when test="${page.number > 1}">
-												<a href="${contextPaht}/gm/user/list.do?pageNum=1" class="button"><span>首页</span></a>
-												<a style="margin-left: 5px;" href="${contextPaht}/gm/user/list.do?pageNum=${page.number - 1}" class="button"><span>上一页</span></a>
+												<a href="${contextPaht}/gm/prize/list.do?pageNum=1" class="button"><span>首页</span></a>
+												<a style="margin-left: 5px;" href="${contextPaht}/gm/prize/list.do?pageNum=${page.number - 1}" class="button"><span>上一页</span></a>
 											</c:when>
 											<c:otherwise>
 												<a href="javascript:void(0)" class="button"><span>首页</span></a>
@@ -70,8 +61,8 @@
 										</c:choose>
 										<c:choose>
 											<c:when test="${page.number < page.totalPages}">
-												<a style="margin-left: 5px;" href="${contextPaht}/gm/user/list.do?pageNum=${page.number + 1}" class="button"><span>下一页</span></a>
-												<a style="margin-left: 5px;" href="${contextPaht}/gm/user/list.do?pageNum=${page.totalPages}" class="button"><span>尾页</span></a>
+												<a style="margin-left: 5px;" href="${contextPaht}/gm/prize/list.do?pageNum=${page.number + 1}" class="button"><span>下一页</span></a>
+												<a style="margin-left: 5px;" href="${contextPaht}/gm/prize/list.do?pageNum=${page.totalPages}" class="button"><span>尾页</span></a>
 											</c:when>
 											<c:otherwise>
 												<a style="margin-left: 5px;" href="javascript:void(0)" class="button"><span>下一页</span></a>
