@@ -99,20 +99,7 @@ public class MemberControl {
 							loginInfo.setMember(member);
 							MemberCache.getInstance().add(uid, loginInfo);
 							result = Result.getSuccessResult();
-							Map<String,Object> memberInfo = Maps.newHashMap();
-							memberInfo.put("mobile", member.getMobile());
-							memberInfo.put("sex",member.getSex());
-							memberInfo.put("name", member.getName());
-							memberInfo.put("photoUrl",member.getPhotoUrl());
-							long scoreAmount = 0;
-							if(member.getAccount() != null){
-								long realScore = member.getAccount().getScoreAmount() 
-										- member.getAccount().getFreezeAmount();
-								if(realScore > 0){
-									scoreAmount = realScore;
-								}
-							}
-							memberInfo.put("scoreAmount", scoreAmount);
+							Map<String,Object> memberInfo = getMemberMap(member);
 							result.setRe(memberInfo);
 						}
 					}
@@ -164,6 +151,10 @@ public class MemberControl {
 			}else{
 				log.error(e.getMessage(),e);
 			}
+		}finally{
+			if(result == null){
+				result = new Result(EEchoCode.ERROR.getCode(),"系统异常!");
+			}
 		}
 		return ResultUtil.getJsonString(result);
 	}
@@ -197,9 +188,57 @@ public class MemberControl {
 			}
 		}catch (Exception e) {
 			log.error(e.getMessage(),e);
+		}finally{
+			if(result == null){
+				result = new Result(EEchoCode.ERROR.getCode(),"系统异常!");
+			}
 		}
 		return ResultUtil.getJsonString(result);
 	}
+	
+	@RequestMapping("getMemberInfo")
+	@ResponseBody
+	public String modifyPassword(String uid){
+		Result result = null;
+		try{
+			LoginInfo loginInfo = MemberCache.getInstance().get(uid);
+			if(loginInfo != null && loginInfo.getMember() != null){
+				Map<String,Object> memberInfo = getMemberMap(loginInfo.getMember());
+				result = Result.getSuccessResult();
+				result.setRe(memberInfo);
+			}else{
+				result = new Result(EEchoCode.ERROR.getCode(),"用户登录超时!");
+			}
+		}catch(Exception e){
+			log.error(e.getMessage(),e);
+		}finally{
+			if(result == null){
+				result = new Result(EEchoCode.ERROR.getCode(),"系统异常!");
+			}
+		}
+		return ResultUtil.getJsonString(result);
+	}
+	
+	private Map<String,Object> getMemberMap(Member member){
+		Map<String,Object> memberInfo = Maps.newHashMap();
+		if(member != null){
+			memberInfo.put("mobile", member.getMobile());
+			memberInfo.put("sex",member.getSex());
+			memberInfo.put("name", member.getName());
+			memberInfo.put("photoUrl",member.getPhotoUrl());
+			long scoreAmount = 0;
+			if(member.getAccount() != null){
+				long realScore = member.getAccount().getScoreAmount() 
+						- member.getAccount().getFreezeAmount();
+				if(realScore > 0){
+					scoreAmount = realScore;
+				}
+			}
+			memberInfo.put("scoreAmount", scoreAmount);
+		}
+		return memberInfo;
+	}
+	
 	
 	@RequestMapping("start")
 	@ResponseBody

@@ -95,12 +95,15 @@ public class GameControl {
 	
 	private Page<GamblingVO> getPageList(Integer pageNum){
 		Page<GamblingVO> page = new Page<GamblingVO>();
-		page.setNumber(pageNum);
-		page.setSize(20);
 		List<Gambling> roomList = GamblingCache.getInstance().getAll();
 		if(roomList != null && roomList.size() > 0){
+			page.setSize(20);
 			page.setTotal(roomList.size());
-			List<Gambling> pageList = Lists.newArrayList(roomList.subList(page.getStartNum() - 1, page.getEndNum()));
+			if(pageNum != null && pageNum > page.getTotalPages()){
+				pageNum =  page.getTotalPages();
+			}
+			page.setNumber(pageNum);
+			List<Gambling> pageList = Lists.newArrayList(roomList.subList(page.getStartNum(), page.getEndNum()));
 			if(pageList != null && pageList.size() > 0){
 				List<GamblingVO> gamblingVOList = Lists.transform
 						(pageList, new Function<Gambling,GamblingVO>(){

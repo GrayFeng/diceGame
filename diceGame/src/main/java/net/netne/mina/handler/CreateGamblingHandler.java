@@ -1,7 +1,5 @@
 package net.netne.mina.handler;
 
-import java.util.Random;
-
 import net.netne.api.service.IMemberService;
 import net.netne.common.SpringConstant;
 import net.netne.common.cache.GamblingCache;
@@ -33,6 +31,8 @@ import com.alibaba.fastjson.JSONObject;
 public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 	
 	private Logger log = LoggerFactory.getLogger(CreateGamblingHandler.class);
+	
+	private static Integer roomNum = 0;
 
 	@Override
 	public MinaResult execute(IoSession session,String params) {
@@ -44,6 +44,9 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 			IMemberService memberService = SpringConstant.getBean("memberServiceImpl");
 			if(createGamblingParams.getScore() == null){
 				createGamblingParams.setScore(200);
+			}
+			if(createGamblingParams.getGamerNum() == null){
+				createGamblingParams.setGamerNum(5);
 			}
 			if(createGamblingParams.getScore() > 0){
 				//检测用户积分是否满足开局条件
@@ -77,8 +80,7 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 	private Gambling create(IoSession session,CreateGamblingParams createGamblingParams){
 		Gambling gambling = new Gambling();
 		gambling.setId(GamblingKeyCreator.create());
-		Random random = new Random();
-		gambling.setBoardNo(random.nextInt(100)+"");
+		gambling.setBoardNo(getRoomNum().toString());
 		gambling.setGamerNum(createGamblingParams.getGamerNum());
 		gambling.setStatus(GameStatus.WAIT.getCode());
 		gambling.setGamerNum(1);
@@ -105,6 +107,11 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 		gamer.setPhotoUrl(loginInfo.getMember().getPhotoUrl());
 		gamer.setSession(session);
 		GamerCache.getInstance().addOne(gambling.getId(), gamer);
+	}
+	
+	private synchronized Integer getRoomNum(){
+		CreateGamblingHandler.roomNum += 1;
+		return CreateGamblingHandler.roomNum;
 	}
 
 }

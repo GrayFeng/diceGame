@@ -15,7 +15,7 @@ import java.net.Socket;
 public class Test {
 	
 	public static void main(String[] args) {
-		String params = "{'uid':'m-c378aa4c-d3ef-4eb9-bc3f-4889597246ec','actionCode':'100','gamerNum':2,'score':100}";
+		String params = "{'uid':'m-7fd67e8e-8058-40ab-a5ba-bb1bb69c2b7a','actionCode':'100','gamerNum':2,'score':100}";
 		try{
 			Socket client = new Socket(InetAddress.getByName("127.0.0.1"), 8088);
 			client.setKeepAlive(true);//开启保持活动状态的套接字

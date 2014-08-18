@@ -6,7 +6,7 @@
      <!-- 新增用户 -->
 	 <insert id="addMember" parameterType="Member">
 	 		insert into member 
-	 			(name,password,mobile,sex,reg_time,modity_time) 
+	 			(name,password,mobile,sex,reg_time,modify_time) 
 	 		values
 	 			(#{name},#{password},#{mobile},#{sex},now(),now())
 	 	<selectKey resultType="int" keyProperty="id" order="AFTER">  
@@ -21,12 +21,12 @@
 	 
 	 <!-- 修改用户信息 -->
 	 <update id="updateMember" parameterType="map">
-	     update member set name=#{name}, sex=#{sex},modity_time=now() where id = #{memberId};
+	     update member set name=#{name}, sex=#{sex},modify_time=now() where id = #{memberId};
 	 </update>
 	 
 	 <!-- 修改密码 -->
 	 <update id="modifyPassword" parameterType="map">
-	     update member set password=#{password},modity_time=now() where id = #{memberId};
+	     update member set password=#{password},modify_time=now() where id = #{memberId};
 	 </update>
 	 
 	 <!-- 手机号获取用户信息-->

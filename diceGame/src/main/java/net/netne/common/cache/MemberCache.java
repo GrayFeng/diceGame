@@ -55,7 +55,10 @@ public class MemberCache {
 	}
 	
 	public boolean isHave(String uid){
-		return cache.asMap().containsKey(uid);
+		if(get(uid) != null){
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean isLogin(String uid){

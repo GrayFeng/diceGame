@@ -4,6 +4,7 @@
     <param-name>log4jConfigLocation</param-name>
     <param-value>log4j.properties</param-value>
   </context-param>
+  
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>
@@ -11,6 +12,7 @@
 			classpath*:spring/*.xml
 		</param-value>
   </context-param>
+  
   <filter>
     <filter-name>utfEncodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -19,13 +21,38 @@
       <param-value>utf-8</param-value>
     </init-param>
   </filter>
+  
+  <filter>
+    <display-name>commonFilter</display-name>
+    <filter-name>commonFilter</filter-name>
+    <filter-class>net.netne.api.filter.CommonFilter</filter-class>
+  </filter>
+  
+  <filter>
+    <display-name>LoginFilter</display-name>
+    <filter-name>LoginFilter</filter-name>
+    <filter-class>net.netne.admin.filter.LoginFilter</filter-class>
+  </filter>
+  
   <filter-mapping>
     <filter-name>utfEncodingFilter</filter-name>
     <url-pattern>*.do</url-pattern>
   </filter-mapping>
+  
+  <filter-mapping>
+    <filter-name>commonFilter</filter-name>
+    <url-pattern>/api/*</url-pattern>
+  </filter-mapping>
+  
+  <filter-mapping>
+    <filter-name>LoginFilter</filter-name>
+    <url-pattern>/gm/*</url-pattern>
+  </filter-mapping>
+  
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
+  
   <servlet>
     <servlet-name>mvc</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -35,23 +62,18 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
+  
   <servlet-mapping>
     <servlet-name>mvc</servlet-name>
     <url-pattern>*.do</url-pattern>
   </servlet-mapping>
+  
   <welcome-file-list>
     <welcome-file>/jsp/index.jsp</welcome-file>
   </welcome-file-list>
+  
   <listener>
     <listener-class>net.netne.init.GameServer</listener-class>
   </listener>
-  <filter>
-    <display-name>LoginFilter</display-name>
-    <filter-name>LoginFilter</filter-name>
-    <filter-class>net.netne.admin.filter.LoginFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>LoginFilter</filter-name>
-    <url-pattern>*.do</url-pattern>
-  </filter-mapping>
+  
 </web-app>
