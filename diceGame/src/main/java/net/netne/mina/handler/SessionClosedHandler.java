@@ -7,6 +7,7 @@ import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
 import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EBroadcastCode;
+import net.netne.common.enums.GameStatus;
 import net.netne.common.enums.GamerStatus;
 import net.netne.common.pojo.LoginInfo;
 import net.netne.common.uitls.ResultUtil;
@@ -67,13 +68,22 @@ public class SessionClosedHandler extends AbstractHandler implements IHandler{
 						}
 					}
 					if(offLineGamerCount == gambling.getGamerNum()){
-						GamblingCache.getInstance().remove(gid);
+						gambling.setGamerNum(0);
+						gambling.setStatus(GameStatus.WAIT.getCode());
+						gambling.setDiceNum(0);
+						gambling.setDicePoint(0);
+						gambling.setFast(false);
 						GamerCache.getInstance().remove(gid);
 						log.error("gamer over,all gamer is offline gid:" + gid);
 					}else{
-						GamerCache.getInstance().addOne(gid,offlineGamer);
+						GamerCache.getInstance().removeOne(gid,offlineGamer.getUid());
+						gambling.setGamerNum(gambling.getGamerNum() - 1);
 						//如果仅剩一个有效玩家，则自动结束游戏
-						if(offLineGamerCount == gambling.getGamerNum() - 1){
+						if(offLineGamerCount == gambling.getGamerNum()){
+							gambling.setStatus(GameStatus.OVER.getCode());
+							gambling.setDiceNum(0);
+							gambling.setDicePoint(0);
+							gambling.setFast(false);
 							BroadcastTO broadcastTO = new BroadcastTO(EBroadcastCode.GAME_OVER.getCode(),"游戏结束");
 							for(Gamer gamer :gamers){
 								if(gamer.getGamestatus() != GamerStatus.OFF_LINE.getCode()){
@@ -86,6 +96,7 @@ public class SessionClosedHandler extends AbstractHandler implements IHandler{
 							log.error("gamer over,all gamer is offline gid:" + gid);
 						}
 					}
+					GamblingCache.getInstance().add(gambling);
 				}
 			}
 		}catch(Exception e){

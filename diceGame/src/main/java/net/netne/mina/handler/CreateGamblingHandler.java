@@ -48,27 +48,32 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 			if(createGamblingParams.getGamerNum() == null){
 				createGamblingParams.setGamerNum(5);
 			}
-			if(createGamblingParams.getScore() > 0){
-				//检测用户积分是否满足开局条件
-				if(memberService.checkScore(loginInfo.getMember().getId(), 
-						createGamblingParams.getScore())){
-					memberService.freezeScore(loginInfo.getMember().getId(), 
-							createGamblingParams.getScore());
-					Gambling gambling = create(session,createGamblingParams);
-					if(gambling != null){
-						session.setAttribute("gbId", gambling.getId());
-						result = MinaResult.getSuccessResult();
-						CreateGamblingResult createGamblingResult = new CreateGamblingResult();
-						createGamblingResult.setGamblingId(gambling.getId());
-						createGamblingResult.setBoardNo(gambling.getBoardNo());
-						result.setRe(createGamblingResult);
+			if(GamerCache.getInstance().getOne(createGamblingParams.getUid()) == null){
+				if(createGamblingParams.getScore() > 0){
+					//检测用户积分是否满足开局条件
+					if(memberService.checkScore(loginInfo.getMember().getId(), 
+							createGamblingParams.getScore())){
+						memberService.freezeScore(loginInfo.getMember().getId(), 
+								createGamblingParams.getScore());
+						Gambling gambling = create(session,createGamblingParams);
+						if(gambling != null){
+							session.setAttribute("gbId", gambling.getId());
+							result = MinaResult.getSuccessResult();
+							CreateGamblingResult createGamblingResult = new CreateGamblingResult();
+							createGamblingResult.setGamblingId(gambling.getId());
+							createGamblingResult.setBoardNo(gambling.getBoardNo());
+							result.setRe(createGamblingResult);
+						}
+					}else{
+						result = new MinaResult(EEchoCode.ERROR.getCode(),"您的积分不足无法创建游戏");
+						session.close(false);
 					}
 				}else{
-					result = new MinaResult(EEchoCode.ERROR.getCode(),"您的积分不足无法创建游戏");
+					result = new MinaResult(EEchoCode.ERROR.getCode(),"请设置有效的开局积分数量");
 					session.close(false);
 				}
 			}else{
-				result = new MinaResult(EEchoCode.ERROR.getCode(),"请设置有效的开局积分数量");
+				result = new MinaResult(EEchoCode.ERROR.getCode(),"您已经在游戏中，无法继续创建游戏");
 				session.close(false);
 			}
 		}catch(Exception e){
@@ -81,7 +86,6 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 		Gambling gambling = new Gambling();
 		gambling.setId(GamblingKeyCreator.create());
 		gambling.setBoardNo(getRoomNum().toString());
-		gambling.setGamerNum(createGamblingParams.getGamerNum());
 		gambling.setStatus(GameStatus.WAIT.getCode());
 		gambling.setGamerNum(1);
 		gambling.setMaxGamerNum(createGamblingParams.getGamerNum());

@@ -69,7 +69,8 @@ public class MessagetHandler extends IoHandlerAdapter {
 		try {
 			String params = String.valueOf(message);
 			MinaResult result = execute(session,params);
-			session.write(ResultUtil.getJsonString(result));
+			String resultMsg = ResultUtil.getJsonString(result);
+			session.write(resultMsg);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(),e);
 			session.close(true);

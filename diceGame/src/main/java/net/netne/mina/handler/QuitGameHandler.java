@@ -36,8 +36,7 @@ public class QuitGameHandler extends AbstractHandler implements IHandler{
 				if(gamer != null 
 						&& (gamer.getGamestatus() == GamerStatus.NEW_JOIN.getCode() 
 							|| gamer.getGamestatus() == GamerStatus.READY.getCode())){
-					gamer.setGamestatus(GamerStatus.QUIT.getCode());
-					GamerCache.getInstance().addOne(quitGameParam.getGamblingId(), gamer);
+					GamerCache.getInstance().removeOne(gamer.getUid(), quitGameParam.getGamblingId());
 					result = MinaResult.getSuccessResult();
 				}
 			}

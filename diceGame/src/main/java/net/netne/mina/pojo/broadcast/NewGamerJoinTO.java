@@ -8,6 +8,16 @@ public class NewGamerJoinTO {
 	
 	private Integer id;
 	
+	private String photoUrl;
+	
+	public String getPhotoUrl() {
+		return photoUrl;
+	}
+
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
+	}
+
 	public Integer getId() {
 		return id;
 	}
