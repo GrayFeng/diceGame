@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.netne.api.service.IMemberService;
 import net.netne.api.service.IUploadService;
+import net.netne.common.Constant;
 import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EEchoCode;
 import net.netne.common.pojo.ImageUploadResult;
@@ -60,7 +61,7 @@ public class UploadController {
 			if(imageUploadResult.isSuccess()){
 				result = new Result(EEchoCode.SUCCESS.getCode(),"上传成功");
 				Map<String,String> paramMap = Maps.newHashMap();
-				paramMap.put("url", "/api/img.do?key="+loginInfo.getMember().getId());
+				paramMap.put("url", Constant.PHOTO_URL_PATH + loginInfo.getMember().getId());
 				result.setRe(paramMap);
 			}else{
 				result = new Result(EEchoCode.ERROR.getCode(), imageUploadResult.getMsg());
