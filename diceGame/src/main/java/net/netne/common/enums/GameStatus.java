@@ -27,14 +27,19 @@ public enum GameStatus {
 			return 3;
 		}
 	},
-	OVER{
+	OPENING{
 		public Integer getCode(){
 			return 4;
 		}
 	},
-	CLOSE{
+	OVER{
 		public Integer getCode(){
 			return 5;
+		}
+	},
+	CLOSE{
+		public Integer getCode(){
+			return 6;
 		}
 	};
 	

@@ -66,15 +66,12 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 						}
 					}else{
 						result = new MinaResult(EEchoCode.ERROR.getCode(),"您的积分不足无法创建游戏");
-						session.close(false);
 					}
 				}else{
 					result = new MinaResult(EEchoCode.ERROR.getCode(),"请设置有效的开局积分数量");
-					session.close(false);
 				}
 			}else{
 				result = new MinaResult(EEchoCode.ERROR.getCode(),"您已经在游戏中，无法继续创建游戏");
-				session.close(false);
 			}
 		}catch(Exception e){
 			log.error(e.getMessage(),e);

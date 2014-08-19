@@ -3,13 +3,15 @@ package net.netne.mina.handler;
 import java.util.List;
 import java.util.Map;
 
+import net.netne.api.service.IMemberService;
 import net.netne.api.service.IScoreService;
 import net.netne.common.SpringConstant;
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
+import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EEchoCode;
 import net.netne.common.enums.GameStatus;
-import net.netne.common.enums.GamerStatus;
+import net.netne.common.pojo.Member;
 import net.netne.mina.broadcast.BroadcastThreadPool;
 import net.netne.mina.broadcast.OpenIt;
 import net.netne.mina.pojo.Gambling;
@@ -43,9 +45,9 @@ public class OpenHandler extends AbstractHandler implements IHandler{
 				Map<String,Gamer> gamers = GamerCache.getInstance().getGamerMap(gambling.getId());
 				Gamer openGamer = gamers.get(openParam.getUid());
 				Gamer lastGuessGamer = gamers.get(gambling.getLastGuessGamerId());
-				if(openGamer != null && lastGuessGamer != null 
-						&& openGamer.getTokenIndex() == gambling.getTokenIndex()
-						&& lastGuessGamer.getGamestatus() == GamerStatus.GUESSED.getCode()){
+				if(openGamer != null && gambling.getDiceNum() > 0 && gambling.getDicePoint() > 0){
+					gambling.setStatus(GameStatus.OPENING.getCode());
+					GamblingCache.getInstance().add(gambling);
 					Map<String,Integer> diceMap = Maps.newHashMap();
 					List<DiceInfo> diceInfoList = Lists.newArrayList();
 					for(Gamer gamer : gamers.values()){
@@ -73,14 +75,32 @@ public class OpenHandler extends AbstractHandler implements IHandler{
 					}
 					Integer allDiceNum = diceMap.get(String.valueOf(lastGuessGamer.getGuessDicePoint()));
 					allDiceNum = allDiceNum == null ? 0 :allDiceNum;
-					if(!gambling.isFast()){
-						Integer onePointDiceNum = diceMap.get(1);
-						if(onePointDiceNum != null){
-							allDiceNum += onePointDiceNum;
-						}
-					}
 					IScoreService scoreService = SpringConstant.getBean("scoreServiceImpl");
+					IMemberService memberService = SpringConstant.getBean("memberServiceImpl");
 					Integer score = gambling.getScore();
+					result = new MinaResult(EEchoCode.SUCCESS.getCode(),"等待结果!");
+					boolean isLastGamerWin = true;
+					if(lastGuessGamer.getGuessDiceNum() > allDiceNum){
+						isLastGamerWin = false;
+					}
+					for(Gamer gamer : gamers.values()){
+						if(gamer.getId() == lastGuessGamer.getId()){
+							if(isLastGamerWin){
+								scoreService.settleScore(score, 0, gamer.getId());
+							}else{
+								scoreService.settleScore(-score, 0, gamer.getId());
+							}
+						}else{
+							if(isLastGamerWin){
+								scoreService.settleScore(-score, 0, gamer.getId());
+							}else{
+								scoreService.settleScore(score, 0, gamer.getId());
+							}
+						}
+						Member member = memberService.getMemberById(gamer.getId());
+						MemberCache.getInstance().updateMember(gamer.getUid(), member);
+					}
+					BroadcastThreadPool.execute(new OpenIt(gambling.getId(),lastGuessGamer,isLastGamerWin,diceInfoList));
 					gambling.setStatus(GameStatus.OVER.getCode());
 					gambling.setCurrentGuessGamerId(null);
 					gambling.setLastGuessGamerId(null);
@@ -89,25 +109,13 @@ public class OpenHandler extends AbstractHandler implements IHandler{
 					gambling.setFast(false);
 					gambling.setTokenIndex(0);
 					GamblingCache.getInstance().add(gambling);
-					result = new MinaResult(EEchoCode.SUCCESS.getCode(),"等待结果!");
-					if(lastGuessGamer.getGuessDiceNum() > allDiceNum){
-						scoreService.settleScore(-score, 0, lastGuessGamer.getId());
-						scoreService.settleScore(score, 0, openGamer.getId());
-						BroadcastThreadPool.execute(new OpenIt(gambling.getId(),lastGuessGamer,openGamer,diceInfoList));
-					}else{
-						scoreService.settleScore(-score, 0, openGamer.getId());
-						scoreService.settleScore(score, 0, lastGuessGamer.getId());
-						BroadcastThreadPool.execute(new OpenIt(gambling.getId(),openGamer,lastGuessGamer,diceInfoList));
-					}
-				}else{
-					result = new MinaResult(EEchoCode.ERROR.getCode(),"请等待前一位玩家叫骰再开");
 				}
 			}
 		}catch(Exception e){
 			log.error(e.getMessage(),e);
 		}finally{
 			if(result == null){
-				result = new MinaResult(EEchoCode.ERROR.getCode(),"尚未轮到您叫开");
+				result = new MinaResult(EEchoCode.ERROR.getCode(),"还没有玩家竞猜点数，无法开盅");
 			}
 		}
 		return result;

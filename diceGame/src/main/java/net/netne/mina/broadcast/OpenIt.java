@@ -2,14 +2,10 @@ package net.netne.mina.broadcast;
 
 import java.util.List;
 
-import net.netne.api.service.IMemberService;
-import net.netne.common.SpringConstant;
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
-import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EBroadcastCode;
 import net.netne.common.enums.GamerStatus;
-import net.netne.common.pojo.Member;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.broadcast.BroadcastTO;
@@ -31,16 +27,16 @@ public class OpenIt implements IBroadcastThread {
 
 	private String gamblingId;
 
-	private Gamer loser;
+	private Gamer lastGuessGamer;
 	
-	private Gamer winner;
+	private boolean isLastGamerWin;
 	
 	private List<DiceInfo> diceInfoList;
 
-	public OpenIt(String gamblingId, Gamer loser,Gamer winner,List<DiceInfo> diceInfoList) {
+	public OpenIt(String gamblingId, Gamer lastGuessGamer,boolean isLastGamerWin,List<DiceInfo> diceInfoList) {
 		this.gamblingId = gamblingId;
-		this.loser = loser;
-		this.winner = winner;
+		this.lastGuessGamer = lastGuessGamer;
+		this.isLastGamerWin = isLastGamerWin;
 		this.diceInfoList = diceInfoList;
 	}
 
@@ -57,12 +53,18 @@ public class OpenIt implements IBroadcastThread {
 			broadcastTO.setContent(openItTO);
 			for (Gamer mGamer : gamers) {
 				IoSession session = mGamer.getSession();
-				if(mGamer.getUid().equals(winner.getUid())){
-					openItTO.setWin(1);
-				}else if(mGamer.getUid().equals(loser.getUid())){
-					openItTO.setWin(2);
-				}else{
-					openItTO.setWin(0);
+				if(mGamer.getUid().equals(lastGuessGamer.getUid())){
+					if(isLastGamerWin){
+						openItTO.setWin(1);
+					}else{
+						openItTO.setWin(2);
+					}
+				}else {
+					if(!isLastGamerWin){
+						openItTO.setWin(1);
+					}else{
+						openItTO.setWin(2);
+					}
 				}
 				broadcastTO.setContent(openItTO);
 				mGamer.setGamestatus(GamerStatus.NEW_JOIN.getCode());
@@ -72,11 +74,6 @@ public class OpenIt implements IBroadcastThread {
 				}
 			}
 		}
-		IMemberService memberService = SpringConstant.getBean("memberServiceImpl");
-		Member losemMember = memberService.getMemberById(loser.getId());
-		MemberCache.getInstance().updateMember(loser.getUid(), losemMember);
-		Member winMember = memberService.getMemberById(winner.getId());
-		MemberCache.getInstance().updateMember(winner.getUid(), winMember);
 	}
 
 }

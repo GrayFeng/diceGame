@@ -65,15 +65,12 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 							BroadcastThreadPool.execute(new NewGamerJoin(gambling.getId(), newGamer));
 						}else{
 							result = new MinaResult(EEchoCode.ERROR.getCode(),"您的积分不足无法加入游戏");
-							session.close(false);
 						}
 					}else{
 						result = new MinaResult(EEchoCode.ERROR.getCode(),"缺少用户信息");
-						session.close(false);
 					}
 				}else{
 					result = new MinaResult(EEchoCode.ERROR.getCode(),"您已在游戏游戏中");
-					session.close(false);
 				}
 			}
 		}catch(Exception e){
@@ -81,7 +78,6 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 		}finally{
 			if(result == null){
 				result = new MinaResult(EEchoCode.ERROR.getCode(),"人数已满，游戏已不可加入");
-				session.close(false);
 			}
 		}
 		return result;

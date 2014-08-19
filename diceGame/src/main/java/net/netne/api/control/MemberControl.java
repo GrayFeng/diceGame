@@ -121,7 +121,8 @@ public class MemberControl {
 		Result result = null;
 		try{
 			if(StringUtils.isNotEmpty(uid) 
-					&& MemberCache.getInstance().isLogin(uid)){
+					&& MemberCache.getInstance().isLogin(uid)
+					&& StringUtils.isNotEmpty(params)){
 				LoginInfo loginInfo = MemberCache.getInstance().get(uid);
 				JSONObject jsonObject = JSON.parseObject(params);
 				String name = jsonObject.getString("name");
@@ -223,6 +224,7 @@ public class MemberControl {
 		Map<String,Object> memberInfo = Maps.newHashMap();
 		if(member != null){
 			memberInfo.put("mobile", member.getMobile());
+			memberInfo.put("id", member.getId());
 			memberInfo.put("sex",member.getSex());
 			memberInfo.put("name", member.getName());
 			memberInfo.put("photoUrl",member.getPhotoUrl());

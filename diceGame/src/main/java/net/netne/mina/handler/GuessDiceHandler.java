@@ -80,6 +80,9 @@ public class GuessDiceHandler extends AbstractHandler implements IHandler{
 						result = new MinaResult(EEchoCode.ERROR.getCode(),"竞猜点数无效");
 					}
 				}
+			}else if(gambling != null 
+						&& gambling.getStatus() == GameStatus.OPENING.getCode()){
+				result = new MinaResult(EEchoCode.ERROR.getCode(),"其他玩家已叫开，请等待结果！");
 			}
 		}catch(Exception e){
 			log.error(e.getMessage(),e);
