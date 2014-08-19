@@ -8,6 +8,7 @@ import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
 import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EEchoCode;
+import net.netne.common.enums.GameStatus;
 import net.netne.common.enums.GamerStatus;
 import net.netne.common.pojo.LoginInfo;
 import net.netne.mina.broadcast.BroadcastThreadPool;
@@ -38,7 +39,7 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 					.parseObject(params, JoinGameParam.class);
 			Gambling gambling = GamblingCache.getInstance().get(joinGameParam.getGamblingId());
 			//游戏状态为等待中且人数未满可加入游戏
-			if(gambling != null && gambling.getStatus() == 0 
+			if(gambling != null && gambling.getStatus() == GameStatus.WAIT.getCode() 
 					&& gambling.getGamerNum() < gambling.getMaxGamerNum()){
 				if(GamerCache.getInstance().getOne(joinGameParam.getUid()) == null){
 					IMemberService memberService = SpringConstant.getBean("memberServiceImpl");

@@ -6,6 +6,7 @@ import net.netne.common.pojo.Prize;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,6 +29,13 @@ public class PrizeControl {
 		ModelAndView mav = new ModelAndView("prize");
 		Page<Prize> page = prizeService.getPrizeList(pageNum);
 		mav.addObject("page", page);
+		return mav;
+	}
+	
+	@RequestMapping("add")
+	public ModelAndView list(@ModelAttribute Prize prize){
+		ModelAndView mav = new ModelAndView("redirect:/gm/prize/list.do");
+		prizeService.addPrize(prize);
 		return mav;
 	}
 }

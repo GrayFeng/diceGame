@@ -5,8 +5,9 @@ import java.util.Map;
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
 import net.netne.common.enums.EEchoCode;
-import net.netne.common.enums.GameStatus;
-import net.netne.common.enums.GamerStatus;
+import net.netne.mina.broadcast.BroadcastThreadPool;
+import net.netne.mina.broadcast.NewGamerJoin;
+import net.netne.mina.broadcast.QuitGame;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.MinaResult;
@@ -29,15 +30,15 @@ public class QuitGameHandler extends AbstractHandler implements IHandler{
 			QuitGameParam quitGameParam = JSONObject
 					.parseObject(params, QuitGameParam.class);
 			Gambling gambling = GamblingCache.getInstance().get(quitGameParam.getGamblingId());
-			if(gambling != null && (gambling.getStatus() == GameStatus.WAIT.getCode() 
-					|| gambling.getStatus() == GameStatus.OVER.getCode())){
+			if(gambling != null){
 				Map<String,Gamer> gamers = GamerCache.getInstance().getGamerMap(gambling.getId());
 				Gamer gamer = gamers.get(quitGameParam.getUid());
-				if(gamer != null 
-						&& (gamer.getGamestatus() == GamerStatus.NEW_JOIN.getCode() 
-							|| gamer.getGamestatus() == GamerStatus.READY.getCode())){
-					GamerCache.getInstance().removeOne(gamer.getUid(), quitGameParam.getGamblingId());
+				if(gamer != null){
+					gambling.setGamerNum(gambling.getGamerNum() - 1);
+					GamblingCache.getInstance().add(gambling);
+					GamerCache.getInstance().removeOne(quitGameParam.getGamblingId(),gamer.getUid());
 					result = MinaResult.getSuccessResult();
+					BroadcastThreadPool.execute(new QuitGame(gambling.getId(), gamer));
 				}
 			}
 		}catch(Exception e){

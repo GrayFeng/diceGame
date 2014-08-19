@@ -37,7 +37,7 @@
 
     <!-- 扫描basePackage下所有以@MyBatisRepository标识的 接口-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="net.netne"/>
+        <property name="basePackage" value="net.netne.api.dao"/>
         <property name="annotationClass" value="net.netne.common.annotation.MyBatisRepository"/>
     </bean>
 </beans>

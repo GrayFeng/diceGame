@@ -21,7 +21,29 @@
 					<div id="submenu">
 						<div class="modules_left">
 							<div class="module buttons">
-								<a href="${contextPaht}/gm/prize/list.do" class="dropdown_button"><span>奖品列表</span></a>
+								<a href="javascript:void(0)" class="dropdown_button"><span>添加奖品</span></a>
+								<div class="dropdown" style="display: none;">
+									<div class="arrow"></div>
+									<div class="content">
+										<form action="${contextPaht}/gm/prize/add.do" id="addPrize" method="post">
+											<p>
+												<label for="name">奖品名称:</label>
+												<input type="text" class="text w_22" name="name" id="name">
+											</p>
+											<p>
+												<label for="name">库存数量:</label>
+												<input type="text" class="text w_22" name="stock" id="stock">
+											</p>
+											<p>
+												<label for="name">中奖概率:</label>
+												<input type="text" class="text w_22" name="probability" id="probability">
+											</p>
+										</form>
+										<a href="javascript:$('#addPrize').submit()" class="button green right"><small class="icon check"></small><span>保存</span></a>
+										<a class="button red mr right close"><small class="icon cross"></small><span>取消</span></a>
+										<div class="clear"></div>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="modules_right"></div>

@@ -80,7 +80,7 @@ public class SessionClosedHandler extends AbstractHandler implements IHandler{
 						gambling.setGamerNum(gambling.getGamerNum() - 1);
 						//如果仅剩一个有效玩家，则自动结束游戏
 						if(offLineGamerCount == gambling.getGamerNum()){
-							gambling.setStatus(GameStatus.OVER.getCode());
+							gambling.setStatus(GameStatus.WAIT.getCode());
 							gambling.setDiceNum(0);
 							gambling.setDicePoint(0);
 							gambling.setFast(false);
