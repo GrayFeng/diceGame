@@ -6,7 +6,6 @@ import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
 import net.netne.common.enums.EEchoCode;
 import net.netne.mina.broadcast.BroadcastThreadPool;
-import net.netne.mina.broadcast.NewGamerJoin;
 import net.netne.mina.broadcast.QuitGame;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;

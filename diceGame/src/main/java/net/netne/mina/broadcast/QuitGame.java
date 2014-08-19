@@ -6,8 +6,6 @@ import java.util.Map;
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
 import net.netne.common.enums.EBroadcastCode;
-import net.netne.common.enums.GameStatus;
-import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.broadcast.BroadcastTO;
 
@@ -50,15 +48,15 @@ public class QuitGame implements IBroadcastThread {
 				}
 			}
 		}else{
-			Gambling gambling = GamblingCache.getInstance().get(gamblingId);
-			if(gambling != null){
-				gambling.setStatus(GameStatus.WAIT.getCode());
-				gambling.setGamerNum(0);
-				gambling.setFast(false);
-				gambling.setDiceNum(0);
-				gambling.setDicePoint(0);
-				GamblingCache.getInstance().add(gambling);
-			}
+			GamblingCache.getInstance().remove(gamblingId);
+//			if(gambling != null){
+//				gambling.setStatus(GameStatus.WAIT.getCode());
+//				gambling.setGamerNum(0);
+//				gambling.setFast(false);
+//				gambling.setDiceNum(0);
+//				gambling.setDicePoint(0);
+//				GamblingCache.getInstance().add(gambling);
+//			}
 		}
 	}
 

@@ -98,13 +98,15 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 	
 	private List<GamerVO> getOldGamerList(List<Gamer> gamers){
 		List<GamerVO> gamerVOList = Lists.newArrayList();
-		for(Gamer gamer : gamers){
-			GamerVO gamerVO = new GamerVO();
-			gamerVO.setId(gamer.getId());
-			gamerVO.setName(gamer.getName());
-			gamerVO.setSex(gamer.getSex());
-			gamerVO.setPhotoUrl(gamer.getPhotoUrl());
-			gamerVOList.add(gamerVO);
+		if(gamers != null && gamers.size() > 0){
+			for(Gamer gamer : gamers){
+				GamerVO gamerVO = new GamerVO();
+				gamerVO.setId(gamer.getId());
+				gamerVO.setName(gamer.getName());
+				gamerVO.setSex(gamer.getSex());
+				gamerVO.setPhotoUrl(gamer.getPhotoUrl());
+				gamerVOList.add(gamerVO);
+			}
 		}
 		return gamerVOList;
 	}
