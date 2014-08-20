@@ -16,7 +16,7 @@
      
 	 <update id="modifyPrize" parameterType="Prize">
 	     update prize set 
-	    	 name = #{name},stock = #{stock} ,probability=#{probability},photo=photoData
+	    	 name = #{name},stock = #{stock} ,probability=#{probability},photo=#{photoData}
 	     where id = #{id};
 	 </update>
 	 

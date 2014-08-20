@@ -38,4 +38,11 @@ public class PrizeControl {
 		prizeService.addPrize(prize);
 		return mav;
 	}
+	
+	@RequestMapping("modify")
+	public ModelAndView modify(@ModelAttribute Prize prize){
+		ModelAndView mav = new ModelAndView("redirect:/gm/prize/list.do");
+		prizeService.modifyPrize(prize);
+		return mav;
+	}
 }

@@ -33,7 +33,7 @@ public class AdminLoginControl {
 		Result result = null;
 		if(StringUtils.isNotEmpty(password) 
 				&& StringUtils.isNotEmpty(userName)){
-			if("admin".equals(userName) && "admin".equals(password)){
+			if("admin".equals(userName) && "tiantianle".equals(password)){
 				request.getSession().setAttribute("adminName", "admin");
 				result = Result.getSuccessResult();
 			}

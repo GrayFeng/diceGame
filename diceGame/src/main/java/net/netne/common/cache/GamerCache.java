@@ -114,4 +114,8 @@ public class GamerCache {
 		cache.remove(key);
 	}
 	
+	public void removeAll(){
+		cache.clear();
+	}
+	
 }

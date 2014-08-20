@@ -21,7 +21,39 @@
 					<div id="submenu">
 						<div class="modules_left">
 							<div class="module buttons">
-								<a href="${contextPaht}/gm/user/list.do" class="dropdown_button"><span>用户列表</span></a>
+								<a href="javascript:getUser()" class="button"><span>修改用户信息</span></a>
+								<div class="dropdown modify_user_dropdown" style="display: none;">
+									<div class="arrow"></div>
+									<div class="content">
+										<form action="${contextPaht}/gm/user/update.do" id="modifyUser" method="post">
+											<p>
+												<label for="name">昵称:</label>
+												<input type="text" class="text w_22" name="name" id="name" maxlength="50">
+											</p>
+											<p>
+												<label for="name">性别:</label>
+												<input name="sex" id="radio_2" value="1" type="radio" checked="checked">男
+												<input name="sex" id="radio_2" value="2" type="radio">女
+											</p>
+											<p>
+												<label for="name">增加积分:</label>
+												<input type="text" class="text w_22" name="score" id="score" maxlength="10">
+											</p>
+											<p>
+												<label for="name">密码:</label>
+												<input type="text" class="text w_22" name="password" id="password" maxlength="10">
+											</p>
+											<p>
+												<label for="name">确认密码:</label>
+												<input type="text" class="text w_22" name="confirm_password" id="confirm_password" maxlength="10">
+											</p>
+											<input type="hidden" class="text w_22" name="id" id="userId">
+										</form>
+										<a href="javascript:modifyUser()" class="button green right"><small class="icon check"></small><span>保存</span></a>
+										<a class="button red mr right close"><small class="icon cross"></small><span>取消</span></a>
+										<div class="clear"></div>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="modules_right"></div>
@@ -34,25 +66,29 @@
 								<div class="content">
 									<table>
 										<tr>
-											<th class="checkbox"><input type="checkbox" name="checkbox" /></th>
+											<th class="checkbox"></th>
 											<th>昵称</th>
 											<th>手机号</th>
 											<th>性别</th>
+											<th>积分</th>
 											<th>状态</th>
 										</tr>
 										<c:forEach items="${page.content}" var="member">
 											<tr id="id_${member.id}">
-												<td class="checkbox"><input type="checkbox" name="checkbox" /></td>
-												<td>${member.name}</td>
-												<td>${member.mobile}</td>
+												<td class="checkbox">
+													<input type="checkbox" name="checkbox" data="${member.id}"/>
+												</td>
+												<td id="name_${member.id}" data="${member.name}">${member.name}</td>
+												<td id="mobile_${member.id}" data="${member.mobile}">${member.mobile}</td>
 												<c:choose>
 													<c:when test="${member.sex == 2}">
-														<td>女</td>
+														<td id="sex_${member.id}" data="${member.sex}">女</td>
 													</c:when>
 													<c:otherwise>
-														<td>男</td>
+														<td id="sex_${member.id}" data="${member.sex}">男</td>
 													</c:otherwise>
 												</c:choose>
+											<td id="score_${member.id}" data="${member.account.scoreAmount}">${member.account.scoreAmount}</td>
 											<td>正常</td>
 										</tr>
 										</c:forEach>
@@ -99,4 +135,48 @@
 	<script src="${staticURL}/js/jquery.js" type="text/javascript"></script>
 	<script src="${staticURL}/js/global.js" type="text/javascript"></script>
 	<script src="${staticURL}/js/modal.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		$(function(){
+			$("input[type=checkbox]").click(function(){
+				$("input[type=checkbox]").removeAttr("checked");
+				$(this).attr('checked',true);
+			});
+		});
+		function getUser(){
+			var id = '';
+			$("input[type=checkbox]").each(function(i,checkbox){
+				if($(checkbox).attr('checked') == true){
+					id = $(checkbox).attr('data');
+					return false;
+				}
+			});
+			if(!id){
+				alert('请先选择一个用户');
+				return;
+			}
+			$("#name").val($("#name_"+id).attr('data'));
+			if($("#sex_"+id).attr('data') == 2){
+				$('input:radio').eq(1).attr('checked', 'true');
+			}else{
+				$('input:radio').eq(0).attr('checked', 'true');
+			}
+			$("#userId").val(id);
+			$(".modify_user_dropdown").stop().slideToggle();
+		}
+		
+		function modifyUser(){
+			var name = $("#name").val();
+			var password = $("#password").val();
+			var confirm_password = $("#confirm_password").val();
+			if(!name){
+				alert('昵称不能为空');
+				return;
+			}
+			if(password != confirm_password){
+				alert('两次密码不一致');
+				return;
+			}
+			$('#modifyUser').submit();
+		}
+	</script>
 </html>

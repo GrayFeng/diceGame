@@ -63,4 +63,9 @@ public class GamblingCache {
 		}
 	}
 	
+	public void removeAll(){
+		cache.clear();
+		roomNoCache.clear();
+	}
+	
 }

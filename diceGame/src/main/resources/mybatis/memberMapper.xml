@@ -45,8 +45,19 @@
 	 </select>
 	 
 	  <!-- 读取用户记录总数 -->
-	 <select id="getMemberList" resultType="Member" parameterType="map">
-	 	select id,name,mobile,sex from member order by id desc limit #{startNum},#{size};
+	 <resultMap type="Member" id="MemberResult">
+	 	<result column="id" property="id"/>
+	 	<result column="name" property="name"/>
+	 	<result column="mobile" property="mobile"/>
+	 	<result column="sex" property="sex"/>
+        <association property="account" javaType="Account">
+        	<result column="score_amount" property="scoreAmount"/>
+        </association>
+     </resultMap>  
+	 <select id="getMemberList" resultMap="MemberResult" parameterType="map">
+	 	select member.id as id,name,mobile,sex,score_amount
+	 	from member inner join account on member.id = account.member_id
+	 	order by id desc limit #{startNum},#{size};
 	 </select>
 	
 	 <!-- 获取用户账户信息-->

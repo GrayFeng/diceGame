@@ -31,20 +31,22 @@ public class QuitGameHandler extends AbstractHandler implements IHandler{
 			Gambling gambling = GamblingCache.getInstance().get(quitGameParam.getGamblingId());
 			if(gambling != null){
 				Map<String,Gamer> gamers = GamerCache.getInstance().getGamerMap(gambling.getId());
-				Gamer gamer = gamers.get(quitGameParam.getUid());
-				if(gamer != null){
-					gambling.setGamerNum(gambling.getGamerNum() - 1);
-					GamblingCache.getInstance().add(gambling);
-					GamerCache.getInstance().removeOne(quitGameParam.getGamblingId(),gamer.getUid());
-					result = MinaResult.getSuccessResult();
-					BroadcastThreadPool.execute(new QuitGame(gambling.getId(), gamer));
+				if(gamers != null){
+					Gamer gamer = gamers.get(quitGameParam.getUid());
+					if(gamer != null){
+						gambling.setGamerNum(gambling.getGamerNum() - 1);
+						GamblingCache.getInstance().add(gambling);
+						GamerCache.getInstance().removeOne(quitGameParam.getGamblingId(),gamer.getUid());
+						result = MinaResult.getSuccessResult();
+						BroadcastThreadPool.execute(new QuitGame(gambling.getId(), gamer));
+					}
 				}
 			}
 		}catch(Exception e){
 			log.error(e.getMessage(),e);
 		}finally{
 			if(result == null){
-				result = new MinaResult(EEchoCode.ERROR.getCode(),"游戏已经开始，无法退出");
+				result = new MinaResult(EEchoCode.ERROR.getCode(),"游戏退出失败");
 			}
 		}
 		return result;
