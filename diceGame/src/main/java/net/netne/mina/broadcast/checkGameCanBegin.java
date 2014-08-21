@@ -52,7 +52,8 @@ public class checkGameCanBegin implements IBroadcastThread{
 						readyCount += 1;
 					}
 				}
-				if(readyCount == gambling.getMaxGamerNum()){
+				if(readyCount == gambling.getGamerNum() 
+						&& gambling.getGamerNum() > 1){
 					gambling.setStatus(GameStatus.START.getCode());
 					GamblingCache.getInstance().add(gambling);
 					broadCastGameBegin(gamers);

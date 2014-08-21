@@ -49,7 +49,8 @@ public class GamerShakeDice implements IBroadcastThread{
 						shookCount += 1;
 					}
 				}
-				if(shookCount == gambling.getMaxGamerNum()){
+				if(shookCount == gambling.getGamerNum() 
+						&& gambling.getGamerNum() > 1){
 					gambling.setStatus(GameStatus.GUESS.getCode());
 					GamblingCache.getInstance().add(gambling);
 					broadCastStartReport(gamers,gambling);
