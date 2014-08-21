@@ -2,6 +2,8 @@ package net.netne.mina.handler;
 
 import java.util.Map;
 
+import net.netne.api.service.IScoreService;
+import net.netne.common.SpringConstant;
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
 import net.netne.common.enums.EEchoCode;
@@ -34,6 +36,8 @@ public class QuitGameHandler extends AbstractHandler implements IHandler{
 				if(gamers != null){
 					Gamer gamer = gamers.get(quitGameParam.getUid());
 					if(gamer != null){
+						IScoreService scoreService = SpringConstant.getBean("scoreServiceImpl");
+						scoreService.addScore(gamer.getId(), -gambling.getScore());
 						gambling.setGamerNum(gambling.getGamerNum() - 1);
 						GamblingCache.getInstance().add(gambling);
 						GamerCache.getInstance().removeOne(quitGameParam.getGamblingId(),gamer.getUid());
