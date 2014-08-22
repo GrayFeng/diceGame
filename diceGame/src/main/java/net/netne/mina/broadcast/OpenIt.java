@@ -50,6 +50,8 @@ public class OpenIt implements IBroadcastThread {
 			openItTO.setDiceList(diceInfoList);
 			openItTO.setWin(0);
 			openItTO.setScore(gambling.getScore());
+			openItTO.setDiceNum(lastGuessGamer.getGuessDiceNum());
+			openItTO.setDicePoint(lastGuessGamer.getGuessDicePoint());
 			broadcastTO.setContent(openItTO);
 			for (Gamer mGamer : gamers) {
 				IoSession session = mGamer.getSession();

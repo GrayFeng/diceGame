@@ -14,6 +14,26 @@ public class OpenItTO {
 	
 	private Integer win;
 	
+	private Integer diceNum;
+	
+	private Integer dicePoint;
+	
+	public Integer getDiceNum() {
+		return diceNum;
+	}
+
+	public void setDiceNum(Integer diceNum) {
+		this.diceNum = diceNum;
+	}
+
+	public Integer getDicePoint() {
+		return dicePoint;
+	}
+
+	public void setDicePoint(Integer dicePoint) {
+		this.dicePoint = dicePoint;
+	}
+
 	private List<DiceInfo> diceList;
 
 	public Integer getScore() {
