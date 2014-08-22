@@ -5,6 +5,7 @@ import java.util.Map;
 
 import net.netne.api.dao.IPrizeDao;
 import net.netne.api.service.IPrizeService;
+import net.netne.common.pojo.Member;
 import net.netne.common.pojo.Page;
 import net.netne.common.pojo.Prize;
 
@@ -78,6 +79,14 @@ public class PrizeServiceImpl implements IPrizeService {
 			prizeList = prizeDao.getPrizeList(paramMap);
 		}
 		return prizeList;
+	}
+	
+	public Prize lottery(Member member){
+		List<Prize> prizeList = getAllPrizeList();
+		if(prizeList != null && prizeList.size() > 0){
+			
+		}
+		return null;
 	}
 
 }

@@ -101,7 +101,7 @@ public class OpenHandler extends AbstractHandler implements IHandler{
 						MemberCache.getInstance().updateMember(gamer.getUid(), member);
 					}
 					BroadcastThreadPool.execute(new OpenIt(gambling.getId(),lastGuessGamer,isLastGamerWin,diceInfoList));
-					gambling.setStatus(GameStatus.OVER.getCode());
+					gambling.setStatus(GameStatus.WAIT.getCode());
 					gambling.setCurrentGuessGamerId(null);
 					gambling.setLastGuessGamerId(null);
 					gambling.setDiceNum(0);

@@ -48,11 +48,15 @@ public enum EBroadcastCode {
 			return "920";
 		}
 	},
+	GAME_ENFORCE_OVER{
+		public String getCode(){
+			return "921";
+		}
+	},
 	GAME_OVER{
 		public String getCode(){
 			return "930";
 		}
 	};
-	
 	abstract public String getCode();
 }
