@@ -10,6 +10,8 @@ import net.netne.common.enums.EBroadcastCode;
 import net.netne.common.enums.GamerStatus;
 import net.netne.common.pojo.LoginInfo;
 import net.netne.common.uitls.ResultUtil;
+import net.netne.mina.broadcast.BroadcastThreadPool;
+import net.netne.mina.broadcast.checkGameCanBegin4Quit;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.MinaResult;
@@ -63,6 +65,7 @@ public class SessionClosedHandler extends AbstractHandler implements IHandler{
 									gamer.getSession().write(ResultUtil.getJsonString(broadcastTO));
 								}
 							}
+							BroadcastThreadPool.execute(new checkGameCanBegin4Quit(gambling.getId()));
 						}
 					}
 				}

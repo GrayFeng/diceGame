@@ -3,6 +3,9 @@ package net.netne.api.control;
 import java.util.List;
 
 import net.netne.api.service.IPrizeService;
+import net.netne.common.cache.MemberCache;
+import net.netne.common.enums.EEchoCode;
+import net.netne.common.pojo.LoginInfo;
 import net.netne.common.pojo.Prize;
 import net.netne.common.pojo.Result;
 import net.netne.common.uitls.ResultUtil;
@@ -39,10 +42,17 @@ public class LotteryControl {
 	@RequestMapping("lottery")
 	@ResponseBody
 	public String lottery(String uid){
-		Prize prize = prizeService.getPrizeById(1);
-		Result result = Result.getSuccessResult();
-		if(prize != null){
-			result.setRe(prize);
+		Result result = null;
+		LoginInfo loginInfo = MemberCache.getInstance().get(uid);
+		if(loginInfo != null && loginInfo.getMember() != null){
+			Prize prize = prizeService.lottery(loginInfo.getMember());
+			if(prize != null){
+				result = Result.getSuccessResult();
+				result.setRe(prize);
+			}
+		}
+		if(result == null){
+			result = new Result(EEchoCode.ERROR.getCode(), "很遗憾没能中奖");
 		}
 		return ResultUtil.getJsonString(result);
 	}

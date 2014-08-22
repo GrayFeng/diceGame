@@ -2,6 +2,7 @@ package net.netne.api.service;
 
 import java.util.List;
 
+import net.netne.common.pojo.Member;
 import net.netne.common.pojo.Page;
 import net.netne.common.pojo.Prize;
 
@@ -22,5 +23,7 @@ public interface IPrizeService {
 	public Page<Prize> getPrizeList(Integer pageNum);
 	
 	public List<Prize> getAllPrizeList();
+	
+	public Prize lottery(Member member);
 	
 }

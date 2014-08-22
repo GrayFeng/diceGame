@@ -44,6 +44,7 @@ public class QuitGame implements IBroadcastThread {
 			Map<String,Object> params = Maps.newHashMap();
 			params.put("id", gamer.getId());
 			broadcastTO.setContent(params);
+			gameOverBroadcastTO.setContent(params);
 			for (Gamer mGamer : gamers) {
 				IoSession session = mGamer.getSession();
 				if (session.isConnected() 

@@ -9,6 +9,7 @@ import net.netne.common.cache.GamerCache;
 import net.netne.common.enums.EEchoCode;
 import net.netne.mina.broadcast.BroadcastThreadPool;
 import net.netne.mina.broadcast.QuitGame;
+import net.netne.mina.broadcast.checkGameCanBegin4Quit;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.MinaResult;
@@ -43,6 +44,7 @@ public class QuitGameHandler extends AbstractHandler implements IHandler{
 						GamerCache.getInstance().removeOne(quitGameParam.getGamblingId(),gamer.getUid());
 						result = MinaResult.getSuccessResult();
 						BroadcastThreadPool.execute(new QuitGame(gambling.getId(), gamer));
+						BroadcastThreadPool.execute(new checkGameCanBegin4Quit(gambling.getId()));
 					}
 				}
 			}

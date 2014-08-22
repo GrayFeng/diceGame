@@ -1,7 +1,10 @@
 package net.netne.api.service.impl;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import net.netne.api.dao.IPrizeDao;
 import net.netne.api.service.IPrizeService;
@@ -12,6 +15,7 @@ import net.netne.common.pojo.Prize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
@@ -84,9 +88,62 @@ public class PrizeServiceImpl implements IPrizeService {
 	public Prize lottery(Member member){
 		List<Prize> prizeList = getAllPrizeList();
 		if(prizeList != null && prizeList.size() > 0){
-			
+			Map<Double,List<Integer>> probabilityMap = Maps.newHashMap();
+			for(Prize prize : prizeList){
+				if(prize.getProbability() == null || prize.getStock() < 1){
+					continue;
+				}
+				List<Integer> prizeIdList = probabilityMap.get(prize.getId());
+				if(prizeIdList == null || probabilityMap.isEmpty()){
+					prizeIdList = Lists.newArrayList();
+				}
+				prizeIdList.add(prize.getId());
+				probabilityMap.put(prize.getProbability(), prizeIdList);
+			}
+			if(probabilityMap.size() > 0){
+				List<Double> probabilityList = Lists.newArrayList(probabilityMap.keySet());
+				 Collections.sort(probabilityList, new Comparator<Double>(){
+					@Override
+					public int compare(Double arg0, Double arg1) {
+						return arg0.compareTo(arg1);
+					}
+				 });
+				 double randomNumber = Math.random() * 100;
+				 Double prizeKey = null;
+				 for(int i = 0; i < probabilityList.size();i++){
+					 Double probability = probabilityList.get(i);
+					 if(i == 0 && randomNumber <= probability){
+						 prizeKey = probability;
+						 break;
+					 }else if(i > 0 && randomNumber > probabilityList.get(i-1) 
+							 && randomNumber <= probability){
+						 prizeKey = probability;
+						 break;
+					 }
+				 }
+				 if(prizeKey == null){
+					 
+				 }
+				 Integer prizeId = null;
+				 if(prizeKey != null){
+					 List<Integer> prizeIds = probabilityMap.get(prizeKey);
+					 if(prizeIds != null && !prizeIds.isEmpty()){
+						 if(prizeIds.size() > 1){
+							 int index = new Random().nextInt(prizeIds.size());
+							 if(index > prizeIds.size() || index == prizeIds.size()){
+								 index = prizeIds.size() - 1 ;
+							 }
+							 prizeId = prizeIds.get(index);
+						 }else{
+							 prizeId = prizeIds.get(0);
+						 }
+					 }
+					 if(prizeId != null){
+						 return getPrizeById(prizeId);
+					 }
+				 }
+			}
 		}
 		return null;
 	}
-
 }
