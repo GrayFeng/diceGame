@@ -85,6 +85,14 @@ public class PrizeServiceImpl implements IPrizeService {
 		return prizeList;
 	}
 	
+	@Override
+	public void modifyStockPrize(Integer id, Integer stock) {
+		Map<String,Object> paramMap = Maps.newHashMap();
+		paramMap.put("id", id);
+		paramMap.put("stock", stock);
+		prizeDao.modifyStockPrize(paramMap);
+	}
+	
 	public Prize lottery(Member member){
 		List<Prize> prizeList = getAllPrizeList();
 		if(prizeList != null && prizeList.size() > 0){
@@ -93,7 +101,7 @@ public class PrizeServiceImpl implements IPrizeService {
 				if(prize.getProbability() == null || prize.getStock() < 1){
 					continue;
 				}
-				List<Integer> prizeIdList = probabilityMap.get(prize.getId());
+				List<Integer> prizeIdList = probabilityMap.get(prize.getProbability());
 				if(prizeIdList == null || probabilityMap.isEmpty()){
 					prizeIdList = Lists.newArrayList();
 				}
@@ -121,9 +129,11 @@ public class PrizeServiceImpl implements IPrizeService {
 						 break;
 					 }
 				 }
-				 if(prizeKey == null){
-					 
-				 }
+//				 if(prizeKey == null 
+//						 && probabilityList != null 
+//						 && !probabilityList.isEmpty()){
+//					 prizeKey = probabilityList.get(probabilityList.size() -1);
+//				 }
 				 Integer prizeId = null;
 				 if(prizeKey != null){
 					 List<Integer> prizeIds = probabilityMap.get(prizeKey);
@@ -139,11 +149,16 @@ public class PrizeServiceImpl implements IPrizeService {
 						 }
 					 }
 					 if(prizeId != null){
-						 return getPrizeById(prizeId);
+						 Prize prize = getPrizeById(prizeId);
+						 if(prize != null){
+							 modifyStockPrize(prize.getId(),1);
+						 }
+						 return prize;
 					 }
 				 }
 			}
 		}
 		return null;
 	}
+
 }

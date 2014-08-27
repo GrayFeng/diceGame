@@ -27,6 +27,10 @@
 	 <select id="getPrizeList" resultType="Prize" parameterType="map">
 	 	select id,name,probability,stock from prize order by id desc limit #{startNum},#{size};
 	 </select>
+	 
+	 <update id="modifyStockPrize" parameterType="map">
+	 	update prize set stock = stock - #{stock} where id = #{id}
+	 </update>
 	
 	 <select id="getPrizeCount" resultType="long">
 	 	select count(id) from prize;

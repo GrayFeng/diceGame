@@ -27,5 +27,7 @@ public interface IPrizeDao {
 	public List<Prize> getPrizeList(Map<String,Object> paramMap);
 	
 	public Long getPrizeCount();
+	
+	public void modifyStockPrize(Map<String,Object> paramMap);
 
 }

@@ -26,4 +26,6 @@ public interface IPrizeService {
 	
 	public Prize lottery(Member member);
 	
+	public void modifyStockPrize(Integer id,Integer stock);
+	
 }

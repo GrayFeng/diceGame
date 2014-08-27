@@ -1,6 +1,7 @@
 package net.netne.api.control;
 
 import java.util.List;
+import java.util.Map;
 
 import net.netne.api.service.IPrizeService;
 import net.netne.common.cache.MemberCache;
@@ -14,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * diceGame
@@ -34,7 +38,14 @@ public class LotteryControl {
 		List<Prize> prizeList = prizeService.getAllPrizeList();
 		Result result = Result.getSuccessResult();
 		if(prizeList != null){
-			result.setRe(prizeList);
+			List<Map<String,Object>> prizeInfoList = Lists.newArrayList();
+			for(Prize prize : prizeList){
+				Map<String,Object> infoMap = Maps.newHashMap();
+				infoMap.put("name", prize.getName());
+				infoMap.put("id", prize.getId());
+				prizeInfoList.add(infoMap);
+			}
+			result.setRe(prizeInfoList);
 		}
 		return ResultUtil.getJsonString(result);
 	}
@@ -48,7 +59,10 @@ public class LotteryControl {
 			Prize prize = prizeService.lottery(loginInfo.getMember());
 			if(prize != null){
 				result = Result.getSuccessResult();
-				result.setRe(prize);
+				Map<String,Object> infoMap = Maps.newHashMap();
+				infoMap.put("name", prize.getName());
+				infoMap.put("id", prize.getId());
+				result.setRe(infoMap);
 			}
 		}
 		if(result == null){
