@@ -3,10 +3,11 @@ package net.netne.api.dao;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Repository;
-
 import net.netne.common.annotation.MyBatisRepository;
 import net.netne.common.pojo.Prize;
+import net.netne.common.pojo.PrizeMember;
+
+import org.springframework.stereotype.Repository;
 
 /**
  * diceGame
@@ -29,5 +30,11 @@ public interface IPrizeDao {
 	public Long getPrizeCount();
 	
 	public void modifyStockPrize(Map<String,Object> paramMap);
+	
+	public void addPrizeMember(Map<String,Object> paramMap);
+	
+	public Long getPrizeMemberCount();
+	
+	public List<PrizeMember> getPrizeMemberList(Map<String,Object> paramMap);
 
 }

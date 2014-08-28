@@ -11,6 +11,7 @@ import net.netne.api.service.IPrizeService;
 import net.netne.common.pojo.Member;
 import net.netne.common.pojo.Page;
 import net.netne.common.pojo.Prize;
+import net.netne.common.pojo.PrizeMember;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -152,6 +153,7 @@ public class PrizeServiceImpl implements IPrizeService {
 						 Prize prize = getPrizeById(prizeId);
 						 if(prize != null){
 							 modifyStockPrize(prize.getId(),1);
+							 addPrizeMember(member,prize);
 						 }
 						 return prize;
 					 }
@@ -159,6 +161,39 @@ public class PrizeServiceImpl implements IPrizeService {
 			}
 		}
 		return null;
+	}
+	
+	private void addPrizeMember(Member member,Prize prize){
+		Map<String,Object> paramMap = Maps.newHashMap();
+		paramMap.put("memberId", member.getId());
+		paramMap.put("memberMobile", member.getMobile());
+		paramMap.put("memberName", member.getName());
+		paramMap.put("prizeId", prize.getId());
+		paramMap.put("prizeName", prize.getName());
+		prizeDao.addPrizeMember(paramMap);
+	}
+
+	@Override
+	public Page<PrizeMember> getPrizeMemberList(Integer pageNum) {
+		Page<PrizeMember> page = new Page<PrizeMember>();
+		if(pageNum == null){
+			pageNum = 1;
+		}
+		Long count = prizeDao.getPrizeMemberCount();
+		if(count != null && count > 0){
+			page.setTotal(count.intValue());
+			page.setSize(10);
+			if(pageNum > page.getTotalPages()){
+				pageNum = page.getTotalPages();
+			}
+			page.setNumber(pageNum);
+			Map<String,Object> paramMap = Maps.newHashMap();
+			paramMap.put("startNum", page.getStartNum());
+			paramMap.put("size", page.getSize());
+			List<PrizeMember> memberList = prizeDao.getPrizeMemberList(paramMap);
+			page.setContent(memberList);
+		}
+		return page;
 	}
 
 }

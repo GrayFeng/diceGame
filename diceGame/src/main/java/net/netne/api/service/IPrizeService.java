@@ -5,6 +5,7 @@ import java.util.List;
 import net.netne.common.pojo.Member;
 import net.netne.common.pojo.Page;
 import net.netne.common.pojo.Prize;
+import net.netne.common.pojo.PrizeMember;
 
 /**
  * diceGame
@@ -27,5 +28,7 @@ public interface IPrizeService {
 	public Prize lottery(Member member);
 	
 	public void modifyStockPrize(Integer id,Integer stock);
+	
+	public Page<PrizeMember> getPrizeMemberList(Integer pageNum);
 	
 }

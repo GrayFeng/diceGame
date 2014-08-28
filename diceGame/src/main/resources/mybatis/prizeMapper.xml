@@ -36,4 +36,23 @@
 	 	select count(id) from prize;
 	 </select>
 	 
+	 <insert id="addPrizeMember" parameterType="map">
+		insert into prize_member
+	 		(prize_id,member_id,member_mobile,member_name,prize_name,create_time) 
+	 	values
+	 		(#{prizeId},#{memberId},#{memberMobile},#{memberName},#{prizeName},now())
+	</insert>
+	
+	<select id="getPrizeMemberList" resultType="PrizeMember" parameterType="map">
+	 	select id,prize_id as prizeId,member_id as memberId,
+	 	member_mobile as memberMobile,member_name as memberName,
+	 	prize_name as prizeName,create_time as date
+	 	from prize_member
+	 	order by id desc limit #{startNum},#{size};
+	 </select>
+	
+	 <select id="getPrizeMemberCount" resultType="long">
+	 	select count(id) from prize_member;
+	 </select>
+	 
 </mapper> 

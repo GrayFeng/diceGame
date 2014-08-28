@@ -11,6 +11,9 @@
 			<a href="${contextPaht}/gm/prize/list.do"><span>奖品管理</span></a>
 		</li>
 		<li>
+			<a href="${contextPaht}/gm/prize/prizeMemberList.do"><span>中奖记录</span></a>
+		</li>
+		<li>
 			<a href="${contextPaht}/gm/game/roomList.do"><span>房间管理</span></a>
 		</li>
 	</ul>

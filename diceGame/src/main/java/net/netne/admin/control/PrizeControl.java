@@ -3,6 +3,7 @@ package net.netne.admin.control;
 import net.netne.api.service.IPrizeService;
 import net.netne.common.pojo.Page;
 import net.netne.common.pojo.Prize;
+import net.netne.common.pojo.PrizeMember;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,6 +44,14 @@ public class PrizeControl {
 	public ModelAndView modify(@ModelAttribute Prize prize){
 		ModelAndView mav = new ModelAndView("redirect:/gm/prize/list.do");
 		prizeService.modifyPrize(prize);
+		return mav;
+	}
+	
+	@RequestMapping("prizeMemberList")
+	public ModelAndView prizeMemberList(@RequestParam(defaultValue="1") Integer pageNum){
+		Page<PrizeMember> page = prizeService.getPrizeMemberList(pageNum);
+		ModelAndView mav = new ModelAndView("prizeMember");
+		mav.addObject("page", page);
 		return mav;
 	}
 }
