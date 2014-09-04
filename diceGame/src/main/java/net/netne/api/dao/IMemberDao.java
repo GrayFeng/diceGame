@@ -43,5 +43,7 @@ public interface IMemberDao {
 	public Long getMemberCount();
 	
 	public List<Member> getMemberList(Map<String,Object> paramMap);
+	
+	public Member sysLogin(String name);
 
 }

@@ -33,5 +33,7 @@ public interface IMemberService {
 	public MemberPhoto getMemberPhoto(Integer memberId);
 	
 	public Page<Member> getMemberList(Integer pageNum);
+	
+	public Member sysLogin(String name);
 
 }

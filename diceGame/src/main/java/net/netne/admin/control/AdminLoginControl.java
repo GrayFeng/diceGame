@@ -2,11 +2,14 @@ package net.netne.admin.control;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.netne.api.service.IMemberService;
 import net.netne.common.enums.EEchoCode;
+import net.netne.common.pojo.Member;
 import net.netne.common.pojo.Result;
 import net.netne.common.uitls.ResultUtil;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +24,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/gm")
 public class AdminLoginControl {
+	
+	@Autowired
+	private IMemberService memberService;
 
 	@RequestMapping("index")
 	public ModelAndView index(){
@@ -33,8 +39,9 @@ public class AdminLoginControl {
 		Result result = null;
 		if(StringUtils.isNotEmpty(password) 
 				&& StringUtils.isNotEmpty(userName)){
-			if("admin".equals(userName) && "tiantianle".equals(password)){
-				request.getSession().setAttribute("adminName", "admin");
+			Member member = memberService.sysLogin(userName);
+			if(member != null && password.equals(member.getPassword())){
+				request.getSession().setAttribute("adminName", member.getName());
 				result = Result.getSuccessResult();
 			}
 		}

@@ -80,4 +80,8 @@
 	 		select member_id,photo from member_photo where member_id = #{memberId}
 	 </select>
 	 
+	 <select id="sysLogin" resultType="Member" parameterType="string">
+	 	select * from sys_user where name = #{name} limit 0,1
+	 </select>
+	 
 </mapper> 

@@ -155,4 +155,9 @@ public class MemberServiceImpl implements IMemberService{
 		return page;
 	}
 
+	@Override
+	public Member sysLogin(String name) {
+		return memberDao.sysLogin(name);
+	}
+
 }

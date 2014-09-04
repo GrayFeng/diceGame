@@ -55,7 +55,7 @@
 	<script>
 		$(function(){
 			var contextPaht = "${contextPaht}";
-			$(".loginBtn").click(function(){
+			function login(){
 				var userName = $.trim($("#username").val());
 				var password = $.trim($("#password").val());
 				if(userName && password){
@@ -76,6 +76,14 @@
 				}else{
 					alert("请输入用户名密码");
 				}
+			}
+			$(document).keydown(function(e){
+				if(e.which == 13){
+					login();
+				}
+			});
+			$(".loginBtn").click(function(){
+				login();
 			});
 		});
 	</script>	
