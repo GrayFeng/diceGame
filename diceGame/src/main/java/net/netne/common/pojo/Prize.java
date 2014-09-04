@@ -24,9 +24,23 @@ public class Prize {
 	
 	private byte[] photoData;
 	
+	private String receiveKey;
+	
 	public String getPhotoUrl() {
 		return photoUrl;
 	}
+
+	public String getReceiveKey() {
+		return receiveKey;
+	}
+
+
+
+	public void setReceiveKey(String receiveKey) {
+		this.receiveKey = receiveKey;
+	}
+
+
 
 	public void setPhotoUrl(String photoUrl) {
 		this.photoUrl = photoUrl;

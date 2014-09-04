@@ -2,6 +2,7 @@ package net.netne.common.cache;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -23,6 +24,8 @@ public class GamblingCache {
 	private static Map<String,Gambling> cache = Maps.newLinkedHashMap();
 	
 	private static Map<String,String> roomNoCache = Maps.newLinkedHashMap();
+	
+	private static Vector<String> freeRoomNo = new Vector<String>();
 	
 	private GamblingCache(){
 		
@@ -59,7 +62,16 @@ public class GamblingCache {
 	public void remove(String key){
 		Gambling gambling = cache.remove(key);
 		if(gambling != null){
+			freeRoomNo.add(gambling.getBoardNo());
 			roomNoCache.remove(gambling.getBoardNo());
+		}
+	}
+	
+	public synchronized String getFreeRoomNo(){
+		if(!freeRoomNo.isEmpty()){
+			return freeRoomNo.remove(0);
+		}else{
+			return null;
 		}
 	}
 	

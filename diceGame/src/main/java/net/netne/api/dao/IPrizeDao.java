@@ -6,6 +6,7 @@ import java.util.Map;
 import net.netne.common.annotation.MyBatisRepository;
 import net.netne.common.pojo.Prize;
 import net.netne.common.pojo.PrizeMember;
+import net.netne.common.pojo.PrizePhoto;
 
 import org.springframework.stereotype.Repository;
 
@@ -36,5 +37,12 @@ public interface IPrizeDao {
 	public Long getPrizeMemberCount();
 	
 	public List<PrizeMember> getPrizeMemberList(Map<String,Object> paramMap);
+	
+	public void updateMemberInfo4Prize(Map<String,Object> paramMap);
+	
+	public void updatePrizePhoto(PrizePhoto prizePhoto);
+	
+	public PrizePhoto getPrizePhoto(Integer prizeId);
+	
 
 }

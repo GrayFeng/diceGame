@@ -33,7 +33,7 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 	private Logger log = LoggerFactory.getLogger(CreateGamblingHandler.class);
 	
 	private static Integer roomNum = 0;
-
+	
 	@Override
 	public MinaResult execute(IoSession session,String params) {
 		MinaResult result = null;
@@ -110,9 +110,13 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 		GamerCache.getInstance().addOne(gambling.getId(), gamer);
 	}
 	
-	private synchronized Integer getRoomNum(){
-		CreateGamblingHandler.roomNum += 1;
-		return CreateGamblingHandler.roomNum;
+	private synchronized String getRoomNum(){
+		String roomNo = GamblingCache.getInstance().getFreeRoomNo();
+		if(roomNo == null){
+			CreateGamblingHandler.roomNum += 1;
+			roomNo = CreateGamblingHandler.roomNum.toString();
+		}
+		return roomNo;
 	}
 
 }

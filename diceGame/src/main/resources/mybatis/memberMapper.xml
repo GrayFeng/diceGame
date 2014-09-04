@@ -71,9 +71,9 @@
 	 </insert>
 	 
 	 <!-- 保存用户照片 -->
-	 <insert id="updateMemberPhoto" parameterType="MemberPhoto">
+	 <update id="updateMemberPhoto" parameterType="MemberPhoto">
 	 		update member_photo set photo = #{photo} where member_id = #{memberId}
-	 </insert>
+	 </update>
 	 
 	 <!-- 读取用户照片 -->
 	  <select id="getMemberPhoto" parameterType="int" resultType="MemberPhoto">

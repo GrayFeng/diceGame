@@ -1,11 +1,13 @@
 package net.netne.api.service;
 
 import java.util.List;
+import java.util.Map;
 
 import net.netne.common.pojo.Member;
 import net.netne.common.pojo.Page;
 import net.netne.common.pojo.Prize;
 import net.netne.common.pojo.PrizeMember;
+import net.netne.common.pojo.PrizePhoto;
 
 /**
  * diceGame
@@ -30,5 +32,11 @@ public interface IPrizeService {
 	public void modifyStockPrize(Integer id,Integer stock);
 	
 	public Page<PrizeMember> getPrizeMemberList(Integer pageNum);
+	
+	public void updateMemberInfo4Prize(Map<String,Object> paramMap);
+	
+	public void updatePrizePhoto(PrizePhoto prizePhoto);
+	
+	public PrizePhoto getPrizePhoto(Integer prizeId);
 	
 }

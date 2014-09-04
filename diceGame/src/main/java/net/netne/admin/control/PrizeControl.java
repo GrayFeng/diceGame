@@ -1,6 +1,8 @@
 package net.netne.admin.control;
 
 import net.netne.api.service.IPrizeService;
+import net.netne.api.service.IUploadService;
+import net.netne.common.enums.EUploadType;
 import net.netne.common.pojo.Page;
 import net.netne.common.pojo.Prize;
 import net.netne.common.pojo.PrizeMember;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -24,6 +27,8 @@ public class PrizeControl {
 	
 	@Autowired
 	private IPrizeService prizeService;
+	@Autowired
+	private IUploadService uploadService;
 
 	@RequestMapping("list")
 	public ModelAndView list(@RequestParam(defaultValue="1")Integer pageNum){
@@ -34,9 +39,12 @@ public class PrizeControl {
 	}
 	
 	@RequestMapping("add")
-	public ModelAndView list(@ModelAttribute Prize prize){
+	public ModelAndView list(@ModelAttribute Prize prize,MultipartFile photo){
 		ModelAndView mav = new ModelAndView("redirect:/gm/prize/list.do");
 		prizeService.addPrize(prize);
+		if(photo != null && photo.getSize() > 0){
+			uploadService.processupload(prize.getId(),photo,EUploadType.PRIZE_PHOTO);
+		}
 		return mav;
 	}
 	

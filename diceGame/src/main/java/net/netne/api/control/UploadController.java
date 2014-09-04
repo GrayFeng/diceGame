@@ -11,6 +11,7 @@ import net.netne.api.service.IUploadService;
 import net.netne.common.Constant;
 import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EEchoCode;
+import net.netne.common.enums.EUploadType;
 import net.netne.common.pojo.ImageUploadResult;
 import net.netne.common.pojo.LoginInfo;
 import net.netne.common.pojo.MemberPhoto;
@@ -57,7 +58,7 @@ public class UploadController {
 		Result result = null;
 		LoginInfo loginInfo = MemberCache.getInstance().get(uid);
 		if(loginInfo != null && loginInfo.getMember() != null){
-			ImageUploadResult imageUploadResult =  uploadService.processupload(loginInfo.getMember().getId(),file);
+			ImageUploadResult imageUploadResult =  uploadService.processupload(loginInfo.getMember().getId(),file,EUploadType.MEMBER_PHOTO);
 			if(imageUploadResult.isSuccess()){
 				result = new Result(EEchoCode.SUCCESS.getCode(),"上传成功");
 				Map<String,String> paramMap = Maps.newHashMap();

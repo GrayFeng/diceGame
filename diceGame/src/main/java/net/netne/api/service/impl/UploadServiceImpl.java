@@ -1,9 +1,12 @@
 package net.netne.api.service.impl;
 
 import net.netne.api.dao.IMemberDao;
+import net.netne.api.dao.IPrizeDao;
 import net.netne.api.service.IUploadService;
+import net.netne.common.enums.EUploadType;
 import net.netne.common.pojo.ImageUploadResult;
 import net.netne.common.pojo.MemberPhoto;
+import net.netne.common.pojo.PrizePhoto;
 import net.netne.common.uitls.SimpleFileUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -17,8 +20,10 @@ public class UploadServiceImpl implements IUploadService{
 	private final static Logger logger = Logger.getLogger(UploadServiceImpl.class);
 	@Autowired
 	private IMemberDao memberDao;
+	@Autowired
+	private IPrizeDao prizeDao;
 
-	public ImageUploadResult processupload(Integer memberId,MultipartFile uploadFile) {
+	public ImageUploadResult processupload(Integer memberId,MultipartFile uploadFile,EUploadType uploadType) {
 		ImageUploadResult result = null;
 		if (uploadFile == null) {
 			return new ImageUploadResult(false,"请选择文件上传");
@@ -33,13 +38,24 @@ public class UploadServiceImpl implements IUploadService{
 			if (!cheackFileExtention(fileExtension)) {
 				return new ImageUploadResult(false,"不支持的文件格式");
 			}
-			MemberPhoto memberPhoto = new MemberPhoto();
-			memberPhoto.setMemberId(memberId);
-			memberPhoto.setPhoto(imgbytes);
-			if(memberDao.getMemberPhoto(memberId) != null){
-				memberDao.updateMemberPhoto(memberPhoto);
-			}else{
-				memberDao.addMemberPhoto(memberPhoto);
+			switch (uploadType) {
+			case MEMBER_PHOTO:
+				MemberPhoto memberPhoto = new MemberPhoto();
+				memberPhoto.setMemberId(memberId);
+				memberPhoto.setPhoto(imgbytes);
+				if(memberDao.getMemberPhoto(memberId) != null){
+					memberDao.updateMemberPhoto(memberPhoto);
+				}else{
+					memberDao.addMemberPhoto(memberPhoto);
+				}
+				break;
+			case PRIZE_PHOTO:
+				PrizePhoto prizePhoto  = new PrizePhoto();
+				prizePhoto.setId(memberId);
+				prizePhoto.setPhoto(imgbytes);
+				prizeDao.updatePrizePhoto(prizePhoto);
+			default:
+				break;
 			}
 			result = new ImageUploadResult(true,"图片上传成功");
 		} catch (Exception e) {
@@ -64,5 +80,4 @@ public class UploadServiceImpl implements IUploadService{
 		}
 		return result;
 	}
-
 }

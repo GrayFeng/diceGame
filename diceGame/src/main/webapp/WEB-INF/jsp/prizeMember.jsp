@@ -36,6 +36,7 @@
 											<th class="checkbox"></th>
 											<th>会员名称</th>
 											<th>会员手机号</th>
+											<th>收货地址</th>
 											<th>奖品名称</th>
 											<th>中奖时间</th>
 										</tr>
@@ -44,6 +45,7 @@
 												<td class="checkbox"><input type="checkbox" name="checkbox" data="${prizeMember.id}"/></td>
 												<td id="memberName_${prizeMember.id}" data='${prizeMember.memberName}'>${prizeMember.memberName}</td>
 												<td id="memberMobile_${prizeMember.id}" data='${prizeMember.memberMobile}'>${prizeMember.memberMobile}</td>
+												<td id="address_${prizeMember.id}" data='${prizeMember.address}'>${prizeMember.address}</td>
 												<td id="prizeName_${prizeMember.id}" data='${prizeMember.prizeName}'>${prizeMember.prizeName}</td>
 												<td>${prizeMember.date}</td>
 											</tr>

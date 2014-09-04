@@ -25,7 +25,9 @@
 	 </select>
 	 
 	 <select id="getPrizeList" resultType="Prize" parameterType="map">
-	 	select id,name,probability,stock from prize order by id desc limit #{startNum},#{size};
+	 	select id,name,probability,stock,
+	 	case when photo is null  then 'false' when photo is not null then 'true' end as photoUrl
+	 	from prize order by id desc limit #{startNum},#{size};
 	 </select>
 	 
 	 <update id="modifyStockPrize" parameterType="map">
@@ -38,21 +40,37 @@
 	 
 	 <insert id="addPrizeMember" parameterType="map">
 		insert into prize_member
-	 		(prize_id,member_id,member_mobile,member_name,prize_name,create_time) 
+	 		(prize_id,member_id,member_mobile,member_name,prize_name,receive_key,create_time) 
 	 	values
-	 		(#{prizeId},#{memberId},#{memberMobile},#{memberName},#{prizeName},now())
+	 		(#{prizeId},#{memberId},#{memberMobile},#{memberName},#{prizeName},#{key},now())
 	</insert>
+	
+	<update id="updateMemberInfo4Prize" parameterType="map">
+		update prize_member 
+		set member_mobile = #{memberMobile},member_address = #{memberAddress}
+		where receive_key = #{key} and member_id = #{memberId}
+	</update>
 	
 	<select id="getPrizeMemberList" resultType="PrizeMember" parameterType="map">
 	 	select id,prize_id as prizeId,member_id as memberId,
 	 	member_mobile as memberMobile,member_name as memberName,
-	 	prize_name as prizeName,create_time as date
+	 	prize_name as prizeName,create_time as date,member_address as address
 	 	from prize_member
 	 	order by id desc limit #{startNum},#{size};
 	 </select>
 	
 	 <select id="getPrizeMemberCount" resultType="long">
 	 	select count(id) from prize_member;
+	 </select>
+	 
+	 <!-- 保存奖品照片 -->
+	 <update id="updatePrizePhoto" parameterType="PrizePhoto">
+	 		update prize set photo = #{photo} where id = #{id}
+	 </update>
+	 
+	 <!-- 读取奖品照片 -->
+	  <select id="getPrizePhoto" parameterType="int" resultType="PrizePhoto">
+	 		select photo from prize where id = #{id}
 	 </select>
 	 
 </mapper> 

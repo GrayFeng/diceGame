@@ -25,7 +25,7 @@
 								<div class="dropdown" style="display: none;">
 									<div class="arrow"></div>
 									<div class="content">
-										<form action="${contextPaht}/gm/prize/add.do" id="addPrize" method="post">
+										<form action="${contextPaht}/gm/prize/add.do" id="addPrize" enctype="multipart/form-data" method="post">
 											<p>
 												<label for="name">奖品名称:</label>
 												<input type="text" class="text w_22" name="name" id="name" maxlength="50">
@@ -37,6 +37,10 @@
 											<p>
 												<label for="name">中奖概率:</label>
 												<input type="text" class="text w_22" name="probability" id="probability" maxlength="5">
+											</p>
+											<p>
+												<label for="name">奖品图片:</label>
+												<input type="file" name="photo"/>
 											</p>
 										</form>
 										<a href="javascript:addPrize()" class="button green right"><small class="icon check"></small><span>保存</span></a>

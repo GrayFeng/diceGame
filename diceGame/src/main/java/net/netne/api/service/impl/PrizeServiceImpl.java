@@ -5,13 +5,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import net.netne.api.dao.IPrizeDao;
 import net.netne.api.service.IPrizeService;
+import net.netne.common.Constant;
 import net.netne.common.pojo.Member;
 import net.netne.common.pojo.Page;
 import net.netne.common.pojo.Prize;
 import net.netne.common.pojo.PrizeMember;
+import net.netne.common.pojo.PrizePhoto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,6 +67,15 @@ public class PrizeServiceImpl implements IPrizeService {
 			paramMap.put("startNum", page.getStartNum());
 			paramMap.put("size", page.getSize());
 			List<Prize> prizeList = prizeDao.getPrizeList(paramMap);
+			for(Prize prize : prizeList){
+				if(prize != null){
+					if("true".equals(prize.getPhotoUrl())){
+						prize.setPhotoUrl(Constant.PRIZE_PHOTO_URL_PATH + prize.getId());
+					}else{
+						prize.setPhotoUrl(null);
+					}
+				} 
+			}
 			page.setContent(prizeList);
 		}
 		return page;
@@ -82,6 +94,17 @@ public class PrizeServiceImpl implements IPrizeService {
 			paramMap.put("startNum", page.getStartNum());
 			paramMap.put("size", page.getSize());
 			prizeList = prizeDao.getPrizeList(paramMap);
+			if(prizeList != null && prizeList.size() > 0 ){
+				for(Prize prize : prizeList){
+					if(prize != null){
+						if("true".equals(prize.getPhotoUrl())){
+							prize.setPhotoUrl(Constant.PRIZE_PHOTO_URL_PATH + prize.getId());
+						}else{
+							prize.setPhotoUrl(null);
+						}
+					} 
+				}
+			}
 		}
 		return prizeList;
 	}
@@ -152,6 +175,7 @@ public class PrizeServiceImpl implements IPrizeService {
 					 if(prizeId != null){
 						 Prize prize = getPrizeById(prizeId);
 						 if(prize != null){
+							 prize.setReceiveKey("pm-" + UUID.randomUUID());
 							 modifyStockPrize(prize.getId(),1);
 							 addPrizeMember(member,prize);
 						 }
@@ -170,6 +194,7 @@ public class PrizeServiceImpl implements IPrizeService {
 		paramMap.put("memberName", member.getName());
 		paramMap.put("prizeId", prize.getId());
 		paramMap.put("prizeName", prize.getName());
+		paramMap.put("key",prize.getReceiveKey());
 		prizeDao.addPrizeMember(paramMap);
 	}
 
@@ -194,6 +219,21 @@ public class PrizeServiceImpl implements IPrizeService {
 			page.setContent(memberList);
 		}
 		return page;
+	}
+
+	@Override
+	public void updateMemberInfo4Prize(Map<String, Object> paramMap) {
+		prizeDao.updateMemberInfo4Prize(paramMap);
+	}
+
+	@Override
+	public void updatePrizePhoto(PrizePhoto prizePhoto) {
+		prizeDao.updatePrizePhoto(prizePhoto);
+	}
+
+	@Override
+	public PrizePhoto getPrizePhoto(Integer prizeId) {
+		return prizeDao.getPrizePhoto(prizeId);
 	}
 
 }
