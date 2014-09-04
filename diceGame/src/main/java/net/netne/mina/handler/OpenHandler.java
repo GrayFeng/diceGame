@@ -1,5 +1,6 @@
 package net.netne.mina.handler;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -75,32 +76,21 @@ public class OpenHandler extends AbstractHandler implements IHandler{
 					}
 					Integer allDiceNum = diceMap.get(String.valueOf(lastGuessGamer.getGuessDicePoint()));
 					allDiceNum = allDiceNum == null ? 0 :allDiceNum;
-					IScoreService scoreService = SpringConstant.getBean("scoreServiceImpl");
-					IMemberService memberService = SpringConstant.getBean("memberServiceImpl");
+					//是否计算点数1的数量
+					if(!gambling.isFast()){
+						Integer oneDiceNum = diceMap.get(String.valueOf(1));
+						oneDiceNum = oneDiceNum == null ? 0 :oneDiceNum;
+						allDiceNum += oneDiceNum;
+					}
 					Integer score = gambling.getScore();
 					result = new MinaResult(EEchoCode.SUCCESS.getCode(),"等待结果!");
 					boolean isLastGamerWin = true;
 					if(lastGuessGamer.getGuessDiceNum() > allDiceNum){
 						isLastGamerWin = false;
-					}
-					for(Gamer gamer : gamers.values()){
-						if(gamer.getId() == lastGuessGamer.getId()){
-							if(isLastGamerWin){
-								scoreService.settleScore(score, 0, gamer.getId());
-							}else{
-								scoreService.settleScore(-score, 0, gamer.getId());
-							}
-						}else{
-							if(isLastGamerWin){
-								scoreService.settleScore(-score, 0, gamer.getId());
-							}else{
-								scoreService.settleScore(score, 0, gamer.getId());
-							}
-						}
-						Member member = memberService.getMemberById(gamer.getId());
-						MemberCache.getInstance().updateMember(gamer.getUid(), member);
-					}
-					BroadcastThreadPool.execute(new OpenIt(gambling.getId(),lastGuessGamer,isLastGamerWin,diceInfoList));
+					}                                                                         
+					//处理用户分数
+					handleScore(gamers.values(),openGamer, lastGuessGamer,score, isLastGamerWin);
+					BroadcastThreadPool.execute(new OpenIt(gambling.getId(),lastGuessGamer,openGamer,isLastGamerWin,diceInfoList,allDiceNum));
 					gambling.setStatus(GameStatus.WAIT.getCode());
 					gambling.setCurrentGuessGamerId(null);
 					gambling.setLastGuessGamerId(null);
@@ -119,5 +109,33 @@ public class OpenHandler extends AbstractHandler implements IHandler{
 			}
 		}
 		return result;
+	}
+
+	private void handleScore(Collection<Gamer> gamers, Gamer openGamer,
+			Gamer lastGuessGamer, Integer score, boolean isLastGamerWin) {
+		IScoreService scoreService = SpringConstant.getBean("scoreServiceImpl");
+		IMemberService memberService = SpringConstant.getBean("memberServiceImpl");
+		for(Gamer gamer : gamers){
+			//最后一个叫点用户
+			if(gamer.getId() == lastGuessGamer.getId() && isLastGamerWin){
+				if(isLastGamerWin){
+					scoreService.settleScore(score, 0, gamer.getId());
+				}else{
+					scoreService.settleScore(-score, 0, gamer.getId());
+				}
+			}else if(gamer.getId() == openGamer.getId()){
+				//当前叫开用户
+				if(isLastGamerWin){
+					scoreService.settleScore(-score, 0, gamer.getId());
+				}else{
+					scoreService.settleScore(score, 0, gamer.getId());
+				}
+			}else{
+				//其他参与用户
+				scoreService.settleScore(-10, 0, gamer.getId());
+			}
+			Member member = memberService.getMemberById(gamer.getId());
+			MemberCache.getInstance().updateMember(gamer.getUid(), member);
+		}
 	}
 }

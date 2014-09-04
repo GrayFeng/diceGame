@@ -1,12 +1,16 @@
 package net.netne.admin.control;
 
+import javax.servlet.http.HttpServletRequest;
+
 import net.netne.api.service.IPrizeService;
 import net.netne.api.service.IUploadService;
 import net.netne.common.enums.EUploadType;
+import net.netne.common.pojo.ImageUploadResult;
 import net.netne.common.pojo.Page;
 import net.netne.common.pojo.Prize;
 import net.netne.common.pojo.PrizeMember;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -39,11 +43,22 @@ public class PrizeControl {
 	}
 	
 	@RequestMapping("add")
-	public ModelAndView list(@ModelAttribute Prize prize,MultipartFile photo){
+	public ModelAndView list(@ModelAttribute Prize prize,MultipartFile photo
+			,HttpServletRequest request){
 		ModelAndView mav = new ModelAndView("redirect:/gm/prize/list.do");
+		ImageUploadResult imageUploadResult = null;
 		prizeService.addPrize(prize);
 		if(photo != null && photo.getSize() > 0){
-			uploadService.processupload(prize.getId(),photo,EUploadType.PRIZE_PHOTO);
+			imageUploadResult = uploadService.processupload(prize.getId(),photo,EUploadType.PRIZE_PHOTO);
+		}
+		if(imageUploadResult == null || imageUploadResult.isSuccess()){
+			
+		}else if(StringUtils.isNotEmpty(imageUploadResult.getMsg())){
+			prizeService.deletePrize(prize.getId());
+			request.getSession().setAttribute("errorMsg", imageUploadResult.getMsg());
+		}else{
+			prizeService.deletePrize(prize.getId());
+			request.getSession().setAttribute("errorMsg","系统异常，添加奖品失败!");
 		}
 		return mav;
 	}

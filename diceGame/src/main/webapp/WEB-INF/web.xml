@@ -69,8 +69,16 @@
   </servlet-mapping>
   
   <welcome-file-list>
-    <welcome-file>/jsp/index.jsp</welcome-file>
+    <welcome-file>/WEB-INF/jsp/common/error_page.jsp</welcome-file>
   </welcome-file-list>
+  <error-page>
+  	<error-code>404</error-code>
+  	<location>/WEB-INF/jsp/common/error_page.jsp</location>
+  </error-page>
+   <error-page>
+  	<error-code>500</error-code>
+  	<location>/WEB-INF/jsp/common/error_page.jsp</location>
+  </error-page>
   
   <listener>
     <listener-class>net.netne.init.GameServer</listener-class>

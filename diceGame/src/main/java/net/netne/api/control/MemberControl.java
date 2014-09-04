@@ -246,7 +246,7 @@ public class MemberControl {
 	@ResponseBody
 	public String start(String uid){
 		Result result = Result.getSuccessResult();
-		Map<String,String> resultMap = Maps.newHashMap();
+		Map<String,Object> resultMap = Maps.newHashMap();
 		if(StringUtils.isEmpty(uid) 
 				|| !MemberCache.getInstance().isHave(uid)){
 			uid = "m-"+UUID.randomUUID().toString();
@@ -254,6 +254,7 @@ public class MemberControl {
 			MemberCache.getInstance().add(uid, loginInfo);
 		}
 		resultMap.put("uid", uid);
+		resultMap.put("sysTime", System.currentTimeMillis());
 		result.setRe(resultMap);
 		return ResultUtil.getJsonString(result);
 	}

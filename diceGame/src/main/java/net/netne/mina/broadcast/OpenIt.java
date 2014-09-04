@@ -26,18 +26,25 @@ import com.alibaba.fastjson.JSON;
 public class OpenIt implements IBroadcastThread {
 
 	private String gamblingId;
+	
+	private Gamer opneGamer;
 
 	private Gamer lastGuessGamer;
 	
 	private boolean isLastGamerWin;
 	
 	private List<DiceInfo> diceInfoList;
+	
+	private Integer diceNum;
 
-	public OpenIt(String gamblingId, Gamer lastGuessGamer,boolean isLastGamerWin,List<DiceInfo> diceInfoList) {
+	public OpenIt(String gamblingId, Gamer lastGuessGamer,Gamer opneGamer
+			,boolean isLastGamerWin,List<DiceInfo> diceInfoList,Integer diceNum) {
 		this.gamblingId = gamblingId;
 		this.lastGuessGamer = lastGuessGamer;
 		this.isLastGamerWin = isLastGamerWin;
 		this.diceInfoList = diceInfoList;
+		this.opneGamer = opneGamer;
+		this.diceNum = diceNum;
 	}
 
 	@Override
@@ -49,8 +56,7 @@ public class OpenIt implements IBroadcastThread {
 			OpenItTO openItTO = new OpenItTO();
 			openItTO.setDiceList(diceInfoList);
 			openItTO.setWin(0);
-			openItTO.setScore(gambling.getScore());
-			openItTO.setDiceNum(lastGuessGamer.getGuessDiceNum());
+			openItTO.setDiceNum(diceNum);
 			openItTO.setDicePoint(lastGuessGamer.getGuessDicePoint());
 			broadcastTO.setContent(openItTO);
 			for (Gamer mGamer : gamers) {
@@ -58,15 +64,22 @@ public class OpenIt implements IBroadcastThread {
 				if(mGamer.getUid().equals(lastGuessGamer.getUid())){
 					if(isLastGamerWin){
 						openItTO.setWin(1);
+						openItTO.setScore(gambling.getScore());
 					}else{
 						openItTO.setWin(2);
+						openItTO.setScore(-gambling.getScore());
 					}
-				}else {
+				}else if(mGamer.getUid().equals(opneGamer.getUid())){
 					if(!isLastGamerWin){
 						openItTO.setWin(1);
+						openItTO.setScore(gambling.getScore());
 					}else{
 						openItTO.setWin(2);
+						openItTO.setScore(-gambling.getScore());
 					}
+				}else {
+					openItTO.setWin(2);
+					openItTO.setScore(-10);
 				}
 				broadcastTO.setContent(openItTO);
 				mGamer.setGamestatus(GamerStatus.NEW_JOIN.getCode());

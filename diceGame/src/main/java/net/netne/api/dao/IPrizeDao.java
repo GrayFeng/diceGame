@@ -44,5 +44,7 @@ public interface IPrizeDao {
 	
 	public PrizePhoto getPrizePhoto(Integer prizeId);
 	
+	public void deletePrize(Integer prizeId);
+	
 
 }

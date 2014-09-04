@@ -46,7 +46,15 @@ public class PrizeServiceImpl implements IPrizeService {
 
 	@Override
 	public Prize getPrizeById(Integer prizeId) {
-		return prizeDao.getPrizeById(prizeId);
+		Prize prize = prizeDao.getPrizeById(prizeId);
+		if(prize != null){
+			if("true".equals(prize.getPhotoUrl())){
+				prize.setPhotoUrl(Constant.PRIZE_PHOTO_URL_PATH + prize.getId());
+			}else{
+				prize.setPhotoUrl(null);
+			}
+		} 
+		return prize;
 	}
 
 	@Override
@@ -234,6 +242,14 @@ public class PrizeServiceImpl implements IPrizeService {
 	@Override
 	public PrizePhoto getPrizePhoto(Integer prizeId) {
 		return prizeDao.getPrizePhoto(prizeId);
+	}
+
+	@Override
+	public void deletePrize(Integer prizeId) {
+		if(prizeId == null){
+			return;
+		}
+		prizeDao.deletePrize(prizeId);
 	}
 
 }

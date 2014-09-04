@@ -1,5 +1,10 @@
 package net.netne.api.service.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+
+import javax.imageio.ImageIO;
+
 import net.netne.api.dao.IMemberDao;
 import net.netne.api.dao.IPrizeDao;
 import net.netne.api.service.IUploadService;
@@ -30,9 +35,17 @@ public class UploadServiceImpl implements IUploadService{
 		}
 		long fileSize = uploadFile.getSize();
 		if (fileSize > 300 * 1024L) {
-			return new ImageUploadResult(false,"图片过大");
+			return new ImageUploadResult(false,"图片大小不能超过300Kkb");
 		}
 		try {
+			//奖品图片格式检测
+			if(EUploadType.PRIZE_PHOTO.equals(uploadType)){
+				 BufferedImage sourceImg = ImageIO.read(uploadFile.getInputStream());
+				 if(sourceImg != null 
+						 && (sourceImg.getHeight() > 65 || sourceImg.getWidth() > 120)){
+					 return new ImageUploadResult(false,"图片尺寸大于120x65");
+				 }
+			}
 			byte[] imgbytes = SimpleFileUtil.boBin(uploadFile.getInputStream());
 			String fileExtension = SimpleFileUtil.detectFileStype(imgbytes);
 			if (!cheackFileExtention(fileExtension)) {
@@ -65,7 +78,6 @@ public class UploadServiceImpl implements IUploadService{
 				result = new ImageUploadResult(false,"图片上传失败,服务器故障");
 			}
 		}
-		
 		return result;
 	}
 

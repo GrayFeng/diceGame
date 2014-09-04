@@ -39,7 +39,7 @@
 												<input type="text" class="text w_22" name="probability" id="probability" maxlength="5">
 											</p>
 											<p>
-												<label for="name">奖品图片:</label>
+												<label for="name">奖品图片:<br/><font color="red">(图片宽高不大于120像素x65像素)</font></label>
 												<input type="file" name="photo"/>
 											</p>
 										</form>
@@ -143,11 +143,15 @@
 	<script src="${staticURL}/js/global.js" type="text/javascript"></script>
 	<script src="${staticURL}/js/modal.js" type="text/javascript"></script>
 	<script type="text/javascript">
+		var errorMsg = '${errorMsg}';
 		$(function(){
 			$("input[type=checkbox]").click(function(){
 				$("input[type=checkbox]").removeAttr("checked");
 				$(this).attr('checked',true);
 			});
+			if(errorMsg){
+				alert(errorMsg);
+			}
 		});
 		function addPrize(){
 			var name = $("#name").val();
@@ -206,4 +210,5 @@
 			$(".modify_dropdown").stop().slideToggle();
 		}
 	</script>
+	<%session.setAttribute("errorMsg", null); %>
 </html>

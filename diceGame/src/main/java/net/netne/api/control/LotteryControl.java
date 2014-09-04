@@ -75,17 +75,22 @@ public class LotteryControl {
 		LoginInfo loginInfo = MemberCache.getInstance().get(uid);
 		if(loginInfo != null && loginInfo.getMember() != null){
 			Prize prize = prizeService.lottery(loginInfo.getMember());
+			result = Result.getSuccessResult();
+			Map<String,Object> infoMap = Maps.newHashMap();
 			if(prize != null){
-				result = Result.getSuccessResult();
-				Map<String,Object> infoMap = Maps.newHashMap();
+				infoMap.put("isorder", 1);
 				infoMap.put("name", prize.getName());
 				infoMap.put("receiveKey", prize.getReceiveKey());
 				infoMap.put("id", prize.getId());
-				result.setRe(infoMap);
+				infoMap.put("photo", prize.getPhotoUrl());
+			}else{
+				result.setMsg("很抱歉没有中奖");
+				infoMap.put("isorder", 2);
 			}
+			result.setRe(infoMap);
 		}
 		if(result == null){
-			result = new Result(EEchoCode.ERROR.getCode(), "很遗憾没能中奖");
+			result = new Result(EEchoCode.ERROR.getCode(), "用户认证失败，无法参与抽奖");
 		}
 		return ResultUtil.getJsonString(result);
 	}

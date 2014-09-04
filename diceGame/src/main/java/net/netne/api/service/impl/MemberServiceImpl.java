@@ -38,7 +38,7 @@ public class MemberServiceImpl implements IMemberService{
 		memberDao.addMember(member);
 		Account account = new Account();
 		account.setMemberId(member.getId());
-		account.setScoreAmount(500L);
+		account.setScoreAmount(1000L);
 		account.setFreezeAmount(0L);
 		memberDao.addAccount(account);
 	}
