@@ -26,6 +26,7 @@ import net.netne.common.enums.EEchoCode;
 import net.netne.common.uitls.ResultUtil;
 import net.netne.mina.handler.CreateGamblingHandler;
 import net.netne.mina.handler.GuessDiceHandler;
+import net.netne.mina.handler.HeartbeatHandler;
 import net.netne.mina.handler.IHandler;
 import net.netne.mina.handler.JoinGameHandler;
 import net.netne.mina.handler.OpenHandler;
@@ -61,6 +62,7 @@ public class MessagetHandler extends IoHandlerAdapter {
 		handlerMap.put(EActionCode.GAMER_GUESS.getCode(), new GuessDiceHandler());
 		handlerMap.put(EActionCode.GAMER_OPEN.getCode(), new OpenHandler());
 		handlerMap.put(EActionCode.QUIT_GAME.getCode(), new QuitGameHandler());
+		handlerMap.put(EActionCode.HEARTBEAT.getCode(), new HeartbeatHandler());
 	}
 	
 	@Override

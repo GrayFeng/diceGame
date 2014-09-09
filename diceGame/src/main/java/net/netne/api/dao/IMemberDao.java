@@ -5,6 +5,7 @@ import java.util.Map;
 
 import net.netne.common.annotation.MyBatisRepository;
 import net.netne.common.pojo.Account;
+import net.netne.common.pojo.LoginLog;
 import net.netne.common.pojo.Member;
 import net.netne.common.pojo.MemberPhoto;
 
@@ -45,5 +46,9 @@ public interface IMemberDao {
 	public List<Member> getMemberList(Map<String,Object> paramMap);
 	
 	public Member sysLogin(String name);
+	
+	public Integer addLoginLog(LoginLog loginLog);
+	
+	public Integer getLoginCount(Integer memberId);
 
 }

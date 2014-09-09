@@ -44,7 +44,7 @@ public class SessionClosedHandler extends AbstractHandler implements IHandler{
 						GamerCache.getInstance().removeOne(gid,offlineGamer.getUid());
 						if(gambling.getGamerNum() == 0){
 							GamblingCache.getInstance().remove(gambling.getId());
-							if(offlineGamer.getTokenIndex() == gambling.getTokenIndex() 
+							if(offlineGamer.getUid().equals(gambling.getCurrentGuessGamerId())
 									&& (offlineGamer.getGamestatus() == GamerStatus.SHOOK.getCode() 
 										|| offlineGamer.getGamestatus() == GamerStatus.GUESSED.getCode())){
 								// 如果掉线用户是当前竞猜用户则通知其他玩家

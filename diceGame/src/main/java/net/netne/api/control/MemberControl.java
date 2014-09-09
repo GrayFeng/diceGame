@@ -5,6 +5,8 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import net.netne.api.service.IMemberService;
 import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EEchoCode;
@@ -82,7 +84,7 @@ public class MemberControl {
 	
 	@RequestMapping("login")
 	@ResponseBody
-	public  String login(String uid,String params){
+	public  String login(String uid,String params,HttpServletRequest request){
 		Result result = null;
 		try{
 			if(StringUtils.isNotEmpty(params)){
@@ -93,7 +95,7 @@ public class MemberControl {
 					String password = paramsObj.getString("password");
 					if(StringUtils.isNotEmpty(mobile) 
 							&& StringUtils.isNotEmpty(password)){
-						Member member = memberService.login(mobile,password);
+						Member member = memberService.login(mobile,password,getClientIp(request));
 						if(member != null){
 							LoginInfo loginInfo = new LoginInfo();
 							loginInfo.setMember(member);
@@ -204,9 +206,12 @@ public class MemberControl {
 		try{
 			LoginInfo loginInfo = MemberCache.getInstance().get(uid);
 			if(loginInfo != null && loginInfo.getMember() != null){
-				Map<String,Object> memberInfo = getMemberMap(loginInfo.getMember());
-				result = Result.getSuccessResult();
-				result.setRe(memberInfo);
+				Member member = memberService.getMemberById(loginInfo.getMember().getId());
+				if(member != null){
+					Map<String,Object> memberInfo = getMemberMap(member);
+					result = Result.getSuccessResult();
+					result.setRe(memberInfo);
+				}
 			}else{
 				result = new Result(EEchoCode.ERROR.getCode(),"用户登录超时!");
 			}
@@ -228,6 +233,7 @@ public class MemberControl {
 			memberInfo.put("sex",member.getSex());
 			memberInfo.put("name", member.getName());
 			memberInfo.put("photoUrl",member.getPhotoUrl());
+			memberInfo.put("firstLogin", member.isFirstLogin() ? 1 : 0);
 			long scoreAmount = 0;
 			if(member.getAccount() != null){
 				long realScore = member.getAccount().getScoreAmount() 
@@ -257,6 +263,20 @@ public class MemberControl {
 		resultMap.put("sysTime", System.currentTimeMillis());
 		result.setRe(resultMap);
 		return ResultUtil.getJsonString(result);
+	}
+	
+	private String getClientIp(HttpServletRequest request){
+		String ip = request.getHeader("x-forwarded-for");
+		if(StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)){
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+		if(StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)){
+			ip = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if(StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)){
+			ip = request.getRemoteAddr();
+		}
+		return ip;
 	}
 
 }

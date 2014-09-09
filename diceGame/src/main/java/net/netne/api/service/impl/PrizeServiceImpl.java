@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import net.netne.api.dao.IPrizeDao;
 import net.netne.api.service.IPrizeService;
+import net.netne.api.service.IScoreService;
 import net.netne.common.Constant;
 import net.netne.common.pojo.Member;
 import net.netne.common.pojo.Page;
@@ -33,7 +34,8 @@ public class PrizeServiceImpl implements IPrizeService {
 	
 	@Autowired
 	private IPrizeDao prizeDao;
-
+	@Autowired
+	private IScoreService scoreService;
 	@Override
 	public void addPrize(Prize prize) {
 		prizeDao.addPrize(prize);
@@ -128,6 +130,7 @@ public class PrizeServiceImpl implements IPrizeService {
 	public Prize lottery(Member member){
 		List<Prize> prizeList = getAllPrizeList();
 		if(prizeList != null && prizeList.size() > 0){
+			scoreService.addScore(member.getId(), -200);
 			Map<Double,List<Integer>> probabilityMap = Maps.newHashMap();
 			for(Prize prize : prizeList){
 				if(prize.getProbability() == null || prize.getStock() < 1){

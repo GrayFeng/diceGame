@@ -43,7 +43,7 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 			LoginInfo loginInfo = MemberCache.getInstance().get(createGamblingParams.getUid());
 			IMemberService memberService = SpringConstant.getBean("memberServiceImpl");
 			if(createGamblingParams.getScore() == null){
-				createGamblingParams.setScore(200);
+				createGamblingParams.setScore(50);
 			}
 			if(createGamblingParams.getGamerNum() == null){
 				createGamblingParams.setGamerNum(5);

@@ -84,4 +84,20 @@
 	 	select * from sys_user where name = #{name} limit 0,1
 	 </select>
 	 
+	 <insert id="addLoginLog" parameterType="LoginLog">
+	 		insert into login_log 
+	 			(member_id,ip,login_time) 
+	 		values
+	 			(#{memberId},#{ip},now())
+	 	<selectKey resultType="int" keyProperty="id" order="AFTER">  
+  			SELECT LAST_INSERT_ID() as id
+  		</selectKey>  
+	 </insert>
+	 
+	 <select id="getLoginCount" resultType="int" parameterType="int">
+	 	select count(id) as loginCount from login_log 
+	 	where DATE_FORMAT(login_time,'%Y-%m-%d') = DATE_FORMAT(now(),'%Y-%m-%d')
+	 	and member_id = #{memberId}
+	 </select>
+	 
 </mapper> 

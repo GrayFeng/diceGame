@@ -2,6 +2,8 @@ package net.netne.mina.handler;
 
 import java.util.Map;
 
+import net.netne.api.service.IMemberService;
+import net.netne.common.SpringConstant;
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
 import net.netne.common.enums.EEchoCode;
@@ -32,13 +34,18 @@ public class Ready2GameHandler extends AbstractHandler implements IHandler{
 					.parseObject(params, Ready2GameParam.class);
 			Gambling gambling = GamblingCache.getInstance().get(ready2GameParam.getGamblingId());
 			if(gambling != null && gambling.getStatus() == GameStatus.WAIT.getCode()){
+				IMemberService memberService = SpringConstant.getBean("memberServiceImpl");
 				Map<String,Gamer> gamers = GamerCache.getInstance().getGamerMap(gambling.getId());
 				Gamer gamer = gamers.get(ready2GameParam.getUid());
 				if(gamer != null && gamer.getGamestatus() == GamerStatus.NEW_JOIN.getCode()){
-					gamer.setGamestatus(GamerStatus.READY.getCode());
-					GamerCache.getInstance().addOne(ready2GameParam.getGamblingId(), gamer);
-					result = MinaResult.getSuccessResult();
-					BroadcastThreadPool.execute(new checkGameCanBegin(gambling.getId(),gamer));
+					if(memberService.checkScore(gamer.getId(), gambling.getScore())){
+						gamer.setGamestatus(GamerStatus.READY.getCode());
+						GamerCache.getInstance().addOne(ready2GameParam.getGamblingId(), gamer);
+						result = MinaResult.getSuccessResult();
+						BroadcastThreadPool.execute(new checkGameCanBegin(gambling.getId(),gamer));
+					}else{
+						result = new MinaResult(EEchoCode.SCORE_NOT_ENOUTH.getCode(),"积分不足无法开始游戏");
+					}
 				}
 			}
 		}catch(Exception e){

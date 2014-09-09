@@ -81,6 +81,10 @@ public class GamerShakeDice implements IBroadcastThread{
 	private void broadCastStartReport(List<Gamer> gamers,Gambling gambling){
 		if(gamers != null){
 			BroadcastTO result = new BroadcastTO(EBroadcastCode.GAMER_START_GUESS.getCode(), "开始竞猜点数");
+			Gamer loseGamer = null;
+			if(gambling.getCurrentGuessGamerId() != null){
+				loseGamer = GamerCache.getInstance().getOne(gamblingId, gambling.getCurrentGuessGamerId());
+			}
 			Map<String,Object> firstGamerMap = null;
 			for(Gamer mGamer : gamers){
 				IoSession session = mGamer.getSession();
@@ -88,10 +92,14 @@ public class GamerShakeDice implements IBroadcastThread{
 						&& mGamer.getGamestatus() == GamerStatus.SHOOK.getCode()){
 					if(firstGamerMap == null){
 						firstGamerMap = Maps.newHashMap();
-						firstGamerMap.put("tokenUserId",mGamer.getId());
+						if(loseGamer != null){
+							firstGamerMap.put("tokenUserId",loseGamer.getTokenIndex());
+						}else{
+							firstGamerMap.put("tokenUserId",mGamer.getId());
+							gambling.setTokenIndex(gamers.indexOf(mGamer));
+							gambling.setCurrentGuessGamerId(gamer.getUid());
+						}
 						result.setContent(firstGamerMap);
-						gambling.setTokenIndex(gamers.indexOf(mGamer));
-						gambling.setCurrentGuessGamerId(gamer.getUid());
 						GamblingCache.getInstance().add(gambling);
 					}
 					session.write(JSON.toJSONString(result));

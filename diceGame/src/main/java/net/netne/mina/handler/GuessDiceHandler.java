@@ -38,7 +38,7 @@ public class GuessDiceHandler extends AbstractHandler implements IHandler{
 				Map<String,Gamer> gamers = GamerCache.getInstance().getGamerMap(gambling.getId());
 				Gamer gamer = gamers.get(guessDiceParam.getUid());
 				if(gamer != null 
-						&& gamer.getTokenIndex() == gambling.getTokenIndex()
+						&& gamer.getUid().equals(gambling.getCurrentGuessGamerId())
 						&& (gamer.getGamestatus() == GamerStatus.SHOOK.getCode()
 								|| gamer.getGamestatus() == GamerStatus.GUESSED.getCode())){
 					boolean GuessEffective = false;
@@ -96,14 +96,28 @@ public class GuessDiceHandler extends AbstractHandler implements IHandler{
 	
 	private Gamer getTokenGamer(Gambling gambling,String uid){
 		List<Gamer> gamers = GamerCache.getInstance().getGamers(gambling.getId());
+		Gamer currentGamer = GamerCache.getInstance().getOne(gambling.getId(),uid);
 		Gamer tokenGamer = null;
+		Integer tokenIndex = 0;
+		try{
+			if(currentGamer != null){
+				int index = gamers.indexOf(currentGamer);
+				if(index < (gamers.size() -1)){
+					tokenIndex = index + 1;
+				}
+			}
+		}catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		tokenGamer = gamers.get(tokenIndex);
+		if(tokenGamer.getGamestatus() == GamerStatus.GUESSED.getCode() 
+				|| tokenGamer.getGamestatus() == GamerStatus.SHOOK.getCode()){
+			return tokenGamer;
+		}
 		for(Gamer gamer : gamers){
 			if(gamer.getGamestatus() == GamerStatus.GUESSED.getCode() 
 					|| gamer.getGamestatus() == GamerStatus.SHOOK.getCode()){
-				if(tokenGamer == null 
-						&& !gamer.getUid().equals(uid)){
-					tokenGamer = gamer;
-				}else if(gambling.getTokenIndex() < gamer.getTokenIndex()){
+				if(!gamer.getUid().equals(uid)){
 					tokenGamer = gamer;
 					break;
 				}

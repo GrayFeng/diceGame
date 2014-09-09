@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import net.netne.api.dao.IMemberDao;
-import net.netne.api.dao.IScoreDao;
 import net.netne.api.service.IMemberService;
+import net.netne.api.service.IScoreService;
 import net.netne.common.Constant;
 import net.netne.common.pojo.Account;
+import net.netne.common.pojo.LoginLog;
 import net.netne.common.pojo.Member;
 import net.netne.common.pojo.MemberPhoto;
 import net.netne.common.pojo.Page;
@@ -28,9 +29,8 @@ import com.google.common.collect.Maps;
 public class MemberServiceImpl implements IMemberService{
 	@Autowired
 	private IMemberDao memberDao;
-	@SuppressWarnings("unused")
 	@Autowired
-	private IScoreDao scoreDao;
+	private IScoreService scoreService;
 
 	@Override
 	@Transactional(readOnly=false,rollbackFor=Throwable.class)
@@ -44,10 +44,20 @@ public class MemberServiceImpl implements IMemberService{
 	}
 
 	@Override
-	public Member login(String mobile, String password) {
+	public Member login(String mobile, String password,String ip) {
 		Member member = getMember(mobile);
 		if(member != null 
 				&& member.getPassword().equals(password)){
+			Integer loginCount = memberDao.getLoginCount(member.getId());
+			if(loginCount == null || loginCount == 0){
+				scoreService.addScore(member.getId(), 400);
+				member.setFirstLogin(true);
+				member = getMemberById(member.getId());
+			}
+			LoginLog loginLog = new LoginLog();
+			loginLog.setIp(ip);
+			loginLog.setMemberId(member.getId());
+			addLoginLog(loginLog);
 			return member;
 		}
 		return null;
@@ -158,6 +168,11 @@ public class MemberServiceImpl implements IMemberService{
 	@Override
 	public Member sysLogin(String name) {
 		return memberDao.sysLogin(name);
+	}
+
+	@Override
+	public Integer addLoginLog(LoginLog loginLog) {
+		return memberDao.addLoginLog(loginLog);
 	}
 
 }

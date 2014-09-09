@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.netne.api.service.IMemberService;
 import net.netne.api.service.IPrizeService;
 import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EEchoCode;
@@ -43,6 +44,8 @@ public class LotteryControl {
 	
 	@Autowired
 	private IPrizeService prizeService;
+	@Autowired
+	private IMemberService memberService;
 	
 	@RequestMapping("list")
 	@ResponseBody
@@ -51,19 +54,22 @@ public class LotteryControl {
 		Result result = Result.getSuccessResult();
 		if(prizeList != null){
 			List<Map<String,Object>> prizeInfoList = Lists.newArrayList();
+			Map<String,Object> infoMap = Maps.newHashMap();
 			int i = 0;
 			for(Prize prize : prizeList){
 				if(i > 4){
 					break;
 				}
 				i++;
-				Map<String,Object> infoMap = Maps.newHashMap();
-				infoMap.put("name", prize.getName());
-				infoMap.put("id", prize.getId());
-				infoMap.put("photo", prize.getPhotoUrl());
-				prizeInfoList.add(infoMap);
+				Map<String,Object> prizeInfoMap = Maps.newHashMap();
+				prizeInfoMap.put("name", prize.getName());
+				prizeInfoMap.put("id", prize.getId());
+				prizeInfoMap.put("photo", prize.getPhotoUrl());
+				prizeInfoList.add(prizeInfoMap);
 			}
-			result.setRe(prizeInfoList);
+			infoMap.put("prizeList", prizeInfoList);
+			infoMap.put("score", 200);
+			result.setRe(infoMap);
 		}
 		return ResultUtil.getJsonString(result);
 	}
@@ -74,20 +80,24 @@ public class LotteryControl {
 		Result result = null;
 		LoginInfo loginInfo = MemberCache.getInstance().get(uid);
 		if(loginInfo != null && loginInfo.getMember() != null){
-			Prize prize = prizeService.lottery(loginInfo.getMember());
-			result = Result.getSuccessResult();
-			Map<String,Object> infoMap = Maps.newHashMap();
-			if(prize != null){
-				infoMap.put("isorder", 1);
-				infoMap.put("name", prize.getName());
-				infoMap.put("receiveKey", prize.getReceiveKey());
-				infoMap.put("id", prize.getId());
-				infoMap.put("photo", prize.getPhotoUrl());
+			if(memberService.checkScore(loginInfo.getMember().getId(), 200)){
+				Prize prize = prizeService.lottery(loginInfo.getMember());
+				result = Result.getSuccessResult();
+				Map<String,Object> infoMap = Maps.newHashMap();
+				if(prize != null){
+					infoMap.put("isorder", 1);
+					infoMap.put("name", prize.getName());
+					infoMap.put("receiveKey", prize.getReceiveKey());
+					infoMap.put("id", prize.getId());
+					infoMap.put("photo", prize.getPhotoUrl());
+				}else{
+					result.setMsg("很抱歉没有中奖");
+					infoMap.put("isorder", 2);
+				}
+				result.setRe(infoMap);
 			}else{
-				result.setMsg("很抱歉没有中奖");
-				infoMap.put("isorder", 2);
+				result = new Result(EEchoCode.ERROR.getCode(), "积分不足，无法参与抽奖");
 			}
-			result.setRe(infoMap);
 		}
 		if(result == null){
 			result = new Result(EEchoCode.ERROR.getCode(), "用户认证失败，无法参与抽奖");

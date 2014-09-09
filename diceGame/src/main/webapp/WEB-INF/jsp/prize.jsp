@@ -39,7 +39,7 @@
 												<input type="text" class="text w_22" name="probability" id="probability" maxlength="5">
 											</p>
 											<p>
-												<label for="name">奖品图片:<br/><font color="red">(图片宽高不大于120像素x65像素)</font></label>
+												<label for="name">奖品图片:<br/><font color="red">(图片宽高不大于305像素x220像素)</font></label>
 												<input type="file" name="photo"/>
 											</p>
 										</form>

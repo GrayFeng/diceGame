@@ -46,6 +46,11 @@ public enum EActionCode {
 		public Integer getCode(){
 			return 140;
 		}
+	},
+	HEARTBEAT{
+		public Integer getCode(){
+			return 146;
+		}
 	};
 	
 	abstract public Integer getCode();

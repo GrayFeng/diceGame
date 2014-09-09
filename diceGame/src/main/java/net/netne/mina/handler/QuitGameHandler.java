@@ -7,6 +7,7 @@ import net.netne.common.SpringConstant;
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
 import net.netne.common.enums.EEchoCode;
+import net.netne.common.enums.GamerStatus;
 import net.netne.mina.broadcast.BroadcastThreadPool;
 import net.netne.mina.broadcast.QuitGame;
 import net.netne.mina.broadcast.checkGameCanBegin4Quit;
@@ -38,7 +39,10 @@ public class QuitGameHandler extends AbstractHandler implements IHandler{
 					Gamer gamer = gamers.get(quitGameParam.getUid());
 					if(gamer != null){
 						IScoreService scoreService = SpringConstant.getBean("scoreServiceImpl");
-						scoreService.addScore(gamer.getId(), -gambling.getScore());
+						if(gamer.getGamestatus() != GamerStatus.NEW_JOIN.getCode() 
+								&& gamer.getGamestatus() != GamerStatus.READY.getCode()){
+							scoreService.addScore(gamer.getId(), -gambling.getScore());
+						}
 						gambling.setGamerNum(gambling.getGamerNum() - 1);
 						GamblingCache.getInstance().add(gambling);
 						GamerCache.getInstance().removeOne(quitGameParam.getGamblingId(),gamer.getUid());

@@ -1,5 +1,6 @@
 package net.netne.api.service;
 
+import net.netne.common.pojo.LoginLog;
 import net.netne.common.pojo.Member;
 import net.netne.common.pojo.MemberPhoto;
 import net.netne.common.pojo.Page;
@@ -14,7 +15,7 @@ public interface IMemberService {
 	
 	public void addMember(Member member);
 	
-	public Member login(String mobile,String password);
+	public Member login(String mobile,String password,String ip);
 	
 	public Member getMember(String mobile);
 	
@@ -35,5 +36,7 @@ public interface IMemberService {
 	public Page<Member> getMemberList(Integer pageNum);
 	
 	public Member sysLogin(String name);
+	
+	public Integer addLoginLog(LoginLog loginLog);
 
 }

@@ -1,7 +1,6 @@
 package net.netne.api.service.impl;
 
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 
 import javax.imageio.ImageIO;
 
@@ -42,8 +41,8 @@ public class UploadServiceImpl implements IUploadService{
 			if(EUploadType.PRIZE_PHOTO.equals(uploadType)){
 				 BufferedImage sourceImg = ImageIO.read(uploadFile.getInputStream());
 				 if(sourceImg != null 
-						 && (sourceImg.getHeight() > 65 || sourceImg.getWidth() > 120)){
-					 return new ImageUploadResult(false,"图片尺寸大于120x65");
+						 && (sourceImg.getHeight() > 220 || sourceImg.getWidth() > 305)){
+					 return new ImageUploadResult(false,"图片尺寸大于305x220");
 				 }
 			}
 			byte[] imgbytes = SimpleFileUtil.boBin(uploadFile.getInputStream());

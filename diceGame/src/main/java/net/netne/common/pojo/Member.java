@@ -38,6 +38,16 @@ public class Member {
 	
 	private int status;
 	
+	private boolean firstLogin;
+	
+	public boolean isFirstLogin() {
+		return firstLogin;
+	}
+
+	public void setFirstLogin(boolean firstLogin) {
+		this.firstLogin = firstLogin;
+	}
+
 	public Date getRegTime() {
 		return regTime;
 	}

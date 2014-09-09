@@ -22,6 +22,11 @@ public enum EEchoCode {
 		public String getCode(){
 			return "205";
 		}
+	},
+	SCORE_NOT_ENOUTH{
+		public String getCode(){
+			return "206";
+		}
 	};
 	
 	abstract public String getCode();
