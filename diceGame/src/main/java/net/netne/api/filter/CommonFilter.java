@@ -2,6 +2,7 @@ package net.netne.api.filter;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -47,7 +48,7 @@ public class CommonFilter implements Filter{
 		if(result != null){
 			resp.setContentType("text/plain;charset=UTF-8");  
 			OutputStream os = resp.getOutputStream();
-			os.write(ResultUtil.getJsonString(result).getBytes());
+			os.write(ResultUtil.getJsonString(result).getBytes(Charset.forName("UTF-8")));
 			os.flush();
 			os.close();
 			resp.flushBuffer();
