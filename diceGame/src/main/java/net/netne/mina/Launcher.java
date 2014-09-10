@@ -20,6 +20,7 @@
 package net.netne.mina;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class Launcher {
         }
 
         chain.addLast("codec", new ProtocolCodecFilter(
-                new TextLineCodecFactory()));
+                new TextLineCodecFactory(Charset.forName("UTF-8"))));
 
         addLogger(chain);
 

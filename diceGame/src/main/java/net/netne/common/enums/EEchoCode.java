@@ -10,7 +10,7 @@ public enum EEchoCode {
 	},
 	NOT_LOGIN{
 		public String getCode(){
-			return "201";
+			return "910";
 		}
 	},
 	MISSING{

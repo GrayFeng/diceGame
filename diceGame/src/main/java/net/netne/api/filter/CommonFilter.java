@@ -40,7 +40,7 @@ public class CommonFilter implements Filter{
 					&& !path.contains("api/img") 
 					&& !path.contains("api/prize/img")){
 				if(StringUtils.isEmpty(uid) || !MemberCache.getInstance().isLogin(uid)){
-					result = new Result(EEchoCode.ERROR.getCode(),"用户未登录或缺少UID认证信息");
+					result = new Result(EEchoCode.NOT_LOGIN.getCode(),"用户未登录或缺少UID认证信息");
 				}
 			}
 		}

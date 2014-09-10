@@ -93,11 +93,11 @@ public class GamerShakeDice implements IBroadcastThread{
 					if(firstGamerMap == null){
 						firstGamerMap = Maps.newHashMap();
 						if(loseGamer != null){
-							firstGamerMap.put("tokenUserId",loseGamer.getTokenIndex());
+							firstGamerMap.put("tokenUserId",loseGamer.getId());
 						}else{
 							firstGamerMap.put("tokenUserId",mGamer.getId());
 							gambling.setTokenIndex(gamers.indexOf(mGamer));
-							gambling.setCurrentGuessGamerId(gamer.getUid());
+							gambling.setCurrentGuessGamerId(mGamer.getUid());
 						}
 						result.setContent(firstGamerMap);
 						GamblingCache.getInstance().add(gambling);
