@@ -270,6 +270,7 @@ public class MemberControl {
 			}
 		}
 		resultMap.put("isFirstLogin", isFirstLogin ? 1 : 0);
+		resultMap.put("firstLoginScore", isFirstLogin ? 400 : 0);
 		resultMap.put("uid", uid);
 		resultMap.put("sysTime", System.currentTimeMillis());
 		result.setRe(resultMap);
@@ -278,15 +279,17 @@ public class MemberControl {
 	
 	@RequestMapping("checkVersion")
 	@ResponseBody
-	public String checkVersion(String uid,String cid){
+	public String checkVersion(String uid,String params){
 		Result result = null;
 		Map<String,Object> resultMap = Maps.newHashMap();
-		if(StringUtils.isNotEmpty(cid)){
+		if(StringUtils.isNotEmpty(params)){
+			JSONObject jsonObject = JSON.parseObject(params);
+			String cid = jsonObject.getString("cid");
 			VersionInfo versionInfo = versionService.checkVersion(cid);
 			if(versionInfo != null && versionInfo.isUpgrade()){
 				result = Result.getSuccessResult();
 				resultMap.put("address", versionInfo.getAddress());
-				resultMap.put("ver",versionInfo.getNewver());
+				resultMap.put("ver",versionInfo.getVersion_name());
 				resultMap.put("msg", versionInfo.getMsg());
 				resultMap.put("upgrade",1);
 				result.setRe(resultMap);

@@ -6,9 +6,9 @@
     
     <insert id="addVersionInfo" parameterType="VersionInfo">
         insert into update_info 
-        	(address,msg,channel,newver) 
+        	(address,msg,channel,newver,version_name) 
         values 
-        	(#{address},#{msg},#{channel},#{newver})
+        	(#{address},#{msg},#{channel},#{newver},#{version_name})
     </insert>
      
     <delete id="deleteVersionInfo" parameterType="String">

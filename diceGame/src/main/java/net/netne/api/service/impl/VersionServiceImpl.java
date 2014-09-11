@@ -21,7 +21,7 @@ public class VersionServiceImpl implements IVersionService{
 	public VersionInfo checkVersion(String verStr) {
 		List<VersionInfo> versionList = dao.getVersionList();
 
-        if (null == verStr || verStr.length() != 6) {
+        if (null == verStr || verStr.length() < 4) {
             return null;
         }
 
