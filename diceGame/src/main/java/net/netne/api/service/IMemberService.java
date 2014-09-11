@@ -38,5 +38,7 @@ public interface IMemberService {
 	public Member sysLogin(String name);
 	
 	public Integer addLoginLog(LoginLog loginLog);
+	
+	public boolean checkMemberIsFirstLogin(Member member,String ip);
 
 }

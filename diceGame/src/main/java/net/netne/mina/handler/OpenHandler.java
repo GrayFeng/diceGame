@@ -129,16 +129,16 @@ public class OpenHandler extends AbstractHandler implements IHandler{
 			//最后一个叫点用户
 			if(gamer.getId() == lastGuessGamer.getId() && isLastGamerWin){
 				if(isLastGamerWin){
-					scoreService.settleScore(score, 0, gamer.getId());
+					scoreService.settleScore(score - 10, 0, gamer.getId());
 				}else{
-					scoreService.settleScore(-score, 0, gamer.getId());
+					scoreService.settleScore(-(score + 10), 0, gamer.getId());
 				}
 			}else if(gamer.getId() == openGamer.getId()){
 				//当前叫开用户
 				if(isLastGamerWin){
-					scoreService.settleScore(-score, 0, gamer.getId());
+					scoreService.settleScore(-(score + 10), 0, gamer.getId());
 				}else{
-					scoreService.settleScore(score, 0, gamer.getId());
+					scoreService.settleScore(score - 10, 0, gamer.getId());
 				}
 			}else{
 				//其他参与用户

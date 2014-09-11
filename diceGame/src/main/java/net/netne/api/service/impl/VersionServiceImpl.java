@@ -6,6 +6,7 @@ import net.netne.api.dao.IVersionDao;
 import net.netne.api.service.IVersionService;
 import net.netne.common.pojo.VersionInfo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.primitives.Ints;
@@ -13,6 +14,7 @@ import com.google.common.primitives.Ints;
 @Service
 public class VersionServiceImpl implements IVersionService{
 	
+	@Autowired
 	private IVersionDao dao;
 
 	@Override

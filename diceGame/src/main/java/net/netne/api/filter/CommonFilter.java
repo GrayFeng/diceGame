@@ -37,7 +37,8 @@ public class CommonFilter implements Filter{
 				if(StringUtils.isEmpty(uid) || !MemberCache.getInstance().isHave(uid)){
 					result = new Result(EEchoCode.ERROR.getCode(),"缺少UID认证信息");
 				}
-			}else if(!path.contains("api/start") 
+			}else if(!path.contains("api/start")
+					&& !path.contains("api/checkVersion")
 					&& !path.contains("api/img") 
 					&& !path.contains("api/prize/img")){
 				if(StringUtils.isEmpty(uid) || !MemberCache.getInstance().isLogin(uid)){

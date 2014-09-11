@@ -48,16 +48,7 @@ public class MemberServiceImpl implements IMemberService{
 		Member member = getMember(mobile);
 		if(member != null 
 				&& member.getPassword().equals(password)){
-			Integer loginCount = memberDao.getLoginCount(member.getId());
-			if(loginCount == null || loginCount == 0){
-				scoreService.addScore(member.getId(), 400);
-				member.setFirstLogin(true);
-				member = getMemberById(member.getId());
-			}
-			LoginLog loginLog = new LoginLog();
-			loginLog.setIp(ip);
-			loginLog.setMemberId(member.getId());
-			addLoginLog(loginLog);
+			member = getMemberById(member.getId());
 			return member;
 		}
 		return null;
@@ -173,6 +164,21 @@ public class MemberServiceImpl implements IMemberService{
 	@Override
 	public Integer addLoginLog(LoginLog loginLog) {
 		return memberDao.addLoginLog(loginLog);
+	}
+
+	@Override
+	public boolean checkMemberIsFirstLogin(Member member,String ip) {
+		boolean isFirstLogin = false;
+		Integer loginCount = memberDao.getLoginCount(member.getId());
+		if(loginCount == null || loginCount == 0){
+			scoreService.addScore(member.getId(), 400);
+			isFirstLogin = true;
+			LoginLog loginLog = new LoginLog();
+			loginLog.setIp(ip);
+			loginLog.setMemberId(member.getId());
+			addLoginLog(loginLog);
+		}
+		return isFirstLogin;
 	}
 
 }

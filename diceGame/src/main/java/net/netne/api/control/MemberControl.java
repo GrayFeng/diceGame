@@ -8,11 +8,13 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import net.netne.api.service.IMemberService;
+import net.netne.api.service.IVersionService;
 import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EEchoCode;
 import net.netne.common.pojo.LoginInfo;
 import net.netne.common.pojo.Member;
 import net.netne.common.pojo.Result;
+import net.netne.common.pojo.VersionInfo;
 import net.netne.common.uitls.ResultUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -40,6 +42,8 @@ public class MemberControl {
 	
 	@Autowired
 	private IMemberService memberService;
+	@Autowired
+	private IVersionService versionService;
 	
 	@RequestMapping("reg")
 	@ResponseBody
@@ -250,18 +254,53 @@ public class MemberControl {
 	
 	@RequestMapping("start")
 	@ResponseBody
-	public String start(String uid){
+	public String start(String uid,HttpServletRequest request){
 		Result result = Result.getSuccessResult();
 		Map<String,Object> resultMap = Maps.newHashMap();
+		boolean isFirstLogin = false;
 		if(StringUtils.isEmpty(uid) 
 				|| !MemberCache.getInstance().isHave(uid)){
 			uid = "m-"+UUID.randomUUID().toString();
 			LoginInfo loginInfo = new LoginInfo();
 			MemberCache.getInstance().add(uid, loginInfo);
+		}else{
+			LoginInfo loginInfo = MemberCache.getInstance().get(uid);
+			if(loginInfo != null && loginInfo.getMember() != null){
+				isFirstLogin = memberService.checkMemberIsFirstLogin(loginInfo.getMember(), getClientIp(request));
+			}
 		}
+		resultMap.put("isFirstLogin", isFirstLogin ? 1 : 0);
 		resultMap.put("uid", uid);
 		resultMap.put("sysTime", System.currentTimeMillis());
 		result.setRe(resultMap);
+		return ResultUtil.getJsonString(result);
+	}
+	
+	@RequestMapping("checkVersion")
+	@ResponseBody
+	public String checkVersion(String uid,String cid){
+		Result result = null;
+		Map<String,Object> resultMap = Maps.newHashMap();
+		if(StringUtils.isNotEmpty(cid)){
+			VersionInfo versionInfo = versionService.checkVersion(cid);
+			if(versionInfo != null && versionInfo.isUpgrade()){
+				result = Result.getSuccessResult();
+				resultMap.put("address", versionInfo.getAddress());
+				resultMap.put("ver",versionInfo.getNewver());
+				resultMap.put("msg", versionInfo.getMsg());
+				resultMap.put("upgrade",1);
+				result.setRe(resultMap);
+			}
+		}
+		if(result == null){
+			result = Result.getSuccessResult();
+			resultMap.put("address",null);
+			resultMap.put("ver",null);
+			resultMap.put("msg","无可更新版本");
+			resultMap.put("upgrade",0);
+			result.setRe(resultMap);
+			
+		}
 		return ResultUtil.getJsonString(result);
 	}
 	
