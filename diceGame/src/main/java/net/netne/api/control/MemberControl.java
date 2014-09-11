@@ -270,6 +270,7 @@ public class MemberControl {
 			}
 		}
 		resultMap.put("isFirstLogin", isFirstLogin ? 1 : 0);
+		resultMap.put("firstLoginScore", isFirstLogin ? 400 : 0);
 		resultMap.put("uid", uid);
 		resultMap.put("sysTime", System.currentTimeMillis());
 		result.setRe(resultMap);
