@@ -16,6 +16,9 @@
 		<li>
 			<a href="${contextPaht}/gm/game/roomList.do"><span>房间管理</span></a>
 		</li>
+		<li>
+			<a href="${contextPaht}/gm/sys/index.do"><span>系统管理</span></a>
+		</li>
 	</ul>
 	<div class="clear"></div>
 </div>		
