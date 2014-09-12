@@ -92,9 +92,9 @@
 									<table>
 										<tr>
 											<th>程序类型</th>
+											<th>版本代码</th>
 											<th>版本号</th>
 											<th>包地址</th>
-											<th>版本代码</th>
 											<th>更新信息</th>
 										</tr>
 										<c:forEach items="${versionList}" var="versionInfo">
@@ -107,9 +107,9 @@
 														<td id="stock">IOS版</td>
 													</c:otherwise>
 												</c:choose>
+												<td id="stock">${versionInfo.newver}</td>
 												<td id="name">${versionInfo.version_name}</td>
 												<td id="name">${versionInfo.address}</td>
-												<td id="stock">${versionInfo.newver}</td>
 												<td id="probability">${versionInfo.msg}</td>
 											</tr>
 										</c:forEach>

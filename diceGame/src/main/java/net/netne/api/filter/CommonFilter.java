@@ -21,6 +21,8 @@ import net.netne.common.uitls.AESEncrypter;
 import net.netne.common.uitls.ResultUtil;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CommonFilter implements Filter{
 	
@@ -72,6 +74,8 @@ public class CommonFilter implements Filter{
 }
 
 class FilteredRequest extends HttpServletRequestWrapper {
+	
+	private Logger logger = LoggerFactory.getLogger(FilteredRequest.class);
 
     private static final String queryId = "params";
     
@@ -84,6 +88,7 @@ class FilteredRequest extends HttpServletRequestWrapper {
         if (queryId.equals(paramName) && value != null) {
             if (AESEncrypter.isDecryption) {
                 value = new AESEncrypter().decrypt(value);
+                logger.info("api-rev:" + value);
             }
         }
         return value;
@@ -95,6 +100,7 @@ class FilteredRequest extends HttpServletRequestWrapper {
             if (AESEncrypter.isDecryption) {
                 for (int index = 0; index < values.length; index++) {
                     values[index] = new AESEncrypter().decrypt(values[index]);
+                    logger.info("api-rev:" + values[index]);
                 }
             }
         }
