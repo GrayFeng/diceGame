@@ -2,12 +2,21 @@ package net.netne.admin.control;
 
 import java.util.List;
 
-import net.netne.api.service.IVersionService;
-import net.netne.common.pojo.VersionInfo;
+import javax.servlet.http.HttpServletRequest;
 
+import net.netne.api.service.IMemberService;
+import net.netne.api.service.IVersionService;
+import net.netne.common.enums.EEchoCode;
+import net.netne.common.pojo.Member;
+import net.netne.common.pojo.Result;
+import net.netne.common.pojo.VersionInfo;
+import net.netne.common.uitls.ResultUtil;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -22,6 +31,9 @@ public class SystemInfoControl {
 	
 	@Autowired
 	private IVersionService versionService;
+	
+	@Autowired
+	private IMemberService memberService;
 	
 	@RequestMapping("index")
 	public ModelAndView systemInfo(){
@@ -40,8 +52,28 @@ public class SystemInfoControl {
 		return mav;
 	}
 	
-	public String modifyPassword(String oldPassword,String newPassword){
-		return null;
+	@RequestMapping("modifyPassword")
+	@ResponseBody
+	public String modifyPassword(HttpServletRequest request,String oldPassword,String newPassword){
+		Result result = null;
+		String adminName = (String)request.getSession().getAttribute("adminName");
+		if(StringUtils.isNotEmpty(adminName) 
+				&& StringUtils.isNotEmpty(oldPassword) 
+				&& StringUtils.isNotEmpty(newPassword)){
+			Member adminMember = memberService.sysLogin(adminName);
+			if(adminMember != null 
+					&& oldPassword.equals(adminMember.getPassword())){
+				adminMember.setPassword(newPassword);
+				memberService.modifyAdminPwd(adminMember);
+				result = Result.getSuccessResult();
+			}else{
+				result = new Result(EEchoCode.ERROR.getCode(), "原密码错误，修改失败");
+			}
+		}
+		if(result == null){
+			result = new Result(EEchoCode.ERROR.getCode(), "信息不全，修改失败");
+		}
+		return ResultUtil.getJsonString(result);
 	}
 
 }

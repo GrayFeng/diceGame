@@ -7,6 +7,8 @@ import com.google.common.base.Charsets;
 public class AESEncrypter {
 
     private static final String key = "test123";
+    
+    public static final boolean isDecryption = false;
 
     public static String encrypt(String str) {
         CryptAES aes = new CryptAES(key, 128);

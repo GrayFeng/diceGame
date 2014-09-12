@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="${staticURL}/css/style.css" type="text/css"/>
 	</head>
 	<body>
-		<div id="wrapper_login">
+		<div id="wrapper_login" style="margin-bottom: 20px;">
 			<div id="menu">
 				<div id="left"></div>
 				<div id="right"></div>
@@ -48,6 +48,7 @@
 				</div>
 			</div>		
 		</div>
+		<%@include file="common/footer.jsp"%>
 	</body>
 	<script src="${staticURL}/js/jquery.js" type="text/javascript"></script>
 	<script src="${staticURL}/js/global.js" type="text/javascript"></script>
@@ -72,7 +73,7 @@
 					        	  alert("用户名或密码错误");
 					          }
 					        }
-					    });
+					});
 				}else{
 					alert("请输入用户名密码");
 				}

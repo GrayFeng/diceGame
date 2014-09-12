@@ -100,4 +100,8 @@
 	 	and member_id = #{memberId}
 	 </select>
 	 
+	<update id="modifyAdminPwd" parameterType="Member">
+	     update sys_user set password = #{password} where name = #{name}
+	</update>
+	 
 </mapper> 

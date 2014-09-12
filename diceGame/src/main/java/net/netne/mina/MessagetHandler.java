@@ -23,6 +23,7 @@ import java.util.Map;
 
 import net.netne.common.enums.EActionCode;
 import net.netne.common.enums.EEchoCode;
+import net.netne.common.uitls.AESEncrypter;
 import net.netne.common.uitls.ResultUtil;
 import net.netne.mina.handler.CreateGamblingHandler;
 import net.netne.mina.handler.GuessDiceHandler;
@@ -70,11 +71,17 @@ public class MessagetHandler extends IoHandlerAdapter {
 			throws Exception {
 		try {
 			String params = String.valueOf(message);
+			if(AESEncrypter.isDecryption){
+				params = new AESEncrypter().decrypt(params);
+			}
 			if(params != null){
 				params = params.trim();
 			}
 			MinaResult result = execute(session,params);
 			String resultMsg = ResultUtil.getJsonString(result);
+			if(AESEncrypter.isDecryption){
+				resultMsg = new AESEncrypter().encrypt(resultMsg);
+			}
 			session.write(resultMsg);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(),e);

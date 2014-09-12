@@ -50,5 +50,7 @@ public interface IMemberDao {
 	public Integer addLoginLog(LoginLog loginLog);
 	
 	public Integer getLoginCount(Integer memberId);
+	
+	public void modifyAdminPwd(Member member);
 
 }

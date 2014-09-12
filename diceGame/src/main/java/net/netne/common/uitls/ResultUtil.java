@@ -6,7 +6,10 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 public class ResultUtil {
 	
 	public static String getJsonString(Object result){
-		return JSON.toJSONString(result, SerializerFeature.WriteMapNullValue);
+		String jsonStr = JSON.toJSONString(result, SerializerFeature.WriteMapNullValue);
+		if(AESEncrypter.isDecryption){
+			jsonStr = new AESEncrypter().encrypt(jsonStr);
+		}
+		return jsonStr;
 	}
-
 }

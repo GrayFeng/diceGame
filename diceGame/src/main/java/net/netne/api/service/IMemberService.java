@@ -40,5 +40,7 @@ public interface IMemberService {
 	public Integer addLoginLog(LoginLog loginLog);
 	
 	public boolean checkMemberIsFirstLogin(Member member,String ip);
+	
+	public void modifyAdminPwd(Member member);
 
 }

@@ -181,4 +181,9 @@ public class MemberServiceImpl implements IMemberService{
 		return isFirstLogin;
 	}
 
+	@Override
+	public void modifyAdminPwd(Member member) {
+		memberDao.modifyAdminPwd(member);
+	}
+
 }

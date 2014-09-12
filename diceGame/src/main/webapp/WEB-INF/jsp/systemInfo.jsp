@@ -54,27 +54,27 @@
 									</div>
 								</div>
 								
-								<!-- 修改奖品信息 -->
+								<!-- 修改管理密码 -->
 								<a href="javascript:void(0)" class="dropdown_button"><span>密码修改</span></a>
 								<div class="dropdown modify_dropdown" style="left: 70px;display: none;">
 									<div class="arrow"></div>
 									<div class="content">
-										<form action="${contextPaht}/gm/prize/modify.do" id="modifyPrize" method="post">
+										<form action="#" id="modifyPwd" method="post">
 											<p>
-												<label for="name">旧密码:</label>
-												<input type="text" class="text w_22" name="name" id="modify_name" maxlength="50">
+												<label for="name">原密码:</label>
+												<input type="password" class="text w_22" name="oldPassword" id="oldPassword" maxlength="16">
 											</p>
 											<p>
 												<label for="name">新密码:</label>
-												<input type="text" class="text w_22" name="stock" id="modify_stock" maxlength="10">
+												<input type="password" class="text w_22" name="newPassword" id="newPassword" maxlength="16">
 											</p>
 											<p>
 												<label for="name">确认密码:</label>
-												<input type="text" class="text w_22" name="probability" id="modify_probability" maxlength="5">
+												<input type="password" class="text w_22" name="confirmPassword" id="confirmPassword" maxlength="16">
 											</p>
 											<input type="hidden" name="id" id="modify_id">
 										</form>
-										<a href="javascript:modifyPrize()" class="button green right"><small class="icon check"></small><span>保存</span></a>
+										<a href="javascript:modifyPwd()" class="button green right"><small class="icon check"></small><span>修改</span></a>
 										<a class="button red mr right close"><small class="icon cross"></small><span>取消</span></a>
 										<div class="clear"></div>
 									</div>
@@ -160,23 +160,40 @@
 			$('#addVersion').submit();
 		}
 		
-		function modifyPrize(){
-			var name = $("#modify_name").val();
-			var stock = $("#modify_stock").val();
-			var probability = $("#modify_probability").val();
-			if(!name || !stock || !probability){
-				alert('请完整输入奖品信息');
+		function modifyPwd(){
+			var oldPassword = $("#oldPassword").val();
+			var newPassword = $("#newPassword").val();
+			var confirmPassword = $("#confirmPassword").val();
+			if(!oldPassword){
+				alert('请输入原密码');
 				return;
 			}
-			if(!/^\d+$/.test(stock)){
-				alert('库存数量必须为数字');
+			if(!newPassword){
+				alert('请输入新密码');
 				return;
 			}
-			if(!/^\d+|\d+.\d+$/.test(probability) || probability > 100){
-				alert('概率必须为100内整数或小数');
+			if(newPassword != confirmPassword){
+				alert('新密码输入不一致');
 				return;
 			}
-			$('#modifyPrize').submit();
+			 $.ajax({
+			        url: "${contextPaht}/gm/sys/modifyPassword.do",
+			        data:{oldPassword:oldPassword,newPassword:newPassword},
+			        type: "post",
+			        cache: false,
+			        dataType:"json",
+			        success: function(data) {
+		        	  $(".modify_dropdown").hide();
+				      $("#oldPassword").val('');
+					  $("#newPassword").val('');
+					  $("#confirmPassword").val('');
+			          if(data.status == 200){
+			        	  alert("修改成功");
+			          }else{
+			        	  alert(data.msg);
+			          }
+			        }
+			});
 		}
 	</script>
 	<%session.setAttribute("errorMsg", null); %>

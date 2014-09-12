@@ -55,7 +55,7 @@ public class CommonFilter implements Filter{
 			resp.flushBuffer();
 			return;
 		}
-		if(FilteredRequest.isDecryption){
+		if(AESEncrypter.isDecryption){
 			chain.doFilter(new FilteredRequest(request), response);
 		}else{
 			chain.doFilter(request, response);
@@ -75,8 +75,6 @@ class FilteredRequest extends HttpServletRequestWrapper {
 
     private static final String queryId = "params";
     
-    public static final boolean isDecryption = false;
-
     public FilteredRequest(ServletRequest request) {
         super((HttpServletRequest) request);
     }
@@ -84,7 +82,7 @@ class FilteredRequest extends HttpServletRequestWrapper {
     public String getParameter(String paramName) {
         String value = super.getParameter(paramName);
         if (queryId.equals(paramName) && value != null) {
-            if (isDecryption) {
+            if (AESEncrypter.isDecryption) {
                 value = new AESEncrypter().decrypt(value);
             }
         }
@@ -94,7 +92,7 @@ class FilteredRequest extends HttpServletRequestWrapper {
     public String[] getParameterValues(String paramName) {
         String values[] = super.getParameterValues(paramName);
         if (queryId.equals(paramName) && values != null) {
-            if (isDecryption) {
+            if (AESEncrypter.isDecryption) {
                 for (int index = 0; index < values.length; index++) {
                     values[index] = new AESEncrypter().decrypt(values[index]);
                 }

@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="${staticURL}/css/style.css" type="text/css"/>
 	</head>
 	<body>
-		<div id="wrapper_login">
+		<div id="wrapper_login" style="margin-bottom: 20px;">
 			<div id="menu">
 				<div id="left"></div>
 				<div id="right"></div>
@@ -33,5 +33,6 @@
 				</div>
 			</div>		
 		</div>
+		<%@include file="footer.jsp"%>
 	</body>
 </html>
