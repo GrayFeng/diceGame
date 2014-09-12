@@ -43,4 +43,9 @@ public class VersionServiceImpl implements IVersionService{
 		dao.addVersionInfo(versionInfo);
 	}
 
+	@Override
+	public List<VersionInfo> getVersionInfoList() {
+		return dao.getVersionList();
+	}
+
 }
