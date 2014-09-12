@@ -64,18 +64,18 @@ public class OpenIt implements IBroadcastThread {
 				if(mGamer.getUid().equals(lastGuessGamer.getUid())){
 					if(isLastGamerWin){
 						openItTO.setWin(1);
-						openItTO.setScore(gambling.getScore());
+						openItTO.setScore(gambling.getScore() - 10);
 					}else{
 						openItTO.setWin(2);
-						openItTO.setScore(-gambling.getScore());
+						openItTO.setScore(-(gambling.getScore() + 10));
 					}
 				}else if(mGamer.getUid().equals(opneGamer.getUid())){
 					if(!isLastGamerWin){
 						openItTO.setWin(1);
-						openItTO.setScore(gambling.getScore());
+						openItTO.setScore(gambling.getScore() - 10);
 					}else{
 						openItTO.setWin(2);
-						openItTO.setScore(-gambling.getScore());
+						openItTO.setScore(-(gambling.getScore() + 10));
 					}
 				}else {
 					openItTO.setWin(2);

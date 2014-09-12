@@ -43,12 +43,16 @@ public class QuitGameHandler extends AbstractHandler implements IHandler{
 								&& gamer.getGamestatus() != GamerStatus.READY.getCode()){
 							scoreService.addScore(gamer.getId(), -gambling.getScore());
 						}
-						gambling.setGamerNum(gambling.getGamerNum() - 1);
-						GamblingCache.getInstance().add(gambling);
 						GamerCache.getInstance().removeOne(quitGameParam.getGamblingId(),gamer.getUid());
+						if(gambling.getGamerNum() == 1){
+							GamblingCache.getInstance().remove(gambling.getId());
+						}else{
+							gambling.setGamerNum(gambling.getGamerNum() - 1);
+							GamblingCache.getInstance().add(gambling);
+							BroadcastThreadPool.execute(new QuitGame(gambling.getId(), gamer));
+							BroadcastThreadPool.execute(new checkGameCanBegin4Quit(gambling.getId()));
+						}
 						result = MinaResult.getSuccessResult();
-						BroadcastThreadPool.execute(new QuitGame(gambling.getId(), gamer));
-						BroadcastThreadPool.execute(new checkGameCanBegin4Quit(gambling.getId()));
 					}
 				}
 			}

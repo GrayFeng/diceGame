@@ -49,8 +49,7 @@ public class GuessDiceHandler extends AbstractHandler implements IHandler{
 							&& guessDiceParam.getDiceNum() >= gambling.getGamerNum()){
 						//叫点数量与玩家数量一致或叫了点数1，则默认为斋
 						if(!gambling.isFast() 
-								&& (guessDiceParam.getDiceNum() == gambling.getGamerNum() 
-									|| guessDiceParam.getDicePoint() == 1)){
+								&& guessDiceParam.getDicePoint() == 1){
 							gambling.setFast(true);
 						}
 						//如果玩家竞猜个数与当前一致且点数大于当前，则视为有效
