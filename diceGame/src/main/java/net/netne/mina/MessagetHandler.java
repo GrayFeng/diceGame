@@ -19,12 +19,12 @@
  */
 package net.netne.mina;
 
+import java.net.URLDecoder;
 import java.util.Map;
 
 import net.netne.common.enums.EActionCode;
 import net.netne.common.enums.EEchoCode;
 import net.netne.common.uitls.AESEncrypter;
-import net.netne.common.uitls.ResultUtil;
 import net.netne.mina.handler.CreateGamblingHandler;
 import net.netne.mina.handler.GuessDiceHandler;
 import net.netne.mina.handler.HeartbeatHandler;
@@ -44,7 +44,9 @@ import org.apache.mina.filter.ssl.SslFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Maps;
 
 public class MessagetHandler extends IoHandlerAdapter {
@@ -72,6 +74,7 @@ public class MessagetHandler extends IoHandlerAdapter {
 		try {
 			String params = String.valueOf(message);
 			if(AESEncrypter.isDecryption){
+				params = URLDecoder.decode(params);
 				params = new AESEncrypter().decrypt(params);
 				LOGGER.info("mina-rev:" + params);
 			}
@@ -79,10 +82,10 @@ public class MessagetHandler extends IoHandlerAdapter {
 				params = params.trim();
 			}
 			MinaResult result = execute(session,params);
-			String resultMsg = ResultUtil.getJsonString(result);
+			String resultMsg = JSON.toJSONString(result, SerializerFeature.WriteMapNullValue);
+			LOGGER.info("mina-send:" + params);
 			if(AESEncrypter.isDecryption){
 				resultMsg = new AESEncrypter().encrypt(resultMsg);
-				LOGGER.info("mina-send:" + params);
 			}
 			session.write(resultMsg);
 		} catch (Exception e) {
