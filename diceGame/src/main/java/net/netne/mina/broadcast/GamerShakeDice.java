@@ -12,6 +12,7 @@ import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.broadcast.BroadcastTO;
 import net.netne.mina.pojo.broadcast.NewGamerJoinTO;
+import net.netne.mina.utils.MessageUtils;
 
 import org.apache.mina.core.session.IoSession;
 
@@ -73,7 +74,7 @@ public class GamerShakeDice implements IBroadcastThread{
 					&& !mGamer.getUid().equals(gamer.getUid())
 					&& (mGamer.getGamestatus() == GamerStatus.SHOOK.getCode() 
 							|| mGamer.getGamestatus() == GamerStatus.READY.getCode())) {
-				session.write(JSON.toJSONString(broadcastTO));
+				MessageUtils.sendMsg(session,JSON.toJSONString(broadcastTO));
 			}
 		}
 	}
@@ -102,7 +103,7 @@ public class GamerShakeDice implements IBroadcastThread{
 						result.setContent(firstGamerMap);
 						GamblingCache.getInstance().add(gambling);
 					}
-					session.write(JSON.toJSONString(result));
+					MessageUtils.sendMsg(session,JSON.toJSONString(result));
 				}
 			}
 		}

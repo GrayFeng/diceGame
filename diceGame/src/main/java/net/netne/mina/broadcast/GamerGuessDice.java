@@ -12,7 +12,9 @@ import net.netne.common.uitls.ResultUtil;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.broadcast.BroadcastTO;
+import net.netne.mina.utils.MessageUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 
 /**
@@ -51,7 +53,7 @@ public class GamerGuessDice implements IBroadcastThread{
 				for(Gamer gamer : gamers){
 					if((gamer.getGamestatus() == GamerStatus.GUESSED.getCode() 
 							|| gamer.getGamestatus() == GamerStatus.SHOOK.getCode())){
-						gamer.getSession().write(ResultUtil.getJsonString(broadcastTO));
+						MessageUtils.sendMsg(gamer.getSession(),JSON.toJSONString(broadcastTO));
 					}
 				}
 			}

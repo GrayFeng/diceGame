@@ -10,7 +10,6 @@ import net.netne.common.enums.EEchoCode;
 import net.netne.common.pojo.Member;
 import net.netne.common.pojo.Result;
 import net.netne.common.pojo.VersionInfo;
-import net.netne.common.uitls.ResultUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 /**
  * diceGame
@@ -73,7 +75,7 @@ public class SystemInfoControl {
 		if(result == null){
 			result = new Result(EEchoCode.ERROR.getCode(), "信息不全，修改失败");
 		}
-		return ResultUtil.getJsonString(result);
+		return JSON.toJSONString(result, SerializerFeature.WriteMapNullValue);
 	}
 
 }

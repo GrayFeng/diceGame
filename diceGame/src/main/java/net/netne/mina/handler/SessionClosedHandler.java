@@ -9,19 +9,20 @@ import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EBroadcastCode;
 import net.netne.common.enums.GamerStatus;
 import net.netne.common.pojo.LoginInfo;
-import net.netne.common.uitls.ResultUtil;
 import net.netne.mina.broadcast.BroadcastThreadPool;
 import net.netne.mina.broadcast.checkGameCanBegin4Quit;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.MinaResult;
 import net.netne.mina.pojo.broadcast.BroadcastTO;
+import net.netne.mina.utils.MessageUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 
 public class SessionClosedHandler extends AbstractHandler implements IHandler{
@@ -62,7 +63,7 @@ public class SessionClosedHandler extends AbstractHandler implements IHandler{
 									Map<String,Object> resultMap = Maps.newHashMap();
 									resultMap.put("id",offlineGamer.getId());
 									broadcastTO.setContent(resultMap);
-									gamer.getSession().write(ResultUtil.getJsonString(broadcastTO));
+									MessageUtils.sendMsg(gamer.getSession(),JSON.toJSONString(broadcastTO));
 								}
 							}
 							BroadcastThreadPool.execute(new checkGameCanBegin4Quit(gambling.getId()));

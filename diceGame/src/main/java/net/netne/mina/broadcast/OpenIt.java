@@ -11,6 +11,7 @@ import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.broadcast.BroadcastTO;
 import net.netne.mina.pojo.broadcast.DiceInfo;
 import net.netne.mina.pojo.broadcast.OpenItTO;
+import net.netne.mina.utils.MessageUtils;
 
 import org.apache.mina.core.session.IoSession;
 
@@ -85,7 +86,7 @@ public class OpenIt implements IBroadcastThread {
 				mGamer.setGamestatus(GamerStatus.NEW_JOIN.getCode());
 				GamerCache.getInstance().addOne(gamblingId, mGamer);
 				if (session.isConnected()) {
-					session.write(JSON.toJSONString(broadcastTO));
+					MessageUtils.sendMsg(session,JSON.toJSONString(broadcastTO));
 				}
 			}
 		}

@@ -10,6 +10,7 @@ import net.netne.common.enums.GamerStatus;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.broadcast.BroadcastTO;
+import net.netne.mina.utils.MessageUtils;
 
 import org.apache.mina.core.session.IoSession;
 
@@ -64,7 +65,7 @@ public class checkGameCanBegin4Quit implements IBroadcastThread{
 			for(Gamer mGamer : gamers){
 				IoSession session = mGamer.getSession();
 				if(session.isConnected()){
-					session.write(JSON.toJSONString(result));
+					MessageUtils.sendMsg(session,JSON.toJSONString(result));
 				}
 			}
 		}

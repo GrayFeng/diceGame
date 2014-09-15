@@ -7,6 +7,7 @@ import net.netne.common.enums.EBroadcastCode;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.broadcast.BroadcastTO;
 import net.netne.mina.pojo.broadcast.NewGamerJoinTO;
+import net.netne.mina.utils.MessageUtils;
 
 import org.apache.mina.core.session.IoSession;
 
@@ -44,7 +45,7 @@ public class GamerOver implements IBroadcastThread {
 				IoSession session = mGamer.getSession();
 				if (session.isConnected() 
 						&& !mGamer.getUid().equals(gamer.getUid())) {
-					session.write(JSON.toJSONString(broadcastTO));
+					MessageUtils.sendMsg(session,JSON.toJSONString(broadcastTO));
 				}
 			}
 		}

@@ -237,7 +237,6 @@ public class MemberControl {
 			memberInfo.put("sex",member.getSex());
 			memberInfo.put("name", member.getName());
 			memberInfo.put("photoUrl",member.getPhotoUrl());
-			memberInfo.put("firstLogin", member.isFirstLogin() ? 1 : 0);
 			long scoreAmount = 0;
 			if(member.getAccount() != null){
 				long realScore = member.getAccount().getScoreAmount() 

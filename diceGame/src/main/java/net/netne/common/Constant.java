@@ -6,7 +6,7 @@ public class Constant {
 	
 	public static final Integer MAX_DICE_POINT = 6;
 	
-	public static final String HOST_URL = "http://www.yedianshaiwang.com";
+	public static final String HOST_URL = "http://182.92.170.180";
 	
 	public static final String PHOTO_URL_PATH = HOST_URL + "/api/img.do?key=";
 	

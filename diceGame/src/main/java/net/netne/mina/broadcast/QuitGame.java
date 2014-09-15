@@ -10,6 +10,7 @@ import net.netne.common.enums.GameStatus;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.broadcast.BroadcastTO;
+import net.netne.mina.utils.MessageUtils;
 
 import org.apache.mina.core.session.IoSession;
 
@@ -59,9 +60,9 @@ public class QuitGame implements IBroadcastThread {
 							gambling.setDicePoint(0);
 							GamblingCache.getInstance().add(gambling);
 						}
-						session.write(JSON.toJSONString(gameOverBroadcastTO));
+						MessageUtils.sendMsg(session,JSON.toJSONString(gameOverBroadcastTO));
 					}else{
-						session.write(JSON.toJSONString(broadcastTO));
+						MessageUtils.sendMsg(session,JSON.toJSONString(broadcastTO));
 					}
 				}
 			}
