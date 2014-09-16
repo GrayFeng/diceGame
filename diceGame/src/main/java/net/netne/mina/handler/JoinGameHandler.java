@@ -3,6 +3,7 @@ package net.netne.mina.handler;
 import java.util.List;
 
 import net.netne.api.service.IMemberService;
+import net.netne.api.service.IScoreService;
 import net.netne.common.SpringConstant;
 import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
@@ -13,6 +14,8 @@ import net.netne.common.enums.GamerStatus;
 import net.netne.common.pojo.LoginInfo;
 import net.netne.mina.broadcast.BroadcastThreadPool;
 import net.netne.mina.broadcast.NewGamerJoin;
+import net.netne.mina.broadcast.QuitGame;
+import net.netne.mina.broadcast.checkGameCanBegin4Quit;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.MinaResult;
@@ -41,7 +44,8 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 			//游戏状态为等待中且人数未满可加入游戏
 			if(gambling != null && gambling.getStatus() == GameStatus.WAIT.getCode() 
 					&& gambling.getGamerNum() < gambling.getMaxGamerNum()){
-				if(GamerCache.getInstance().getOne(joinGameParam.getUid()) == null){
+				result = handleInPlayIngGamer(joinGameParam);
+				if(result == null){
 					IMemberService memberService = SpringConstant.getBean("memberServiceImpl");
 					LoginInfo loginInfo = MemberCache.getInstance().get(joinGameParam.getUid());
 					if(loginInfo != null && loginInfo.getMember() != null){
@@ -51,7 +55,7 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 							gambling.setGamerNum(gambling.getGamerNum() + 1);
 							GamblingCache.getInstance().add(gambling);
 							//建立新玩家
-							Gamer newGamer = createNewGamer(joinGameParam.getUid(),session,loginInfo);
+							Gamer newGamer = createNewGamer(joinGameParam.getUid(),session,loginInfo,joinGameParam.getGamblingId());
 							newGamer.setTokenIndex(gambling.getGamerNum() - 1);
 							JoinGameResult jonGameResult = new JoinGameResult();
 							List<Gamer> gamers = GamerCache.getInstance().getGamers(gambling.getId());
@@ -70,8 +74,6 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 					}else{
 						result = new MinaResult(EEchoCode.ERROR.getCode(),"缺少用户信息");
 					}
-				}else{
-					result = new MinaResult(EEchoCode.ERROR.getCode(),"您已在游戏游戏中");
 				}
 			}
 		}catch(Exception e){
@@ -84,7 +86,32 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 		return result;
 	}
 	
-	private Gamer createNewGamer(String uid,IoSession session,LoginInfo loginInfo){
+	private MinaResult handleInPlayIngGamer(JoinGameParam joinGameParam){
+		Gamer gamer = GamerCache.getInstance().getOne(joinGameParam.getUid());
+		if(gamer != null && gamer.getGamblingId() != null){
+			Gambling gambling = GamblingCache.getInstance().get(gamer.getGamblingId());
+			List<Gamer> gamerList = GamerCache.getInstance().getGamers(gamer.getGamblingId());
+			if(gamerList != null && gamerList.size() == 1){
+				GamerCache.getInstance().remove(gamer.getGamblingId());
+				GamblingCache.getInstance().remove(gamer.getGamblingId());
+				return new MinaResult(EEchoCode.GAME_OVER.getCode(),"房间已失效，请重新选择");
+			}else{
+				if(gamer.getGamestatus() != GamerStatus.NEW_JOIN.getCode() 
+						&& gamer.getGamestatus() != GamerStatus.READY.getCode()){
+					IScoreService scoreService = SpringConstant.getBean("scoreServiceImpl");
+					scoreService.addScore(gamer.getId(), - gambling.getScore());
+				}
+				GamerCache.getInstance().removeOne(gamer.getGamblingId(),gamer.getUid());
+				gambling.setGamerNum(gambling.getGamerNum() - 1);
+				GamblingCache.getInstance().add(gambling);
+				BroadcastThreadPool.execute(new QuitGame(gambling.getId(), gamer));
+				BroadcastThreadPool.execute(new checkGameCanBegin4Quit(gambling.getId()));
+			}
+		}
+		return null;
+	}
+	
+	private Gamer createNewGamer(String uid,IoSession session,LoginInfo loginInfo,String gamblingId){
 		Gamer newGamer = new Gamer();
 		newGamer.setUid(uid);
 		newGamer.setId(loginInfo.getMember().getId());
@@ -93,6 +120,7 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 		newGamer.setSex(loginInfo.getMember().getSex());
 		newGamer.setGamestatus(GamerStatus.NEW_JOIN.getCode());
 		newGamer.setPhotoUrl(loginInfo.getMember().getPhotoUrl());
+		newGamer.setGamblingId(gamblingId);
 		return newGamer;
 	}
 	

@@ -35,6 +35,28 @@ public class Gamer {
 	//头像地址
 	private String photoUrl;
 	
+	//游戏ID
+	private String gamblingId;
+	
+	//超时次数
+	private Integer timeOutCount = 0;
+	
+	public Integer getTimeOutCount() {
+		return timeOutCount;
+	}
+
+	public void setTimeOutCount(Integer timeOutCount) {
+		this.timeOutCount = timeOutCount;
+	}
+
+	public String getGamblingId() {
+		return gamblingId;
+	}
+
+	public void setGamblingId(String gamblingId) {
+		this.gamblingId = gamblingId;
+	}
+
 	public String getPhotoUrl() {
 		return photoUrl;
 	}

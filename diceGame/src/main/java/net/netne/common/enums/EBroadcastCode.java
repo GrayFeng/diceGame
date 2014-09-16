@@ -38,6 +38,11 @@ public enum EBroadcastCode {
 			return "906";
 		}
 	},
+	GAMER_GUESSE_TIMEOUT{
+		public String getCode(){
+			return "907";
+		}
+	},
 	GAMER_OFF_LINE{
 		public String getCode(){
 			return "910";

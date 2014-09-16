@@ -42,6 +42,11 @@ public enum EActionCode {
 			return 131;
 		}
 	},
+	GUESS_TIMEOUT{
+		public Integer getCode(){
+			return 132;
+		}
+	},
 	GAMER_OPEN{
 		public Integer getCode(){
 			return 140;

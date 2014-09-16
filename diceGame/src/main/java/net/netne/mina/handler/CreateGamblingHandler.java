@@ -107,6 +107,7 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 		gamer.setTokenIndex(gambling.getGamerNum() - 1);
 		gamer.setPhotoUrl(loginInfo.getMember().getPhotoUrl());
 		gamer.setSession(session);
+		gamer.setGamblingId(gambling.getId());
 		GamerCache.getInstance().addOne(gambling.getId(), gamer);
 	}
 	

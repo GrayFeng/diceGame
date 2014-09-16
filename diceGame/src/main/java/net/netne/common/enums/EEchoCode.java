@@ -27,6 +27,11 @@ public enum EEchoCode {
 		public String getCode(){
 			return "206";
 		}
+	},
+	GAME_OVER{
+		public String getCode(){
+			return "920";
+		}
 	};
 	
 	abstract public String getCode();

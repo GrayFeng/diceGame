@@ -100,6 +100,10 @@ public class MessagetHandler extends IoHandlerAdapter {
 		try {
 			JSONObject jsonObject = JSONObject.parseObject(params);
 			Integer code = jsonObject.getInteger("actionCode");
+			//竞猜与竞猜超时使用相同的处理程序
+			if(EActionCode.GUESS_TIMEOUT.getCode().equals(code)){
+				code = EActionCode.GAMER_GUESS.getCode();
+			}
 			IHandler handler = getActionHandler(code);
 			if(handler != null){
 				result = handler.handle(session, params);

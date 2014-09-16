@@ -43,6 +43,9 @@ public class OpenHandler extends AbstractHandler implements IHandler{
 					.parseObject(params, OpenParam.class);
 			Gambling gambling = GamblingCache.getInstance().get(openParam.getGamblingId());
 			if(gambling != null && gambling.getStatus() == GameStatus.GUESS.getCode()){
+				if(openParam.getUid().equals(gambling.getLastGuessGamerId())){
+					return new MinaResult(EEchoCode.ERROR.getCode(),"其他玩家没有完成竞猜，无法开盅");
+				}
 				Map<String,Gamer> gamers = GamerCache.getInstance().getGamerMap(gambling.getId());
 				Gamer openGamer = gamers.get(openParam.getUid());
 				Gamer lastGuessGamer = gamers.get(gambling.getLastGuessGamerId());
