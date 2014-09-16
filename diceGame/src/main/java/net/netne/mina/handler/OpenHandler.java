@@ -102,11 +102,11 @@ public class OpenHandler extends AbstractHandler implements IHandler{
 						gambling.setDicePoint(0);
 						gambling.setFast(false);
 						if(isLastGamerWin){
-							gambling.setTokenIndex(lastGuessGamer.getTokenIndex());
-							gambling.setCurrentGuessGamerId(lastGuessGamer.getUid());
-						}else{
 							gambling.setTokenIndex(openGamer.getTokenIndex());
 							gambling.setCurrentGuessGamerId(openGamer.getUid());
+						}else{
+							gambling.setTokenIndex(lastGuessGamer.getTokenIndex());
+							gambling.setCurrentGuessGamerId(lastGuessGamer.getUid());
 						}
 						GamblingCache.getInstance().add(gambling);
 					}else{
