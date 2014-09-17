@@ -306,6 +306,28 @@ public class MemberControl {
 		return ResultUtil.getJsonString(result);
 	}
 	
+	@RequestMapping("share")
+	@ResponseBody
+	public String share(String uid,String params){
+		Result result = null;
+		Map<String,Object> resultMap = Maps.newHashMap();
+		if(StringUtils.isNotEmpty(params)){
+			JSONObject jsonObject = JSON.parseObject(params);
+			String cid = jsonObject.getString("cid");
+			VersionInfo versionInfo = versionService.checkVersion(cid);
+			result = Result.getSuccessResult();
+			resultMap.put("picUrl","http://www.yedianshaiwang.com");
+			resultMap.put("msg", "最近在玩一个叫夜店骰王的游戏，超级好玩！还可以抽取大奖哦！");
+			if(versionInfo == null){
+				resultMap.put("url", "http://www.yedianshaiwang.com");
+			}else{
+				resultMap.put("url", versionInfo.getAddress());
+			}
+			result.setRe(resultMap); 
+		}
+		return ResultUtil.getJsonString(result);
+	}
+	
 	private String getClientIp(HttpServletRequest request){
 		String ip = request.getHeader("x-forwarded-for");
 		if(StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)){
