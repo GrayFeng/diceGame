@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.netne.api.service.IMemberService;
 import net.netne.api.service.IPrizeService;
+import net.netne.common.annotation.NotNeedLogin;
+import net.netne.common.annotation.NotNeedUID;
 import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EEchoCode;
 import net.netne.common.pojo.LoginInfo;
@@ -131,6 +133,8 @@ public class LotteryControl {
 	}
 	
 	@RequestMapping(value = "/img", method = RequestMethod.GET)
+	@NotNeedLogin
+	@NotNeedUID
 	public void getImg(Integer key,HttpServletRequest request, HttpServletResponse response) {
 		OutputStream outputStream = null;
 		try{

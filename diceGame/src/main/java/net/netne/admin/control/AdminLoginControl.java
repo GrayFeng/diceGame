@@ -3,6 +3,7 @@ package net.netne.admin.control;
 import javax.servlet.http.HttpServletRequest;
 
 import net.netne.api.service.IMemberService;
+import net.netne.common.annotation.NotNeedLogin;
 import net.netne.common.enums.EEchoCode;
 import net.netne.common.pojo.Member;
 import net.netne.common.pojo.Result;
@@ -31,12 +32,14 @@ public class AdminLoginControl {
 	private IMemberService memberService;
 
 	@RequestMapping("index")
+	@NotNeedLogin
 	public ModelAndView index(){
 		return new ModelAndView("index");
 	}
 	
 	@RequestMapping("login")
-	@ResponseBody
+	@ResponseBody 
+	@NotNeedLogin
 	public String login(String password,String userName,HttpServletRequest request){
 		Result result = null;
 		if(StringUtils.isNotEmpty(password) 

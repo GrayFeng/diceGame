@@ -46,13 +46,16 @@
 	</bean>
 	
    	 <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>  
-   	 <!--  
-	   	 <mvc:interceptors>
-	        <mvc:interceptor>
-	            <mvc:mapping path="/api/**"/>
-	            <bean class="net.netne.api.interceptor.CommonInterceptor"/>
-	        </mvc:interceptor>
-	    </mvc:interceptors>
-    -->
+   	 
+   	 <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/api/**"/>
+            <bean class="net.netne.api.filter.RuleInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/gm/**"/>
+            <bean class="net.netne.api.filter.RuleInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>
 	

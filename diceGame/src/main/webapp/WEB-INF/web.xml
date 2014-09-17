@@ -28,12 +28,6 @@
     <filter-class>net.netne.api.filter.CommonFilter</filter-class>
   </filter>
   
-  <filter>
-    <display-name>LoginFilter</display-name>
-    <filter-name>LoginFilter</filter-name>
-    <filter-class>net.netne.admin.filter.LoginFilter</filter-class>
-  </filter>
-  
   <filter-mapping>
     <filter-name>utfEncodingFilter</filter-name>
     <url-pattern>*.do</url-pattern>
@@ -42,11 +36,6 @@
   <filter-mapping>
     <filter-name>commonFilter</filter-name>
     <url-pattern>/api/*</url-pattern>
-  </filter-mapping>
-  
-  <filter-mapping>
-    <filter-name>LoginFilter</filter-name>
-    <url-pattern>/gm/*</url-pattern>
   </filter-mapping>
   
   <listener>

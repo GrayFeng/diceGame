@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.netne.api.service.IMemberService;
 import net.netne.api.service.IVersionService;
+import net.netne.common.annotation.NotNeedLogin;
+import net.netne.common.annotation.NotNeedUID;
 import net.netne.common.cache.MemberCache;
 import net.netne.common.enums.EEchoCode;
 import net.netne.common.pojo.LoginInfo;
@@ -47,6 +49,7 @@ public class MemberControl {
 	
 	@RequestMapping("reg")
 	@ResponseBody
+	@NotNeedLogin
 	public String reg(String uid,String params){
 		Result result = null;
 		try{
@@ -88,6 +91,7 @@ public class MemberControl {
 	
 	@RequestMapping("login")
 	@ResponseBody
+	@NotNeedLogin
 	public  String login(String uid,String params,HttpServletRequest request){
 		Result result = null;
 		try{
@@ -253,6 +257,8 @@ public class MemberControl {
 	
 	@RequestMapping("start")
 	@ResponseBody
+	@NotNeedLogin
+	@NotNeedUID
 	public String start(String uid,HttpServletRequest request){
 		Result result = Result.getSuccessResult();
 		Map<String,Object> resultMap = Maps.newHashMap();
@@ -278,6 +284,7 @@ public class MemberControl {
 	
 	@RequestMapping("checkVersion")
 	@ResponseBody
+	@NotNeedLogin
 	public String checkVersion(String uid,String params){
 		Result result = null;
 		Map<String,Object> resultMap = Maps.newHashMap();
