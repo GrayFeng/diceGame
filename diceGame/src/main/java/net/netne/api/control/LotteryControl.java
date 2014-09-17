@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -109,22 +111,28 @@ public class LotteryControl {
 	
 	@RequestMapping("updateReceivePrizeInfo")
 	@ResponseBody
-	public String updateReceivePrizeInfo(String uid,String receiveKey,String mobile,String address){
+	public String updateReceivePrizeInfo(String uid,String params){
 		Result result = null;
 		LoginInfo loginInfo = MemberCache.getInstance().get(uid);
 		if(loginInfo != null && loginInfo.getMember() != null 
-				&& StringUtils.isNotEmpty(receiveKey)
-				&& StringUtils.isNotEmpty(address)){
-			if(StringUtils.isEmpty(mobile)){
-				mobile = loginInfo.getMember().getMobile();
+				&& StringUtils.isNotEmpty(params)){
+			JSONObject paramsObj = JSON.parseObject(params);
+			String receiveKey = paramsObj.getString("receiveKey");
+			String mobile = paramsObj.getString("mobile");
+			String address = paramsObj.getString("address");
+			if(StringUtils.isNotEmpty(receiveKey) 
+					&& StringUtils.isNotEmpty(address)){
+				if(StringUtils.isEmpty(mobile)){
+					mobile = loginInfo.getMember().getMobile();
+				}
+				Map<String,Object> infoMap = Maps.newHashMap();
+				infoMap.put("memberMobile", mobile);
+				infoMap.put("memberAddress",address);
+				infoMap.put("memberId",loginInfo.getMember().getId());
+				infoMap.put("key", receiveKey);
+				prizeService.updateMemberInfo4Prize(infoMap);
+				result = new Result(EEchoCode.SUCCESS.getCode(), "更新成功");
 			}
-			Map<String,Object> infoMap = Maps.newHashMap();
-			infoMap.put("memberMobile", mobile);
-			infoMap.put("memberAddress",address);
-			infoMap.put("memberId",loginInfo.getMember().getId());
-			infoMap.put("key", receiveKey);
-			prizeService.updateMemberInfo4Prize(infoMap);
-			result = new Result(EEchoCode.SUCCESS.getCode(), "更新成功");
 		}
 		if(result == null){
 			result = new Result(EEchoCode.ERROR.getCode(), "信息不全，更新失败!");
