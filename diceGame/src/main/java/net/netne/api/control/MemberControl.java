@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.netne.api.service.IMemberService;
 import net.netne.api.service.IVersionService;
+import net.netne.common.Constant;
 import net.netne.common.annotation.NotNeedLogin;
 import net.netne.common.annotation.NotNeedUID;
 import net.netne.common.cache.MemberCache;
@@ -103,7 +104,7 @@ public class MemberControl {
 					String password = paramsObj.getString("password");
 					if(StringUtils.isNotEmpty(mobile) 
 							&& StringUtils.isNotEmpty(password)){
-						Member member = memberService.login(mobile,password,getClientIp(request));
+						Member member = memberService.login(mobile,password,Constant.getClientIp(request));
 						if(member != null){
 							LoginInfo loginInfo = new LoginInfo();
 							loginInfo.setMember(member);
@@ -271,7 +272,7 @@ public class MemberControl {
 		}else{
 			LoginInfo loginInfo = MemberCache.getInstance().get(uid);
 			if(loginInfo != null && loginInfo.getMember() != null){
-				isFirstLogin = memberService.checkMemberIsFirstLogin(loginInfo.getMember(), getClientIp(request));
+				isFirstLogin = memberService.checkMemberIsFirstLogin(loginInfo.getMember(), Constant.getClientIp(request));
 			}
 		}
 		resultMap.put("isFirstLogin", isFirstLogin ? 1 : 0);
@@ -333,20 +334,6 @@ public class MemberControl {
 			result.setRe(resultMap); 
 		}
 		return ResultUtil.getJsonString(result);
-	}
-	
-	private String getClientIp(HttpServletRequest request){
-		String ip = request.getHeader("x-forwarded-for");
-		if(StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)){
-			ip = request.getHeader("Proxy-Client-IP");
-		}
-		if(StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)){
-			ip = request.getHeader("WL-Proxy-Client-IP");
-		}
-		if(StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)){
-			ip = request.getRemoteAddr();
-		}
-		return ip;
 	}
 
 }

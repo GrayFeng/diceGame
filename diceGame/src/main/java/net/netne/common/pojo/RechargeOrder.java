@@ -6,9 +6,9 @@ public class RechargeOrder {
 	
 	private String orderNo;
 	
-	private Integer orderFee;
+	private Long orderFee;
 	
-	private Integer realPayFee;
+	private Long realPayFee;
 	
 	private Integer memberId;
 	
@@ -22,11 +22,11 @@ public class RechargeOrder {
 	
 	private String modifyTime;
 	
-	public Integer getRealPayFee() {
+	public Long getRealPayFee() {
 		return realPayFee;
 	}
 
-	public void setRealPayFee(Integer realPayFee) {
+	public void setRealPayFee(Long realPayFee) {
 		this.realPayFee = realPayFee;
 	}
 
@@ -46,11 +46,11 @@ public class RechargeOrder {
 		this.orderNo = orderNo;
 	}
 
-	public Integer getOrderFee() {
+	public Long getOrderFee() {
 		return orderFee;
 	}
 
-	public void setOrderFee(Integer orderFee) {
+	public void setOrderFee(Long orderFee) {
 		this.orderFee = orderFee;
 	}
 

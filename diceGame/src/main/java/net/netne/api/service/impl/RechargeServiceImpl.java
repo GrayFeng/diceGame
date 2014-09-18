@@ -33,9 +33,9 @@ public class RechargeServiceImpl implements IRechargeService {
 	private IScoreService scoreService;
 	
 	@Override
-	public RechargeOrder createRechargeOrder(Member member, Integer fee) {
+	public RechargeOrder createRechargeOrder(Member member, String fee) {
 		RechargeOrder order = new RechargeOrder();
-		order.setOrderFee(fee);
+		order.setOrderFee(Long.valueOf(fee));
 		order.setMemberId(member.getId());
 		order.setMemberMobile(member.getMobile());
 		order.setStatus(ERechargeStatus.WAIT_2_PAY.getCode());
@@ -89,7 +89,7 @@ public class RechargeServiceImpl implements IRechargeService {
 						&& (ERechargeStatus.WAIT_2_PAY.getCode().equals(order.getStatus())
 								|| ERechargeStatus.FAIL.getCode().equals(status))){
 					order.setChannel(channel);
-					order.setRealPayFee(Integer.valueOf(realFee));
+					order.setRealPayFee(Long.valueOf(realFee));
 					order.setStatus(status);
 					rechargeDao.updatePayResult(order);
 					if(ERechargeStatus.SUCCESS.getCode().equals(status)){

@@ -6,7 +6,7 @@ import net.netne.common.pojo.RechargeOrder;
 
 public interface IRechargeService {
 	
-	public RechargeOrder createRechargeOrder(Member member,Integer fee);
+	public RechargeOrder createRechargeOrder(Member member,String fee);
 	
 	public RechargeOrder getOrderByNo(String orderNo);
 	
