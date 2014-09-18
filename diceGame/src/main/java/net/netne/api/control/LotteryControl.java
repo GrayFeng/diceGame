@@ -59,12 +59,12 @@ public class LotteryControl {
 		if(prizeList != null){
 			List<Map<String,Object>> prizeInfoList = Lists.newArrayList();
 			Map<String,Object> infoMap = Maps.newHashMap();
-			int i = 0;
+//			int i = 0;
 			for(Prize prize : prizeList){
-				if(i > 4){
-					break;
-				}
-				i++;
+//				if(i > 4){
+//					break;
+//				}
+//				i++;
 				Map<String,Object> prizeInfoMap = Maps.newHashMap();
 				prizeInfoMap.put("name", prize.getName());
 				prizeInfoMap.put("id", prize.getId());

@@ -6,7 +6,7 @@ import com.google.common.base.Charsets;
 
 public class AESEncrypter {
 
-    private static final String key = "yyl123123";
+    private static final String key = "ydsw123321";
     
     public static final boolean isDecryption = true;
 

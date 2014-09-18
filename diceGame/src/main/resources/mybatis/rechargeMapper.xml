@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="net.netne.api.dao.IRechargeDao">
+    
+    <insert id="createRechargeOrder" parameterType="RechargeOrder">
+        insert into recharge_order 
+        	(order_no,order_fee,member_id,member_mobile,status,channel,create_time,modify_time) 
+        values 
+        	(#{orderNo},#{orderFee},#{memberId},#{memberMobile},#{status},#{channel},NOW(),NOW())
+    </insert>
+    
+    <update id="updatePayResult" parameterType="RechargeOrder">
+        update recharge_order 
+        set 
+        	status = #{status},
+        	real_pay_fee = #{realPayFee},
+        	channel = #{channel},
+        	modify_time = NOW()
+        where 
+        	order_no = #{orderNo}
+    </update>
+    
+    <select id="getOrderByNo" parameterType="String" resultType="RechargeOrder">
+        	select 
+	 		order_no as orderNo,
+	 		order_fee as orderFee,
+	 		member_id as memberId,
+	 		member_mobile as memberMobile,
+	 		status,
+	 		channel,
+	 		create_time as createTime,
+	 		modify_time as modifyTime
+	 	from 
+	 		recharge_order
+	 	where 
+	 		order_no = #{orderNo}
+    </select>
+    
+    <select id="getOrderCount" resultType="long">
+        select count(id) from recharge_order
+    </select>
+    
+    <select id="getOrderList" resultType="RechargeOrder" parameterType="map">
+	 	select 
+	 		order_no as orderNo,
+	 		order_fee as orderFee,
+	 		member_id as memberId,
+	 		member_mobile as memberMobile,
+	 		status,
+	 		channel,
+	 		create_time as createTime,
+	 		modify_time as modifyTime
+	 	from 
+	 		recharge_order
+	 	order by 
+	 		modify_time desc limit #{startNum},#{size};
+	 </select>
+     
+</mapper> 
