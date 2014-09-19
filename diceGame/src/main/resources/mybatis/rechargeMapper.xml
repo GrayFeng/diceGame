@@ -46,6 +46,7 @@
 	 	select 
 	 		order_no as orderNo,
 	 		order_fee as orderFee,
+	 		real_pay_fee as realPayFee,
 	 		member_id as memberId,
 	 		member_mobile as memberMobile,
 	 		status,

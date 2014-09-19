@@ -75,7 +75,7 @@ public class MessagetHandler extends IoHandlerAdapter {
 			String params = String.valueOf(message);
 			if(AESEncrypter.isDecryption){
 				params = URLDecoder.decode(params);
-				params = new AESEncrypter().decrypt(params);
+				params = AESEncrypter.decrypt(params);
 				LOGGER.info("mina-rev:" + params);
 			}
 			if(params != null){
@@ -85,7 +85,7 @@ public class MessagetHandler extends IoHandlerAdapter {
 			String resultMsg = JSON.toJSONString(result, SerializerFeature.WriteMapNullValue);
 			LOGGER.info("mina-send:" + params);
 			if(AESEncrypter.isDecryption){
-				resultMsg = new AESEncrypter().encrypt(resultMsg);
+				resultMsg = AESEncrypter.encrypt(resultMsg);
 			}
 			session.write(resultMsg);
 		} catch (Exception e) {

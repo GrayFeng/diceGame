@@ -12,7 +12,7 @@ public class MessageUtils {
 	
 	public static void sendMsg(IoSession session,String msg){
 		if(AESEncrypter.isDecryption){
-			msg = new AESEncrypter().encrypt(msg);
+			msg = AESEncrypter.encrypt(msg);
 		}
 		log.info("mina-send:" + msg);
 		session.write(msg);

@@ -51,9 +51,9 @@ class FilteredRequest extends HttpServletRequestWrapper {
         String value = super.getParameter(paramName);
         if (queryId.equals(paramName) && value != null) {
             if (AESEncrypter.isDecryption) {
-                value = new AESEncrypter().decrypt(value);
-                logger.info("api-rev:" + value);
+                value = AESEncrypter.decrypt(value);
             }
+            logger.info("api-rev:" + value);
         }
         return value;
     }
@@ -63,7 +63,7 @@ class FilteredRequest extends HttpServletRequestWrapper {
         if (queryId.equals(paramName) && values != null) {
             if (AESEncrypter.isDecryption) {
                 for (int index = 0; index < values.length; index++) {
-                    values[index] = new AESEncrypter().decrypt(values[index]);
+                    values[index] = AESEncrypter.decrypt(values[index]);
                     logger.info("api-rev:" + values[index]);
                 }
             }

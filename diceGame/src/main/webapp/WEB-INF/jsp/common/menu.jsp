@@ -8,6 +8,9 @@
 			<a href="${contextPaht}/gm/user/list.do"><span>用户管理</span></a>
 		</li>
 		<li>
+			<a href="${contextPaht}/gm/recharge/list.do"><span>充值记录</span></a>
+		</li>
+		<li>
 			<a href="${contextPaht}/gm/prize/list.do"><span>奖品管理</span></a>
 		</li>
 		<li>
