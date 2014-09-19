@@ -7,6 +7,7 @@
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="net.netne.api.service.impl.RechargeServiceImpl" %>
+<%@ page import="net.netne.pay.weixin.util.ConstantUtil"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%
 
@@ -14,15 +15,9 @@ Logger log = LoggerFactory.getLogger("weixin_callback");
 //---------------------------------------------------------
 //财付通支付通知（后台通知）示例，商户按照此文档进行开发即可
 //---------------------------------------------------------
-//商户号
-String partner = "1900000109";
-
-//密钥
-String key = "8934e7d15453e97507ef794cf7b0519d";
-
 //创建支付应答对象
 ResponseHandler resHandler = new ResponseHandler(request, response);
-resHandler.setKey(key);
+resHandler.setKey(ConstantUtil.PARTNER_KEY);
 
 //判断签名
 if(resHandler.isTenpaySign()) {
@@ -39,9 +34,9 @@ if(resHandler.isTenpaySign()) {
 	
 	//通过通知ID查询，确保通知来至财付通
 	queryReq.init();
-	queryReq.setKey(key);
+	queryReq.setKey(ConstantUtil.PARTNER_KEY);
 	queryReq.setGateUrl("https://gw.tenpay.com/gateway/verifynotifyid.xml");
-	queryReq.setParameter("partner", partner);
+	queryReq.setParameter("partner", ConstantUtil.PARTNER);
 	queryReq.setParameter("notify_id", notify_id);
 	
 	//通信对象
@@ -52,7 +47,7 @@ if(resHandler.isTenpaySign()) {
 	if(httpClient.call()) {
 		//设置结果参数
 		queryRes.setContent(httpClient.getResContent());
-		queryRes.setKey(key);
+		queryRes.setKey(ConstantUtil.PARTNER_KEY);
 			
 		//获取返回参数
 		String retcode = queryRes.getParameter("retcode");

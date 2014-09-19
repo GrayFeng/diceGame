@@ -88,17 +88,19 @@ public class RechargeServiceImpl implements IRechargeService {
 				if(order != null
 						&& (ERechargeStatus.WAIT_2_PAY.getCode().equals(order.getStatus())
 								|| ERechargeStatus.FAIL.getCode().equals(status))){
+					log.error("支付订单回调,更新充值记录状态：orderNo:" + (orderNo ==  null ? "null" : orderNo));
 					order.setChannel(channel);
 					order.setRealPayFee(Long.valueOf(realFee));
 					order.setStatus(status);
 					rechargeDao.updatePayResult(order);
 					if(ERechargeStatus.SUCCESS.getCode().equals(status)){
-						scoreService.addScore(order.getMemberId(), Integer.valueOf(realFee) * 10000);
+						log.error("支付订单回调,增加会员积分:会员id：" + order.getMemberId() + "；增加积分："+realFee);
+						scoreService.addScore(order.getMemberId(), Integer.valueOf(realFee));
 					}
 				}
 			}
 		}catch(Exception e){
-			log.error(e.getMessage(),e);
+			log.error("支付订单回调异常:",e);
 		}
 		return result;
 	}
