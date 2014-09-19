@@ -14,7 +14,7 @@ public class ResultUtil {
 		String jsonStr = JSON.toJSONString(result, SerializerFeature.WriteMapNullValue);
 		logger.info("api-send:" + jsonStr);
 		if(AESEncrypter.isDecryption){
-			jsonStr = new AESEncrypter().encrypt(jsonStr);
+			jsonStr = AESEncrypter.encrypt(jsonStr);
 		}
 		return jsonStr;
 	}
