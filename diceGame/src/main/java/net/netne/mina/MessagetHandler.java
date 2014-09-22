@@ -74,8 +74,12 @@ public class MessagetHandler extends IoHandlerAdapter {
 		try {
 			String params = String.valueOf(message);
 			if(AESEncrypter.isDecryption){
-				params = URLDecoder.decode(params);
-				params = AESEncrypter.decrypt(params);
+				try{
+					params = AESEncrypter.decrypt(params);
+				}catch(Exception e){
+					params = URLDecoder.decode(params);
+					params = AESEncrypter.decrypt(params);
+				}
 				LOGGER.info("mina-rev:" + params);
 			}
 			if(params != null){
