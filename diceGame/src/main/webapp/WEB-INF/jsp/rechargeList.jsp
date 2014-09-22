@@ -45,8 +45,8 @@
 												<td><c:if test="${order.realPayFee!=null}">${order.realPayFee/100}元</c:if></td>
 												<td>
 													<c:choose>
-														<c:when test="${order.status == 1}">微信</c:when>
-														<c:when test="${order.status == 2}">支付宝</c:when>
+														<c:when test="${order.channel == 1}">微信</c:when>
+														<c:when test="${order.channel == 2}">支付宝</c:when>
 														<c:otherwise>其他</c:otherwise>
 													</c:choose>
 												</td>
