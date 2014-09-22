@@ -21,4 +21,5 @@ public class AESEncrypter {
         byte[] decrypt = aes.decrypt(Base64.decodeBase64(str));
         return new String(decrypt, Charsets.UTF_8);
     }
+    
 }

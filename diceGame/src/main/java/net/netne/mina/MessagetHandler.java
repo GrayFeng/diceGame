@@ -37,6 +37,7 @@ import net.netne.mina.handler.SessionClosedHandler;
 import net.netne.mina.handler.ShakeDiceHandler;
 import net.netne.mina.pojo.MinaResult;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
@@ -73,21 +74,21 @@ public class MessagetHandler extends IoHandlerAdapter {
 			throws Exception {
 		try {
 			String params = String.valueOf(message);
+			String encodeMsg = null;
 			if(AESEncrypter.isDecryption){
-				try{
-					params = AESEncrypter.decrypt(params);
-				}catch(Exception e){
+				encodeMsg = AESEncrypter.decrypt(params);
+				if(StringUtils.isEmpty(encodeMsg)){
 					params = URLDecoder.decode(params);
-					params = AESEncrypter.decrypt(params);
+					encodeMsg = AESEncrypter.decrypt(params);
 				}
-				LOGGER.info("mina-rev:" + params);
+				LOGGER.info("mina-rev:" + encodeMsg);
 			}
-			if(params != null){
-				params = params.trim();
+			if(encodeMsg != null){
+				encodeMsg = encodeMsg.trim();
 			}
-			MinaResult result = execute(session,params);
+			MinaResult result = execute(session,encodeMsg);
 			String resultMsg = JSON.toJSONString(result, SerializerFeature.WriteMapNullValue);
-			LOGGER.info("mina-send:" + params);
+			LOGGER.info("mina-send:" + resultMsg);
 			if(AESEncrypter.isDecryption){
 				resultMsg = AESEncrypter.encrypt(resultMsg);
 			}

@@ -38,7 +38,7 @@ public class CryptAES {
             }
             sKey = new SecretKeySpec(bytes, "AES");
         } catch (UnsupportedEncodingException e) {
-        	log.error("数据加解密异常:",e);
+        	log.error("数据加解密异常:"+e.getMessage());
         }
 
     }
@@ -62,7 +62,7 @@ public class CryptAES {
             return cipher.doFinal(data);
 
         } catch (Exception e) {
-        	log.error("数据加解密异常:",e);
+        	log.error("数据加解密异常:"+e.getMessage());
         }
         return new byte[0];
     }
