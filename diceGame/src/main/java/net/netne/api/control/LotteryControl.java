@@ -61,6 +61,9 @@ public class LotteryControl {
 			Map<String,Object> infoMap = Maps.newHashMap();
 //			int i = 0;
 			for(Prize prize : prizeList){
+				if(prize.getStock() <= 0){
+					continue;
+				}
 //				if(i > 4){
 //					break;
 //				}
