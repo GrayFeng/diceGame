@@ -335,5 +335,4 @@ public class MemberControl {
 		}
 		return ResultUtil.getJsonString(result);
 	}
-
 }

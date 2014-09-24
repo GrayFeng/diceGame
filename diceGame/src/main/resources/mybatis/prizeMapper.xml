@@ -6,9 +6,9 @@
 
 	<insert id="addPrize" parameterType="Prize">
 		insert into prize 
-	 		(name,stock,probability,create_time) 
+	 		(name,stock,probability,type,par_value,create_time) 
 	 	values
-	 		(#{name},#{stock},#{probability},now())
+	 		(#{name},#{stock},#{probability},#{type},#{parValue},now())
 	 	<selectKey resultType="int" keyProperty="id" order="AFTER">  
   			SELECT LAST_INSERT_ID() as id
   		</selectKey>  
@@ -16,7 +16,8 @@
      
 	 <update id="modifyPrize" parameterType="Prize">
 	     update prize set 
-	    	 name = #{name},stock = #{stock} ,probability=#{probability}
+	    	 name = #{name},stock = #{stock} ,probability=#{probability},type=#{type},
+	    	 par_value = #{parValue}
 	    	 <if test="photoData != null">
 	    		 ,photo=#{photoData}
 	    	 </if>
@@ -24,15 +25,15 @@
 	 </update>
 	 
 	 <select id="getPrizeById" resultType="Prize" parameterType="Integer">
-		select id,name,probability,stock,
+		select id,name,probability,stock,type,par_value as parValue,
 		case when photo is null  then 'false' when photo is not null then 'true' end as photoUrl
 		from prize where id = #{id};
 	 </select>
 	 
 	 <select id="getPrizeList" resultType="Prize" parameterType="map">
-	 	select id,name,probability,stock,
+	 	select id,name,probability,stock,type,par_value as parValue,
 	 	case when photo is null  then 'false' when photo is not null then 'true' end as photoUrl
-	 	from prize order by id desc limit #{startNum},#{size};
+	 	from prize where is_delete = 0  order by id desc limit #{startNum},#{size};
 	 </select>
 	 
 	 <update id="modifyStockPrize" parameterType="map">
@@ -40,7 +41,7 @@
 	 </update>
 	
 	 <select id="getPrizeCount" resultType="long">
-	 	select count(id) from prize;
+	 	select count(id) from prize where is_delete = 0;
 	 </select>
 	 
 	 <insert id="addPrizeMember" parameterType="map">
@@ -80,7 +81,7 @@
 	 
 	 <!-- 删除奖品 -->
 	  <update id="deletePrize" parameterType="int">
-	 		delete from prize where id = #{id}
+	 		update prize set is_delete = 1 where id = #{id}
 	 </update>
 	 
 </mapper> 

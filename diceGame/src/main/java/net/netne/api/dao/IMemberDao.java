@@ -52,5 +52,7 @@ public interface IMemberDao {
 	public Integer getLoginCount(Integer memberId);
 	
 	public void modifyAdminPwd(Member member);
+	
+	public void updateMemberStatus(Map<String,Object> paramMap);
 
 }

@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.netne.api.service.IPrizeService;
 import net.netne.api.service.IUploadService;
+import net.netne.common.enums.EPrizeType;
 import net.netne.common.enums.EUploadType;
 import net.netne.common.pojo.ImageUploadResult;
 import net.netne.common.pojo.Page;
@@ -46,6 +47,10 @@ public class PrizeControl {
 	public ModelAndView list(@ModelAttribute Prize prize,MultipartFile photo
 			,HttpServletRequest request){
 		ModelAndView mav = new ModelAndView("redirect:/gm/prize/list.do");
+		if(prize != null 
+				&& !EPrizeType.VIRTUAL_GOLD.getCode().equals(prize.getType())){
+			prize.setParValue(0);
+		}
 		ImageUploadResult imageUploadResult = null;
 		prizeService.addPrize(prize);
 		if(photo != null && photo.getSize() > 0){
@@ -64,9 +69,20 @@ public class PrizeControl {
 	}
 	
 	@RequestMapping("modify")
-	public ModelAndView modify(@ModelAttribute Prize prize){
+	public ModelAndView modify(@ModelAttribute Prize prize,MultipartFile photo,HttpServletRequest request){
 		ModelAndView mav = new ModelAndView("redirect:/gm/prize/list.do");
 		prizeService.modifyPrize(prize);
+		ImageUploadResult imageUploadResult = null;
+		if(photo != null && photo.getSize() > 0){
+			imageUploadResult = uploadService.processupload(prize.getId(),photo,EUploadType.PRIZE_PHOTO);
+		}
+		if(imageUploadResult == null || imageUploadResult.isSuccess()){
+			
+		}else if(StringUtils.isNotEmpty(imageUploadResult.getMsg())){
+			request.getSession().setAttribute("errorMsg", imageUploadResult.getMsg());
+		}else{
+			request.getSession().setAttribute("errorMsg","系统异常，修改奖品失败!");
+		}
 		return mav;
 	}
 	

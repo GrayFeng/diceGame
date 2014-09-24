@@ -11,6 +11,7 @@ import net.netne.api.dao.IPrizeDao;
 import net.netne.api.service.IPrizeService;
 import net.netne.api.service.IScoreService;
 import net.netne.common.Constant;
+import net.netne.common.enums.EPrizeType;
 import net.netne.common.pojo.Member;
 import net.netne.common.pojo.Page;
 import net.netne.common.pojo.Prize;
@@ -186,7 +187,13 @@ public class PrizeServiceImpl implements IPrizeService {
 					 if(prizeId != null){
 						 Prize prize = getPrizeById(prizeId);
 						 if(prize != null){
-							 prize.setReceiveKey("pm-" + UUID.randomUUID());
+							 //虚拟金币物品直接增加
+							 if(EPrizeType.VIRTUAL_GOLD.getCode().equals(prize.getType()) 
+									 && prize.getParValue() > 0){
+								 scoreService.addScore(member.getId(), prize.getType());
+							 }else{
+								 prize.setReceiveKey("pm-" + UUID.randomUUID());
+							 }
 							 modifyStockPrize(prize.getId(),1);
 							 addPrizeMember(member,prize);
 						 }

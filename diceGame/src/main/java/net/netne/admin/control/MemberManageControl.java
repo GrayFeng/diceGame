@@ -54,6 +54,17 @@ public class MemberManageControl {
 		return mav;
 	}
 	
+	@RequestMapping("logOff")
+	public ModelAndView logOff(Integer memberId){
+		memberService.logOffMember(memberId);
+		return userList(1);
+	}
+	
+	@RequestMapping("enable")
+	public ModelAndView enable(Integer memberId){
+		memberService.enableMember(memberId);
+		return userList(1);
+	}
 	
 
 }

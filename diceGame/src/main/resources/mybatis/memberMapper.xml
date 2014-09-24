@@ -6,9 +6,9 @@
      <!-- 新增用户 -->
 	 <insert id="addMember" parameterType="Member">
 	 		insert into member 
-	 			(name,password,mobile,sex,reg_time,modify_time) 
+	 			(name,password,mobile,sex,status,reg_time,modify_time) 
 	 		values
-	 			(#{name},#{password},#{mobile},#{sex},now(),now())
+	 			(#{name},#{password},#{mobile},#{sex},0,now(),now())
 	 	<selectKey resultType="int" keyProperty="id" order="AFTER">  
   			SELECT LAST_INSERT_ID() as id
   		</selectKey>  
@@ -31,17 +31,17 @@
 	 
 	 <!-- 手机号获取用户信息-->
 	 <select id="getMember" resultType="Member" parameterType="String">
-		select id,name,password,mobile,sex from member where mobile = #{mobile};
+		select id,name,password,mobile,sex,status from member where mobile = #{mobile} and status = 0;
 	 </select>
 	 
 	 <!-- ID获取用户信息-->
 	 <select id="getMemberById" resultType="Member" parameterType="Integer">
-		select id,name,password,mobile,sex from member where id = #{id};
+		select id,name,password,mobile,sex,status from member where id = #{id} and status = 0;
 	 </select>
 	 
 	 <!-- 读取用户记录总数 -->
 	 <select id="getMemberCount" resultType="long">
-	 	select count(id) from member;
+	 	select count(id) from member
 	 </select>
 	 
 	  <!-- 读取用户记录总数 -->
@@ -50,12 +50,13 @@
 	 	<result column="name" property="name"/>
 	 	<result column="mobile" property="mobile"/>
 	 	<result column="sex" property="sex"/>
+	 	<result column="status" property="status"/>
         <association property="account" javaType="Account">
         	<result column="score_amount" property="scoreAmount"/>
         </association>
      </resultMap>  
 	 <select id="getMemberList" resultMap="MemberResult" parameterType="map">
-	 	select member.id as id,name,mobile,sex,score_amount
+	 	select member.id as id,name,mobile,sex,score_amount,status
 	 	from member inner join account on member.id = account.member_id
 	 	order by id desc limit #{startNum},#{size};
 	 </select>
@@ -77,7 +78,7 @@
 	 
 	 <!-- 读取用户照片 -->
 	  <select id="getMemberPhoto" parameterType="int" resultType="MemberPhoto">
-	 		select member_id,photo from member_photo where member_id = #{memberId}
+	 		select member_id,photo from member_photo where member_id = #{memberId} and status = 0
 	 </select>
 	 
 	 <select id="sysLogin" resultType="Member" parameterType="string">
@@ -102,6 +103,10 @@
 	 
 	<update id="modifyAdminPwd" parameterType="Member">
 	     update sys_user set password = #{password} where name = #{name}
+	</update>
+	
+	<update id="updateMemberStatus" parameterType="Map">
+	     update member set status = #{status} where id = #{memberId};
 	</update>
 	 
 </mapper> 

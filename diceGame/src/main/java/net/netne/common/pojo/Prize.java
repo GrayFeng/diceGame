@@ -25,7 +25,27 @@ public class Prize {
 	private byte[] photoData;
 	
 	private String receiveKey;
+	//奖品类型
+	private Integer type;
+	//奖品面值-可为空
+	private Integer parValue;
 	
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public Integer getParValue() {
+		return parValue;
+	}
+
+	public void setParValue(Integer parValue) {
+		this.parValue = parValue;
+	}
+
 	public String getPhotoUrl() {
 		return photoUrl;
 	}

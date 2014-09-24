@@ -54,6 +54,8 @@
 										<div class="clear"></div>
 									</div>
 								</div>
+								<a href="javascript:logoffUser()" class="button" style="margin-left: 5px;display: none;"><span>禁用用户</span></a>
+								<a href="javascript:enableUser()" class="button" style="margin-left: 5px;display: none;"><span>启用用户</span></a>
 							</div>
 						</div>
 						<div class="modules_right"></div>
@@ -89,7 +91,14 @@
 													</c:otherwise>
 												</c:choose>
 											<td id="score_${member.id}" data="${member.account.scoreAmount}">${member.account.scoreAmount}</td>
-											<td>正常</td>
+											<c:choose>
+												<c:when test="${member.status == 0}">
+													<td>正常</td>
+												</c:when>
+												<c:otherwise>
+													<td>禁用</td>
+												</c:otherwise>
+											</c:choose>
 										</tr>
 										</c:forEach>
 									</table>
@@ -162,6 +171,35 @@
 			}
 			$("#userId").val(id);
 			$(".modify_user_dropdown").stop().slideToggle();
+		}
+		function logoffUser(){
+			var id = '';
+			$("input[type=checkbox]").each(function(i,checkbox){
+				if($(checkbox).attr('checked') == true){
+					id = $(checkbox).attr('data');
+					return false;
+				}
+			});
+			if(!id){
+				alert('请先选择一个用户');
+				return;
+			}
+			window.location.href = "${contextPaht}/gm/user/logOff.do?memberId="+id;
+		}
+		
+		function enableUser(){
+			var id = '';
+			$("input[type=checkbox]").each(function(i,checkbox){
+				if($(checkbox).attr('checked') == true){
+					id = $(checkbox).attr('data');
+					return false;
+				}
+			});
+			if(!id){
+				alert('请先选择一个用户');
+				return;
+			}
+			window.location.href =  "${contextPaht}/gm/user/enable.do?memberId="+id;
 		}
 		
 		function modifyUser(){

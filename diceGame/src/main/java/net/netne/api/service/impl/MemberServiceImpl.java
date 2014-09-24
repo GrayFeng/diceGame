@@ -186,4 +186,20 @@ public class MemberServiceImpl implements IMemberService{
 		memberDao.modifyAdminPwd(member);
 	}
 
+	@Override
+	public void logOffMember(Integer memberId) {
+		Map<String,Object> paramMap = Maps.newHashMap();
+		paramMap.put("memberId", memberId);
+		paramMap.put("status", 1);
+		memberDao.updateMemberStatus(paramMap);
+	}
+	
+	@Override
+	public void enableMember(Integer memberId) {
+		Map<String,Object> paramMap = Maps.newHashMap();
+		paramMap.put("memberId", memberId);
+		paramMap.put("status", 0);
+		memberDao.updateMemberStatus(paramMap);
+	}
+
 }

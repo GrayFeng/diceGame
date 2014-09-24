@@ -97,6 +97,7 @@ public class LotteryControl {
 					infoMap.put("receiveKey", prize.getReceiveKey());
 					infoMap.put("id", prize.getId());
 					infoMap.put("photo", prize.getPhotoUrl());
+					infoMap.put("type", prize.getType());
 				}else{
 					result.setMsg("很抱歉没有中奖");
 					infoMap.put("isorder", 2);
