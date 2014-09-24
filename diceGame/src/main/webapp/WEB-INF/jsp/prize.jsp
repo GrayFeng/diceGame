@@ -32,7 +32,7 @@
 											</p>
 											<p>
 												<label for="name">库存数量:</label>
-												<input type="text" class="text w_22" name="stock" id="stock" maxlength="10">
+												<input type="text" class="text w_22" name="stock" id="stock" maxlength="8">
 											</p>
 											<p>
 												<label for="name">中奖概率:</label>
@@ -61,7 +61,7 @@
 											</p>
 											<p>
 												<label for="name">库存数量:</label>
-												<input type="text" class="text w_22" name="stock" id="modify_stock" maxlength="10">
+												<input type="text" class="text w_22" name="stock" id="modify_stock" maxlength="8">
 											</p>
 											<p>
 												<label for="name">中奖概率:</label>
