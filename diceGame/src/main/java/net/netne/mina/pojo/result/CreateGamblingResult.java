@@ -11,6 +11,16 @@ public class CreateGamblingResult implements IResult{
 	
 	private String boardNo;
 	
+	private Integer score;
+	
+	public Integer getScore() {
+		return score;
+	}
+
+	public void setScore(Integer score) {
+		this.score = score;
+	}
+
 	public String getBoardNo() {
 		return boardNo;
 	}

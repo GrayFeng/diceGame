@@ -190,10 +190,9 @@ public class PrizeServiceImpl implements IPrizeService {
 							 //虚拟金币物品直接增加
 							 if(EPrizeType.VIRTUAL_GOLD.getCode().equals(prize.getType()) 
 									 && prize.getParValue() > 0){
-								 scoreService.addScore(member.getId(), prize.getType());
-							 }else{
-								 prize.setReceiveKey("pm-" + UUID.randomUUID());
+								 scoreService.addScore(member.getId(), prize.getParValue());
 							 }
+							 prize.setReceiveKey("pm-" + UUID.randomUUID());
 							 modifyStockPrize(prize.getId(),1);
 							 addPrizeMember(member,prize);
 						 }

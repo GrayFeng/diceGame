@@ -57,11 +57,13 @@ public class MemberServiceImpl implements IMemberService{
 	@Override
 	public Member getMember(String mobile) {
 		Member member = memberDao.getMember(mobile);
-		Account account = memberDao.getAccount(member.getId());
-		MemberPhoto memberPhoto = memberDao.getMemberPhoto(member.getId());
-		member.setAccount(account);
-		if(memberPhoto != null){
-			member.setPhotoUrl(Constant.PHOTO_URL_PATH + member.getId());
+		if(member != null){
+			Account account = memberDao.getAccount(member.getId());
+			MemberPhoto memberPhoto = memberDao.getMemberPhoto(member.getId());
+			member.setAccount(account);
+			if(memberPhoto != null){
+				member.setPhotoUrl(Constant.PHOTO_URL_PATH + member.getId());
+			}
 		}
 		return member;
 	}

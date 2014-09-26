@@ -62,6 +62,7 @@ public class CreateGamblingHandler extends AbstractHandler implements IHandler{
 							CreateGamblingResult createGamblingResult = new CreateGamblingResult();
 							createGamblingResult.setGamblingId(gambling.getId());
 							createGamblingResult.setBoardNo(gambling.getBoardNo());
+							createGamblingResult.setScore(gambling.getScore());
 							result.setRe(createGamblingResult);
 						}
 					}else{
