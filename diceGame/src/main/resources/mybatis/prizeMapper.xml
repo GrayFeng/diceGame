@@ -58,15 +58,15 @@
 	</update>
 	
 	<select id="getPrizeMemberList" resultType="PrizeMember" parameterType="map">
-	 	select id,prize_id as prizeId,member_id as memberId,
+	 	select prize_member.id,prize_id as prizeId,member_id as memberId,
 	 	member_mobile as memberMobile,member_name as memberName,
-	 	prize_name as prizeName,create_time as date,member_address as address
-	 	from prize_member
+	 	prize_name as prizeName,prize_member.create_time as date,member_address as address
+	 	from prize_member left join prize on prize_id = prize.id where type != 1
 	 	order by id desc limit #{startNum},#{size};
 	 </select>
 	
 	 <select id="getPrizeMemberCount" resultType="long">
-	 	select count(id) from prize_member;
+	 	select count(prize_member.id) from prize_member left join prize on prize_id = prize.id where type != 1;
 	 </select>
 	 
 	 <!-- 保存奖品照片 -->
