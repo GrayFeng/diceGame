@@ -50,26 +50,30 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 					LoginInfo loginInfo = MemberCache.getInstance().get(joinGameParam.getUid());
 					if(loginInfo != null && loginInfo.getMember() != null){
 						Integer memberId = loginInfo.getMember().getId();
-						if(memberService.checkScore(memberId, gambling.getScore())){
-							memberService.freezeScore(memberId, gambling.getScore());
-							gambling.setGamerNum(gambling.getGamerNum() + 1);
-							GamblingCache.getInstance().add(gambling);
-							//建立新玩家
-							Gamer newGamer = createNewGamer(joinGameParam.getUid(),session,loginInfo,joinGameParam.getGamblingId());
-							newGamer.setTokenIndex(gambling.getGamerNum() - 1);
-							JoinGameResult jonGameResult = new JoinGameResult();
-							List<Gamer> gamers = GamerCache.getInstance().getGamers(gambling.getId());
-							//读取现有玩家信息
-							List<GamerVO> gamerVOList = getOldGamerList(gamers);
-							jonGameResult.setGamers(gamerVOList);
-							result = MinaResult.getSuccessResult();
-							result.setRe(jonGameResult);
-							GamerCache.getInstance().addOne(gambling.getId(),newGamer);
-							session.setAttribute("gbId", gambling.getId());
-							//广播通知其他玩家
-							BroadcastThreadPool.execute(new NewGamerJoin(gambling.getId(), newGamer));
+						if(GamerCache.getInstance().checkGamerIsInGame(joinGameParam.getGamblingId(),memberId)){
+							if(memberService.checkScore(memberId, gambling.getScore())){
+								memberService.freezeScore(memberId, gambling.getScore());
+								gambling.setGamerNum(gambling.getGamerNum() + 1);
+								GamblingCache.getInstance().add(gambling);
+								//建立新玩家
+								Gamer newGamer = createNewGamer(joinGameParam.getUid(),session,loginInfo,joinGameParam.getGamblingId());
+								newGamer.setTokenIndex(gambling.getGamerNum() - 1);
+								JoinGameResult jonGameResult = new JoinGameResult();
+								List<Gamer> gamers = GamerCache.getInstance().getGamers(gambling.getId());
+								//读取现有玩家信息
+								List<GamerVO> gamerVOList = getOldGamerList(gamers);
+								jonGameResult.setGamers(gamerVOList);
+								result = MinaResult.getSuccessResult();
+								result.setRe(jonGameResult);
+								GamerCache.getInstance().addOne(gambling.getId(),newGamer);
+								session.setAttribute("gbId", gambling.getId());
+								//广播通知其他玩家
+								BroadcastThreadPool.execute(new NewGamerJoin(gambling.getId(), newGamer));
+							}else{
+								result = new MinaResult(EEchoCode.ERROR.getCode(),"您的积分不足无法加入游戏,请充值！");
+							}
 						}else{
-							result = new MinaResult(EEchoCode.ERROR.getCode(),"您的积分不足无法加入游戏");
+							result = new MinaResult(EEchoCode.ERROR.getCode(),"您已在游戏中，请不要重复加入游戏");
 						}
 					}else{
 						result = new MinaResult(EEchoCode.ERROR.getCode(),"缺少用户信息");

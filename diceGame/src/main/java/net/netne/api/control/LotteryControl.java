@@ -104,7 +104,7 @@ public class LotteryControl {
 				}
 				result.setRe(infoMap);
 			}else{
-				result = new Result(EEchoCode.ERROR.getCode(), "积分不足，无法参与抽奖");
+				result = new Result(EEchoCode.ERROR.getCode(), "积分不足，无法参与抽奖,请充值!");
 			}
 		}
 		if(result == null){

@@ -110,6 +110,18 @@ public class GamerCache {
 		}
 	}
 	
+	public boolean checkGamerIsInGame(String gamblingId,Integer gamerId){
+		List<Gamer> gamerList = getGamers(gamblingId);
+		if(gamerList != null && gamerList.size() > 0){
+			for(Gamer gamer : gamerList){
+				if(gamer.getId().equals(gamerId)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public void remove(String key){
 		cache.remove(key);
 	}
