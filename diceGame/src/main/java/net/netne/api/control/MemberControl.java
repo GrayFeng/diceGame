@@ -327,9 +327,15 @@ public class MemberControl {
 			resultMap.put("picUrl","http://www.yedianshaiwang.com/static/images/logo.png");
 			resultMap.put("msg", "最近在玩一个叫夜店骰王的游戏，超级好玩！还可以抽取大奖哦！");
 			if(versionInfo == null){
-				resultMap.put("url", "http://www.yedianshaiwang.com");
+				resultMap.put("url", "http://a.app.qq.com/o/simple.jsp?pkgname=com.yyl");
 			}else{
-				resultMap.put("url", versionInfo.getAddress());
+				if(versionInfo.getChannel().equals("100")){
+					resultMap.put("url", "http://a.app.qq.com/o/simple.jsp?pkgname=com.yyl");
+				}else if(versionInfo.getChannel().equals("200")){
+					resultMap.put("url", versionInfo.getAddress());
+				}else{
+					resultMap.put("url", versionInfo.getAddress());
+				}
 			}
 			result.setRe(resultMap); 
 		}
