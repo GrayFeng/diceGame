@@ -50,7 +50,7 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 					LoginInfo loginInfo = MemberCache.getInstance().get(joinGameParam.getUid());
 					if(loginInfo != null && loginInfo.getMember() != null){
 						Integer memberId = loginInfo.getMember().getId();
-						if(GamerCache.getInstance().checkGamerIsInGame(joinGameParam.getGamblingId(),memberId)){
+						if(!GamerCache.getInstance().checkGamerIsInGame(joinGameParam.getGamblingId(),memberId)){
 							if(memberService.checkScore(memberId, gambling.getScore())){
 								memberService.freezeScore(memberId, gambling.getScore());
 								gambling.setGamerNum(gambling.getGamerNum() + 1);
