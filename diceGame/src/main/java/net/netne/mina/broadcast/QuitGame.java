@@ -7,6 +7,7 @@ import net.netne.common.cache.GamblingCache;
 import net.netne.common.cache.GamerCache;
 import net.netne.common.enums.EBroadcastCode;
 import net.netne.common.enums.GameStatus;
+import net.netne.common.enums.GamerStatus;
 import net.netne.mina.pojo.Gambling;
 import net.netne.mina.pojo.Gamer;
 import net.netne.mina.pojo.broadcast.BroadcastTO;
@@ -54,10 +55,12 @@ public class QuitGame implements IBroadcastThread {
 							&& gambling.getStatus() != GameStatus.WAIT.getCode()){
 						if(gambling != null){
 							gambling.setStatus(GameStatus.WAIT.getCode());
-							gambling.setGamerNum(0);
+							gambling.setGamerNum(1);
 							gambling.setFast(false);
 							gambling.setDiceNum(0);
 							gambling.setDicePoint(0);
+							mGamer.setGamestatus(GamerStatus.NEW_JOIN.getCode());
+							GamerCache.getInstance().addOne(gamblingId, mGamer);
 							GamblingCache.getInstance().add(gambling);
 						}
 						MessageUtils.sendMsg(session,JSON.toJSONString(gameOverBroadcastTO));
