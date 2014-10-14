@@ -137,6 +137,7 @@ public class JoinGameHandler extends AbstractHandler implements IHandler{
 				gamerVO.setName(gamer.getName());
 				gamerVO.setSex(gamer.getSex());
 				gamerVO.setPhotoUrl(gamer.getPhotoUrl());
+				gamerVO.setStatus(gamer.getGamestatus());
 				gamerVOList.add(gamerVO);
 			}
 		}
