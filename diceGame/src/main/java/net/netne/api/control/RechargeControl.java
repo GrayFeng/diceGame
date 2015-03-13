@@ -57,6 +57,11 @@ public class RechargeControl {
 			String fee = paramsObj.getString("fee");
 			if(NumberUtils.isNumber(fee)){
 				try{
+					String userAgent = request.getHeader("user-agent");
+					log.error("充值接口-user-agent：" + (userAgent == null? "": userAgent));
+					if(userAgent != null && userAgent.contains("iPhone")){
+						fee = (Integer.valueOf(fee) * 100) + "";
+					}
 					RechargeOrder order = rechargeService.createRechargeOrder(loginInfo.getMember(),fee);
 
 					//获取token值 

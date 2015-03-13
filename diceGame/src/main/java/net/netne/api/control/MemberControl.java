@@ -279,7 +279,7 @@ public class MemberControl {
 		resultMap.put("firstLoginScore", isFirstLogin ? 400 : 0);
 		resultMap.put("uid", uid);
 		resultMap.put("sysTime", System.currentTimeMillis());
-		resultMap.put("show_pay",0);
+		resultMap.put("show_pay",1);
 		result.setRe(resultMap);
 		return ResultUtil.getJsonString(result);
 	}
